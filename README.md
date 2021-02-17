@@ -41,12 +41,12 @@ This project was created with
 ### Planning/to do
 
 - Create project with react: DONE
-- Host on Firebase
+- Host on Firebase: DONE
+- Add firebase's realtime database to project: DONE
 - Create basic layout
-- Add firebase's realtime database
 - Create layout for mobile screen
 - Create layout for desktop screen
-- Create quizzes and structure
+- Create quizzes and structure using realtime database
 - Add users and registration
 - Give options to create, edit and delete quizzes
 - Add timers
