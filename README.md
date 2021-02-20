@@ -43,7 +43,7 @@ This project was created with
 - Create project with react: DONE
 - Host on Firebase: DONE
 - Add firebase's realtime database to project: DONE
-- Create basic layout
+- Create basic layout recreating base app
 - Create layout for mobile screen
 - Create layout for desktop screen
 - Create quizzes and structure using realtime database

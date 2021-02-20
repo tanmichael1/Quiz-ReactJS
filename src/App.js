@@ -2,7 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
-
+import Button from 'react-bootstrap/Button';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import {firebase} from './Config';
 
 
@@ -100,39 +101,44 @@ export default function App() {
   
 
   return (
-    <div className="App">
+    <div className="App" >
+      <h1 id="mobile">Mobile sized</h1>
+
+      <div id="box" className="container">
 
       {initial ? (
-     <div>
-     <div className="container" id="initial">  
+   
+     <div id="initial">  
       <div id="title-section" >
             <h1 id="quiz-title" >The Ultimate Quiz</h1>        
-        </div>
-
       </div>
-      <div className="initial-button">
+<div className="initial-button">
   
-            <button onClick={handleStartButtonClick} id="start-btn" className="start-btn btn neutral">Start</button>   
+            <Button active type="button" onClick={handleStartButtonClick} id="start-btn" 
+            // className="start-btn btn neutral"
+            className="btn btn-lg btn-primary"
+            >Start</Button>   
         </div>
-        </div>  ) : (
-          <br></br>
+      </div>
+        ) : (
+          <div></div>
         )
       }
 
 {quiz ? (
-     <div id="mainPage" className="container hide">
-     <h1 id="title">Quiz</h1>
+     <div id="mainPage" >
+     <h1 id="title">The Ultimate Quiz</h1>
      <hr></hr>
      
     
      <div id="question-container" >
-         <p id="question">Question</p>
+         <p id="question">What is the remainder of 21 divided by 7?</p>
         
          <div id="answer-buttons" >
-                 <button className="question-btn neutral">Answer 1</button>
-                 <button className="question-btn neutral">Answer 2</button>                
-             <button className="question-btn neutral">Answer 3</button>
-             <button className="question-btn neutral">Answer 4</button>
+                 <Button variant="primary" size="lg" block className="question-btn neutral">Answer 1</Button>
+                 <Button variant="primary" size="lg" block className="question-btn neutral">Answer 2</Button>                
+             <Button variant="primary" size="lg" block className="question-btn neutral">Answer 3</Button>
+             <Button variant="primary" size="lg" block className="question-btn neutral">Answer 4</Button>
          </div>
      </div>
      <hr></hr>
@@ -151,8 +157,8 @@ export default function App() {
      </div>
      
      <div id="control-buttons" className="controls hud-prefix">
-         <button onClick={handleCheckButtonClick} id="check-btn" className="check-btn btn neutral hide">Check</button>
-         <button onClick={handleNextButtonClick} id="next-btn" className="next-btn btn neutral hide">Next</button>  
+         <Button active type="button"  onClick={handleCheckButtonClick} id="check-btn" className="check-btn btn neutral hide">Check</Button>
+         <Button active type="button"  onClick={handleNextButtonClick} id="next-btn" className="next-btn btn neutral hide">Next</Button>  
      </div>   
      
 
@@ -165,7 +171,7 @@ export default function App() {
 
 
 {end ? (
-     <div id="end" className="container hide">
+     <div id="end" className="">
      <h1>You have completed the Quiz</h1>
          <span  >
             
@@ -176,9 +182,9 @@ export default function App() {
    
 
      <div className="controls">
-         <button onClick={handleRestartButtonClick} id="restart-btn" className="restart-btn btn ">Restart</button>
-         <button onClick={handleResultsButtonClick} id="results-btn" className="results-btn btn ">Results</button>
-         <button onClick={handleHomeButtonClick} id="home-btn" className="home-btn btn">Go home</button>
+         <Button onClick={handleRestartButtonClick} id="restart-btn" className="restart-btn btn ">Restart</Button>
+         <Button onClick={handleResultsButtonClick} id="results-btn" className="results-btn btn ">Results</Button>
+         <Button onClick={handleHomeButtonClick} id="home-btn" className="home-btn btn">Go home</Button>
      </div>
 
 
@@ -188,7 +194,7 @@ export default function App() {
       }
 
 {results ? (
-     <div id="new-results" className="result-box container hide">
+     <div id="new-results" className="result-box">
      <h1>Results</h1>
      <table>
        <thead>
@@ -220,7 +226,7 @@ export default function App() {
         
      </table>
 
-     <table id="breakdown">
+     <table  id="breakdown">
        <thead>
          <tr>
              <th>Questions</th>
@@ -228,16 +234,28 @@ export default function App() {
              <th>Correct Answer</th>
          </tr>
        </thead>
+       <tbody>
+         <tr>
+           <td>What is 3/5 of 100?</td>
+           <td>60</td>
+           <td>60</td>
+         </tr>
+         
+       </tbody>
          
          
          
      </table>
 
-     <button onClick={handleReturnEndButtonClick} id="toEndPage" className="toEndPage-btn btn">Back to end page</button>
+     <Button active type="button"   onClick={handleReturnEndButtonClick} id="toEndPage" className="toEndPage-btn btn">Back to end page</Button>
  </div>  ) : (
           <div></div>
         )
       }
+
+</div>
+
+     
       
       
       
