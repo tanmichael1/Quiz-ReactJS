@@ -11,15 +11,54 @@ const preObject = document.getElementById('object');
 const preUsers = document.getElementById('Users');
 
 export default function App() {
+  const [index, setIndex] = useState(0);
+  const [questions, setQuestions] = useState(["test"]);
   const [done, setDone] = useState(false);
+
   const [test, setTest] = useState(null);
   const [initial, setInitial] = useState(true);
   const [quiz, setQuiz] = useState(false);
   const [end, setEnd] = useState(false);
   const [results, setResults] = useState(false);
+  const current = questions[index];
+
+  function databaseQuestions(snapshot) {
+    let returnArr = [];
+    let keyArr = [];
+
+    snapshot.forEach((childSnapshot) => {
+      var num = 0;
+
+      childSnapshot.forEach((element) => {
+        var key = Object.keys(childSnapshot.val())[num];
+        console.log(element.val());
+
+        if (!keyArr.includes(key)) {
+          keyArr.push(key)
+          var text = element.val();
+        returnArr.push({text: text});
+
+        }
+        
+      });
+
+      
+
+    });
+   
+    return returnArr;
+
+
+  }
+
+  const ref = firebase.database().ref();
   
   const dbRefObject = firebase.database().ref().child('object');  
   const dbRefUsers = firebase.database().ref("Users"); 
+
+  const dbTestQuiz = ref.child('Quizzes/TestUser/TestQuiz');
+  const dbTestQuizQuestions = ref.child('Quizzes/TestUser/TestQuiz/Questions');
+  
 
   if(!done){
     dbRefObject.on('value', snap => 
@@ -42,6 +81,17 @@ export default function App() {
   dbRefObject.on('value', snap => 
   setTest(snap.val())
   );
+
+  dbTestQuiz.on('value', function(quizSnapshot){
+    var count = quizSnapshot.child("NumQuestions").val();
+    var questions = dbTestQuizQuestions.once("value").then(function(snapshot){
+      // console.log(snapshot.val())
+      setQuestions(databaseQuestions(snapshot));
+    });
+    // console.log(count);
+  });
+  
+  
   setDone(true);
   }
 
@@ -50,9 +100,18 @@ export default function App() {
   }
   
   function handleStartButtonClick(){
+    console.log(questions);
     console.log("press");
     setInitial(false);
     setQuiz(true);
+    updateQuestion();
+  }
+
+  function updateQuestion(){
+    console.log(questions[0].text);
+    // setIndex(index++);
+    var question = document.getElementById('question');
+    // question.innerText = questions;
   }
 
   function handleCheckButtonClick(){
@@ -115,7 +174,6 @@ export default function App() {
 <div className="initial-button">
   
             <Button active type="button" onClick={handleStartButtonClick} id="start-btn" 
-            // className="start-btn btn neutral"
             className="btn btn-lg btn-primary"
             >Start</Button>   
         </div>
@@ -132,7 +190,7 @@ export default function App() {
      
     
      <div id="question-container" >
-         <p id="question">What is the remainder of 21 divided by 7?</p>
+         <p id="question">{current.text}</p>
         
          <div id="answer-buttons" >
                  <Button variant="primary" size="lg" block className="question-btn neutral">Answer 1</Button>
@@ -141,7 +199,7 @@ export default function App() {
              <Button variant="primary" size="lg" block className="question-btn neutral">Answer 4</Button>
          </div>
      </div>
-     <hr></hr>
+     <hr />
      <div id="footer">
          <div id="hud">
         
