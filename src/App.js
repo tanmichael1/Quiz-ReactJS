@@ -128,7 +128,7 @@ export default function App() {
 {quiz ? (
      <div id="mainPage" >
      <h1 id="title">The Ultimate Quiz</h1>
-     <hr></hr>
+     <hr />
      
     
      <div id="question-container" >

@@ -1,7 +1,7 @@
 /* variables */
-.root {
-  /* --primary: #ffc636;
-  --secondary: #0a0b5b; */
+:root {
+  --primary: #ffc636;
+  --secondary: #0a0b5b;
   /* width: 111px;
   padding-top: 40vh; */
   /* height: 100vh;
@@ -14,24 +14,20 @@
 }
 
 /* reset */
-body,
-p,
-a,
-ul,
-li {
-  /* margin: 0;
-  padding: 0; */
-  /* text-decoration: none; */
-}
+
 h1 {
-  font-size: 3vw;
+  font-size: 6vw;
   font-weight: bold;
   color: rgb(185, 185, 185);
   font-family: "Poppins", "sans-serif";
 }
 
+hr {
+  background-color: white;
+}
+
 p {
-  font-size: 2vw;
+  font-size: 5vw;
   color: rgb(185, 185, 185);
 }
 li {
@@ -40,17 +36,10 @@ li {
 
 /* base styles */
 body {
-  /* background: var(--secondary); */
   --hue: var(--hue-neutral);
-  /* padding: 0; */
-  /* margin: 0; */
-
   display: flex;
-  /* padding-top: 40vh; */
-
   width: 100vw;
   height: 100vh;
-  /* overflow-x: hidden; */
   font-family: "Rubik-Regular";
   --hue-neutral: 252.8;
   --hue-wrong: 0;
@@ -59,15 +48,9 @@ body {
   background-color: rgb(29, 26, 26);
   color: rgb(185, 185, 185);
   background: black url("images/background.jpg") no-repeat fixed center;
-  /* width: 100%;
-  height: 100%; */
-
   --hue: var(--hue-neutral);
-  /* padding: 0;
-  margin: 0; */
   color: rgb(185, 185, 185);
   display: flex;
-
   justify-content: center;
   align-items: center;
 }
@@ -84,8 +67,6 @@ body {
 
 .initial-button button {
   background: none;
-  /* border: 2px solid var(--primary); */
-  /* color: var(--primary); */
   padding: 6px 12px;
   border-radius: 20px;
   text-transform: uppercase;
@@ -94,25 +75,8 @@ body {
 }
 
 .container {
-  width: 50%;
-  /* width: 50%; */
-  /* padding-top: 100px;
-  padding-bottom: 100px; */
-
-  padding: 10px 100px;
-  /* min-width: 200%; */
-  /* width: 4000px; */
-  /* paddingwidth: 100%; */
-  /* padding-left: 100%; */
-  /* width: 10vw;
-  height: 50vh; */
-  /* float: block; */
-  /* padding-right: 1px;
-  padding-left: 1px; */
-  /* max-width: 100%; */
+  padding: 1vw;
   border-radius: 5px;
-  /* padding: 200px 1600px; */
-
   box-shadow: 0 0 10px 2px;
   color: rgb(185, 185, 185);
   background-color: rgb(29, 26, 26);
@@ -148,6 +112,7 @@ h3 {
 #end {
   text-align: center;
   font-size: 2.5vw;
+  padding: 10%;
 }
 
 /* Result Page */
@@ -182,13 +147,6 @@ h3 {
   border: 1px solid #cccccc;
 }
 
-#new-results {
-  height: 85%;
-}
-
-#box {
-}
-
 /* Initial Page */
 
 #initial {
@@ -207,27 +165,10 @@ h3 {
 
 /* Main Page */
 
-/* #mainPage {
+#mainPage {
   width: 100%;
   padding-left: 10%;
   padding-right: 10%;
-}
-
-#progressBar {
-  float: right;
-  width: 40%;
-  height: 2rem;
-  border: 0.2rem solid rgb(8, 145, 24);
-
-  margin-right: 11%;
-  border-radius: 50px;
-  overflow: hidden;
-}
-
-#progressBarFull {
-  height: 100%;
-  background: rgb(8, 145, 24);
-  width: 0%;
 }
 
 .hud-prefix {
@@ -245,26 +186,12 @@ h3 {
   padding-top: 3%;
 }
 
-#progressText {
-  display: inline;
-  float: left;
-  width: 20%;
-  color: rgb(185, 185, 185);
-}
-
 #footer {
   padding-bottom: 5%;
   padding-top: 3%;
-} */
-
-/* #title {
-  margin-left: 10%;
-} */
+}
 
 #question {
-  /* margin-left: 10%;
-  margin-right: 7%; */
-
   font-family: "Poppins", "sans-serif";
 }
 
@@ -274,11 +201,37 @@ h3 {
 }
 
 #controls {
-  /* display: flex;
+  display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 10%; */
+  margin-left: 10%;
 }
+
+/* Progress bar */
+
+/* #progressBar {
+  float: right;
+  width: 40%;
+  height: 2rem;
+  border: 0.2rem solid rgb(8, 145, 24);
+
+  margin-right: 11%;
+  border-radius: 50px;
+  overflow: hidden;
+} */
+
+/* #progressBarFull {
+  height: 100%;
+  background: rgb(8, 145, 24);
+  width: 0%;
+} */
+
+/* #progressText {
+  display: inline;
+  float: left;
+  width: 20%;
+  color: rgb(185, 185, 185);
+} */
 
 /* Buttons */
 
@@ -288,6 +241,7 @@ h3 {
   background-color: hsl(var(--hue), 100%, 50%);
   border-radius: 5px;
   /* padding: 5px 10px; */
+  margin: 1%;
   text-align: center;
   outline: none;
   color: rgb(185, 185, 185);
@@ -301,15 +255,11 @@ h3 {
 
 .question-btn {
   text-align: center;
-  /* margin-left: 10%;
-  margin-right: 10%;
-  margin-bottom: 0.8rem; */
   /* width: 80%; */
   --hue: var(--hue-neutral);
   border: 1px solid hsl(var(--hue), 100%, 30%);
   background-color: hsl(var(--hue), 100%, 50%);
   border-radius: 5px;
-  /* padding: 5px 10px; */
   color: white;
   outline: none;
   font-size: 200%;
@@ -325,7 +275,6 @@ h3 {
 }
 
 .answer-buttons {
-  /* width: 100%; */
   align-items: center;
   align-content: center;
 }
@@ -368,8 +317,6 @@ h3 {
 .check-btn {
   font-size: 1.5rem;
   font-weight: bold;
-  /* padding: 10px 20px;
-  margin-left: 10%; */
 }
 
 .initial-button {

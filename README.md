@@ -43,11 +43,13 @@ This project was created with
 - Create project with react: DONE
 - Host on Firebase: DONE
 - Add firebase's realtime database to project: DONE
-- Create basic layout recreating base app
-- Create layout for mobile screen
-- Create layout for desktop screen
+- Create basic layout recreating base app: DONE
+- Create layout for mobile screen: DONE
+- Make test quiz on realtime database work on app
+- Add progress bar to design
 - Create quizzes and structure using realtime database
 - Add users and registration
+- Create layout for desktop screen
 - Give options to create, edit and delete quizzes
 - Add timers
 - Add scoreboards
