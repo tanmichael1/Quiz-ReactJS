@@ -13,6 +13,7 @@ const preUsers = document.getElementById('Users');
 export default function App() {
   const [index, setIndex] = useState(0);
   const [questions, setQuestions] = useState(["test"]);
+  const [answers, setAnswers] = useState(["test"]);
   const [done, setDone] = useState(false);
 
   const [test, setTest] = useState(null);
@@ -20,80 +21,188 @@ export default function App() {
   const [quiz, setQuiz] = useState(false);
   const [end, setEnd] = useState(false);
   const [results, setResults] = useState(false);
+  const [score, setScore] = useState(0);
+
+
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  let currentSelectedButton;
+  const testQuestions = [
+    {
+      questionText: 'What is 3/5 of 100?',
+      answerOptions: [
+        {answerText: "4", isCorrect: false},
+        {answerText: "5", isCorrect: false},
+        {answerText: "20", isCorrect: false},
+        {answerText: "60", isCorrect: true}
+      ]
+    },
+    {
+      questionText: 'If David’s age is 27 years old in 2011, what was his age in 2003?',
+      answerOptions: [
+        { answerText: '17 years', isCorrect: false },
+        { answerText: '37 years', isCorrect: false },
+        { answerText: '20 years', isCorrect: false },
+        { answerText: '19 years', isCorrect: true }
+      ]
+    }
+  ];
+
+  const handleAnswerButtonClick = (isCorrect) => {
+    console.log(currentQuestion);
+    console.log(testQuestions.length);
+    
+    if(isCorrect===true){
+      alert("This answer is correct");
+      setScore(score+1);
+    }
+    console.log("test");
+    const nextQuestion = currentQuestion + 1;
+    if(nextQuestion < testQuestions.length){
+      setCurrentQuestion(nextQuestion);
+      console.log(currentQuestion);
+    }
+
+    else{
+      alert("You have reached the end of the quiz");
+      handleNextButtonClick();
+    }
+    
+    
+  }
+
+
   const current = questions[index];
+  const answerButtonsElement = document.getElementById('answer-buttons');
 
-  function databaseQuestions(snapshot) {
-    let returnArr = [];
-    let keyArr = [];
+  
 
-    snapshot.forEach((childSnapshot) => {
-      var num = 0;
+  // function databaseQuestions(snapshot) {
+  //   let returnArr = [];
+  //   let keyArr = [];
 
-      childSnapshot.forEach((element) => {
-        var key = Object.keys(childSnapshot.val())[num];
-        console.log(element.val());
+  //   snapshot.forEach((childSnapshot) => {
+  //     var num = 0;
 
-        if (!keyArr.includes(key)) {
-          keyArr.push(key)
-          var text = element.val();
-        returnArr.push({text: text});
+  //     childSnapshot.forEach((element) => {
+  //       var key = Object.keys(childSnapshot.val())[num];
+  //       console.log(element.val());
 
-        }
+  //       if (!keyArr.includes(key)) {
+  //         keyArr.push(key)
+  //         var text = element.val();
+  //       returnArr.push({text: text});
+
+  //       }
+  //       num = num + 1;
         
-      });
+  //     });
 
       
 
-    });
+  //   });
    
-    return returnArr;
+  //   return returnArr;
 
 
-  }
+  // }
 
-  const ref = firebase.database().ref();
+  // function databaseAnswers(snapshot) {
+  //   let returnArr = [];
+  //   let keyArr = [];
+
+  //   //each lot of answers
+  //   snapshot.forEach((childSnapshot) => {
+  //     var num = 0;
+      
+  //     //each answer
+  //     let newArr = [];
+  //     var numQuestion = 0;
+  //     childSnapshot.forEach((element) => {
+        
+        
+  //       // var key = Object.keys(childSnapshot.val())[num];
+        
+
+  //       //  if (!keyArr.includes(key)) {
+  //         // keyArr.push(key)
+       
+  //         var text = element.val().Text;
+          
+  //         var correct = element.val().Correct;
+        
+
+  //       //  }
+  //       newArr.push({text: text, correct:correct});
+  //       console.log(newArr);
+        
+        
+  //     });
+  //     returnArr.push(newArr);
+  //     console.log("returnArr");
+  //     console.log(returnArr);
+  //     num = num + 1;
+      
+
+  //   });
+  //   console.log(returnArr);
+   
+  //   return returnArr;
+
+
+  // }
+
+  /* firebase */
+
   
-  const dbRefObject = firebase.database().ref().child('object');  
-  const dbRefUsers = firebase.database().ref("Users"); 
 
-  const dbTestQuiz = ref.child('Quizzes/TestUser/TestQuiz');
-  const dbTestQuizQuestions = ref.child('Quizzes/TestUser/TestQuiz/Questions');
+  // const ref = firebase.database().ref();
   
+  // const dbRefObject = firebase.database().ref().child('object');  
+  // const dbRefUsers = firebase.database().ref("Users"); 
 
-  if(!done){
-    dbRefObject.on('value', snap => 
-  console.log(snap.val())
-  );
+  // const dbTestQuiz = ref.child('Quizzes/TestUser/TestQuiz');
+  // const dbTestQuizQuestions = ref.child('Quizzes/TestUser/TestQuiz/Questions');
+  // const dbTestQuizAnswers = ref.child('Quizzes/TestUser/TestQuiz/Answers');
 
-  dbRefUsers.on('value', snap => 
-  //Each user
-  snap.forEach(childSnapshot => {
-    //Each element
-    console.log(childSnapshot.val());
-    childSnapshot.forEach((element) => {
-      console.log(element.val())
-    })
-  })
+  // if(!done){
+  //   dbRefObject.on('value', snap => 
+  // console.log(snap.val())
+  // );
 
-  );
+  // dbRefUsers.on('value', snap => 
+  // //Each user
+  // snap.forEach(childSnapshot => {
+  //   //Each element
+  //   console.log(childSnapshot.val());
+  //   childSnapshot.forEach((element) => {
+  //     console.log(element.val())
+  //   })
+  // })
+
+  // );
 
 
-  dbRefObject.on('value', snap => 
-  setTest(snap.val())
-  );
+  // dbRefObject.on('value', snap => 
+  // setTest(snap.val())
+  // );
 
-  dbTestQuiz.on('value', function(quizSnapshot){
-    var count = quizSnapshot.child("NumQuestions").val();
-    var questions = dbTestQuizQuestions.once("value").then(function(snapshot){
-      // console.log(snapshot.val())
-      setQuestions(databaseQuestions(snapshot));
-    });
-    // console.log(count);
-  });
+  // dbTestQuiz.on('value', function(quizSnapshot){
+  //   var count = quizSnapshot.child("NumQuestions").val();
+  //   // var questions = dbTestQuizQuestions.once("value").then(function(snapshot){
+  //   //   // console.log(snapshot.val())
+  //   //   setQuestions(databaseQuestions(snapshot));
+      
+  //   // });
+  //   // var answers = dbTestQuizAnswers.once("value").then(function(snapshot){
+  //   //   setAnswers(databaseAnswers(snapshot));
+
+  //   // });
+  //   // console.log(count);
+  // });
   
   
-  setDone(true);
-  }
+  // setDone(true);
+  // }
 
   function loadQuestions(quiz: object){
 
@@ -104,13 +213,51 @@ export default function App() {
     console.log("press");
     setInitial(false);
     setQuiz(true);
-    updateQuestion();
+    // updateQuestion();
   }
 
   function updateQuestion(){
+    
     console.log(questions[0].text);
     // setIndex(index++);
     var question = document.getElementById('question');
+    // var answers = answers[0];
+    console.log("answers");
+    var tempAnswers = answers[0];
+    console.log(tempAnswers);
+    // tempAnswers.forEach(answer => {
+    //   const button = document.createElement('button');
+    //     button.innerText = answer.text;
+    //     button.classList.add('question-btn');
+    //     if(answer.correct){
+    //         button.dataset.correct = answer.correct;
+
+    //     }
+    //     // button.addEventListener('click', markAnswer);
+    //     if(answerButtonsElement!=null){
+
+    //     answerButtonsElement.appendChild(button);
+    //     }
+
+    // });
+
+    for(var i=0; i<tempAnswers.length; i++){
+      const button = document.createElement('button');
+        button.innerText = tempAnswers[i].text;
+        button.classList.add('question-btn');
+        if(tempAnswers[i].correct){
+            button.dataset.correct = tempAnswers[i].correct;
+
+        }
+        // button.addEventListener('click', markAnswer);
+        if(answerButtonsElement!=null){
+
+        answerButtonsElement.appendChild(button);
+        }
+
+    }
+
+
     // question.innerText = questions;
   }
 
@@ -119,6 +266,7 @@ export default function App() {
   }
 
   function handleNextButtonClick(){
+    
     console.log("press");
 
     setQuiz(false);
@@ -190,14 +338,17 @@ export default function App() {
      
     
      <div id="question-container" >
-         <p id="question">{current.text}</p>
+         <p id="question">{testQuestions[currentQuestion].questionText}</p>
         
-         <div id="answer-buttons" >
+         {/* <div id="answer-buttons" >
                  <Button variant="primary" size="lg" block className="question-btn neutral">Answer 1</Button>
                  <Button variant="primary" size="lg" block className="question-btn neutral">Answer 2</Button>                
              <Button variant="primary" size="lg" block className="question-btn neutral">Answer 3</Button>
              <Button variant="primary" size="lg" block className="question-btn neutral">Answer 4</Button>
-         </div>
+         </div> */}
+         <div id="answer-buttons" className="answer-section">
+           {testQuestions[currentQuestion].answerOptions.map((answerOption) => 
+           (<Button onClick={()=> handleAnswerButtonClick(answerOption.isCorrect)} className="question-btn neutral" variant="primary" size="lg">{answerOption.answerText}</Button>))} </div>
      </div>
      <hr />
      <div id="footer">
@@ -207,6 +358,7 @@ export default function App() {
              <div id="progressText" className="hud-prefix">
      
              </div>
+             <div>Question {currentQuestion +1} of {testQuestions.length} </div>
  <div id="progressBar">
      <div id="progressBarFull"></div>
  
@@ -233,7 +385,7 @@ export default function App() {
      <h1>You have completed the Quiz</h1>
          <span  >
             
-                 <span >Your Score: </span>     
+                 <span >Your Score: You scored {score} out of {questions.length +1} </span>     
          <span id="score"></span> 
          </span>
    

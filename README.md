@@ -45,8 +45,9 @@ This project was created with
 - Add firebase's realtime database to project: DONE
 - Create basic layout recreating base app: DONE
 - Create layout for mobile screen: DONE
-- Make test quiz on realtime database work on app
+- Use local database to make quiz work
 - Add progress bar to design
+- Make test quiz on realtime database work on app
 - Create quizzes and structure using realtime database
 - Add users and registration
 - Create layout for desktop screen
