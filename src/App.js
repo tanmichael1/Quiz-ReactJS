@@ -22,9 +22,11 @@ export default function App() {
   const [end, setEnd] = useState(false);
   const [results, setResults] = useState(false);
   const [score, setScore] = useState(0);
+  const [response, setResponse] = useState([]);
 
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [currentAnswer, setCurrentAnswer] = useState(null);
   let currentSelectedButton;
   const testQuestions = [
     {
@@ -47,15 +49,31 @@ export default function App() {
     }
   ];
 
-  const handleAnswerButtonClick = (isCorrect) => {
-    console.log(currentQuestion);
-    console.log(testQuestions.length);
+  const handleAnswerButtonClick = (text, isCorrect) => {
+    
+    var currentResponse = response;
+    var trueAnswer;
+    testQuestions[currentQuestion].answerOptions.forEach((answer) => {
+      if(answer.isCorrect){
+        trueAnswer = answer.answerText;
+      }
+
+    })
+    
     
     if(isCorrect===true){
       alert("This answer is correct");
       setScore(score+1);
+      currentResponse.push({question: testQuestions[currentQuestion].questionText, yourAnswer: text, correctAnswer:trueAnswer});
+      console.log(response);
+      setResponse(currentResponse);
     }
-    console.log("test");
+    else{
+      currentResponse.push({question: testQuestions[currentQuestion].questionText, yourAnswer: text, correctAnswer:trueAnswer});
+      setResponse(currentResponse);
+
+    }
+    setCurrentAnswer(null);
     const nextQuestion = currentQuestion + 1;
     if(nextQuestion < testQuestions.length){
       setCurrentQuestion(nextQuestion);
@@ -265,6 +283,8 @@ export default function App() {
 
   }
 
+  
+
   function handleNextButtonClick(){
     
     console.log("press");
@@ -282,7 +302,8 @@ export default function App() {
 
   function handleHomeButtonClick(){
     console.log("press");
-
+    setCurrentQuestion(0);
+    setScore(0);
     setInitial(true);
     setEnd(false)
   }
@@ -295,6 +316,8 @@ export default function App() {
   }
 
   function handleRestartButtonClick(){
+    setCurrentQuestion(0);
+    setScore(0);
     setEnd(false);
     setQuiz(true);
   }
@@ -348,7 +371,7 @@ export default function App() {
          </div> */}
          <div id="answer-buttons" className="answer-section">
            {testQuestions[currentQuestion].answerOptions.map((answerOption) => 
-           (<Button onClick={()=> handleAnswerButtonClick(answerOption.isCorrect)} className="question-btn neutral" variant="primary" size="lg">{answerOption.answerText}</Button>))} </div>
+           (<Button onClick={()=> handleAnswerButtonClick(answerOption.answerText, answerOption.isCorrect)} className="question-btn neutral" variant="primary" size="lg">{answerOption.answerText}</Button>))} </div>
      </div>
      <hr />
      <div id="footer">
@@ -410,26 +433,26 @@ export default function App() {
        <thead>
          <tr>
              <td>Total Questions</td>
-             <td><span id="total-question">5</span></td>
+             <td><span id="total-question">{testQuestions.length}</span></td>
          </tr>
        </thead>
 
        <tbody>
           <tr>
              <td>Correct</td>
-             <td><span id="total-correct">5</span></td>
+             <td><span id="total-correct">{score}</span></td>
          </tr>
          <tr>
              <td>Incorrect</td>
-             <td><span id="total-incorrect">5</span></td>
+             <td><span id="total-incorrect">{testQuestions.length - score}</span></td>
          </tr>
          <tr>
              <td>Percentage</td>
-             <td><span id="percentage">60%</span></td>
+             <td><span id="percentage">{Number(Number(score).toFixed(2)/Number(testQuestions.length).toFixed(2)).toFixed(2) * 100}%</span></td>
          </tr>
          <tr>
              <td>Total Score</td>
-             <td><span id="total-score">1 / 3</span></td>
+             <td><span id="total-score">{score} / {testQuestions.length}</span></td>
          </tr>
        </tbody>
          
@@ -445,11 +468,19 @@ export default function App() {
          </tr>
        </thead>
        <tbody>
-         <tr>
+         {/* <tr>
            <td>What is 3/5 of 100?</td>
            <td>60</td>
            <td>60</td>
-         </tr>
+         </tr> */}
+
+         {response.map((answer) => 
+           (<tr>
+             <td>{answer.question}</td>
+             <td>{answer.yourAnswer}</td>
+             <td>{answer.correctAnswer}</td>
+             
+           </tr>))}
          
        </tbody>
          
