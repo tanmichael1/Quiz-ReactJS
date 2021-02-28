@@ -301,7 +301,15 @@ h3 {
 }
 
 .question-btn.marked {
-  --hue: var(--hue-mark);
+  background-color: red;
+}
+
+.question-btn.correct {
+  background-color: green;
+}
+
+.question-btn.incorrect {
+  background-color: red;
 }
 
 .restart-btn,

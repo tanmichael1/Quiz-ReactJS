@@ -23,11 +23,18 @@ export default function App() {
   const [results, setResults] = useState(false);
   const [score, setScore] = useState(0);
   const [response, setResponse] = useState([]);
+  const [selected, setSelected] = useState(false);
+  const [correct, setCorrect] = useState(0);
 
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [currentAnswer, setCurrentAnswer] = useState(null);
-  let currentSelectedButton;
+  const [currentAnswer, setCurrentAnswer] = useState(0);
+  const [trueAnswer, setTrueAnswer] = useState(0);
+  const [selectedButton, setSelectedButton] = useState(0);
+  
+  
+
+
   const testQuestions = [
     {
       questionText: 'What is 3/5 of 100?',
@@ -49,48 +56,60 @@ export default function App() {
     }
   ];
 
-  const handleAnswerButtonClick = (text, isCorrect) => {
-    
-    var currentResponse = response;
-    var trueAnswer;
+  const handleAnswerButtonClick = (newButton, text, isCorrect) => {
+    // console.log(button);
+    const answerButtonsElement = document.getElementById('answer-buttons');
+    setCurrentAnswer(text);
+    setCorrect(isCorrect);
+
+
     testQuestions[currentQuestion].answerOptions.forEach((answer) => {
       if(answer.isCorrect){
-        trueAnswer = answer.answerText;
+        setTrueAnswer(answer.answerText);
       }
 
-    })
-    
-    
-    if(isCorrect===true){
-      alert("This answer is correct");
-      setScore(score+1);
-      currentResponse.push({question: testQuestions[currentQuestion].questionText, yourAnswer: text, correctAnswer:trueAnswer});
-      console.log(response);
-      setResponse(currentResponse);
-    }
-    else{
-      currentResponse.push({question: testQuestions[currentQuestion].questionText, yourAnswer: text, correctAnswer:trueAnswer});
-      setResponse(currentResponse);
+      if(answer.answerText==text){
+        console.log(answer);
+        
+      }
 
-    }
-    setCurrentAnswer(null);
-    const nextQuestion = currentQuestion + 1;
-    if(nextQuestion < testQuestions.length){
-      setCurrentQuestion(nextQuestion);
-      console.log(currentQuestion);
-    }
+    });
+    setSelected(true);
 
-    else{
-      alert("You have reached the end of the quiz");
-      handleNextButtonClick();
-    }
+
+
+    
+
+    Array.from(answerButtonsElement.children).forEach(button => {
+      console.log(currentAnswer);
+      
+      if(text==button.innerHTML){
+        //Save button
+          // button.classList.add('marked');
+          
+        
+
+      }
+
+      else{
+          // button.classList.remove('marked');
+      }
+  });
+
+ 
+    
     
     
   }
+  
+    
+
+  // const highlight
 
 
   const current = questions[index];
-  const answerButtonsElement = document.getElementById('answer-buttons');
+  
+  // const answerButtonsElement = document.getElementById('answer-buttons');
 
   
 
@@ -268,10 +287,10 @@ export default function App() {
 
         }
         // button.addEventListener('click', markAnswer);
-        if(answerButtonsElement!=null){
+        // if(answerButtonsElement!=null){
 
-        answerButtonsElement.appendChild(button);
-        }
+        // answerButtonsElement.appendChild(button);
+        // }
 
     }
 
@@ -280,20 +299,102 @@ export default function App() {
   }
 
   function handleCheckButtonClick(){
+    const answerButtonsElement = document.getElementById('answer-buttons');
+ 
+    if(selected){
+
+
+    
+      //Check
+    var currentResponse = response;
+
+    if(correct){
+      setScore(score+1);
+     
+    }
+
+    currentResponse.push({question: testQuestions[currentQuestion].questionText, yourAnswer:currentAnswer, correctAnswer: trueAnswer});
+    setResponse(currentResponse);
+
+    // setCurrentAnswer(null);
+
+      
+    Array.from(answerButtonsElement.children).forEach(button => {
+      console.log(currentAnswer);
+      
+      if(currentAnswer==button.innerHTML){
+        if(currentAnswer==trueAnswer){
+          button.classList.add('correct');
+        }
+
+        else{
+          button.classList.add('incorrect');
+        }
+        
+        
+        //Save button
+          // button.classList.add('marked');
+          
+        
+
+      }
+
+      else{
+        if(button.innerHTML==trueAnswer){
+          button.classList.add('correct');
+        }
+          // button.classList.remove('marked');
+      }
+  });
+
+      const nextQuestion = currentQuestion + 1;
+    document.getElementById('check-btn').hidden = true;
+    if(nextQuestion < testQuestions.length){
+      
+      document.getElementById('next-btn').hidden = false;
+    }
+
+    else{
+      document.getElementById('finish-btn').hidden = false;
+    }
+    }
+    
 
   }
 
   
 
   function handleNextButtonClick(){
-    
-    console.log("press");
+    setSelected(false);
+    document.getElementById('next-btn').hidden = true;
+    document.getElementById('check-btn').hidden = false;
+    refreshButtons();
 
-    setQuiz(false);
-    setEnd(true)
+    const nextQuestion = currentQuestion + 1;
+    if(nextQuestion < testQuestions.length){
+      setCurrentQuestion(nextQuestion);
+      console.log(currentQuestion);
+    }
+
+    else{
+      alert("You have reached the end of the quiz");
+      handleNextButtonClick();
+    }
+    
+    
   }
 
-  function handleEndButtonClick(){
+  function refreshButtons(){
+
+    const answerButtonsElement = document.getElementById('answer-buttons');
+    Array.from(answerButtonsElement.children).forEach(button => {
+      button.classList.remove('incorrect');
+      button.classList.remove('correct');
+
+  });
+  }
+
+  function handleFinishButtonClick(){
     console.log("press");
 
     setQuiz(false);
@@ -371,7 +472,7 @@ export default function App() {
          </div> */}
          <div id="answer-buttons" className="answer-section">
            {testQuestions[currentQuestion].answerOptions.map((answerOption) => 
-           (<Button onClick={()=> handleAnswerButtonClick(answerOption.answerText, answerOption.isCorrect)} className="question-btn neutral" variant="primary" size="lg">{answerOption.answerText}</Button>))} </div>
+           (<Button onClick={()=> handleAnswerButtonClick(this, answerOption.answerText, answerOption.isCorrect)}  variant="primary" size="lg" className="question-btn " >{answerOption.answerText}</Button>))} </div>
      </div>
      <hr />
      <div id="footer">
@@ -391,7 +492,8 @@ export default function App() {
      
      <div id="control-buttons" className="controls hud-prefix">
          <Button active type="button"  onClick={handleCheckButtonClick} id="check-btn" className="check-btn btn neutral hide">Check</Button>
-         <Button active type="button"  onClick={handleNextButtonClick} id="next-btn" className="next-btn btn neutral hide">Next</Button>  
+         <Button active type="button" hidden onClick={handleNextButtonClick} id="next-btn" className="next-btn btn neutral hide">Next</Button>  
+         <Button active type="button" hidden onClick={handleFinishButtonClick} id="finish-btn" className="next-btn btn neutral hide">Finish</Button>  
      </div>   
      
 
