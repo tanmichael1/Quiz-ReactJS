@@ -284,6 +284,14 @@ h3 {
   color: black;
 }
 
+.red {
+  background-color: red;
+}
+
+.green {
+  background-color: green;
+}
+
 .question-btn.correct:hover {
   --hue: var(--hue-correct);
   transform: scale(1);

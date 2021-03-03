@@ -310,10 +310,15 @@ export default function App() {
 
     if(correct){
       setScore(score+1);
+      currentResponse.push({question: testQuestions[currentQuestion].questionText, yourAnswer:currentAnswer, correctAnswer: trueAnswer, color: "green"});
      
     }
 
-    currentResponse.push({question: testQuestions[currentQuestion].questionText, yourAnswer:currentAnswer, correctAnswer: trueAnswer});
+    else{
+      currentResponse.push({question: testQuestions[currentQuestion].questionText, yourAnswer:currentAnswer, correctAnswer: trueAnswer, color:"red"});
+    }
+
+    
     setResponse(currentResponse);
 
     // setCurrentAnswer(null);
@@ -405,6 +410,7 @@ export default function App() {
     console.log("press");
     setCurrentQuestion(0);
     setScore(0);
+    refreshResults();
     setInitial(true);
     setEnd(false)
   }
@@ -419,6 +425,7 @@ export default function App() {
   function handleRestartButtonClick(){
     setCurrentQuestion(0);
     setScore(0);
+    refreshResults();
     setEnd(false);
     setQuiz(true);
   }
@@ -427,6 +434,10 @@ export default function App() {
 
     setResults(false);
     setEnd(true)
+  }
+
+  function refreshResults(){
+    setResponse([]);
   }
 
   
@@ -577,8 +588,8 @@ export default function App() {
          </tr> */}
 
          {response.map((answer) => 
-           (<tr>
-             <td>{answer.question}</td>
+           (<tr className={answer.color} >
+             <td >{answer.question}</td>
              <td>{answer.yourAnswer}</td>
              <td>{answer.correctAnswer}</td>
              
