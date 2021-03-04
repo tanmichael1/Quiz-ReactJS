@@ -11,18 +11,32 @@ const preObject = document.getElementById('object');
 const preUsers = document.getElementById('Users');
 
 export default function App() {
-  const [index, setIndex] = useState(0);
-  const [questions, setQuestions] = useState(["test"]);
-  const [answers, setAnswers] = useState(["test"]);
-  const [done, setDone] = useState(false);
+  
+
+
 
   const [test, setTest] = useState(null);
+  
+  /* Section */
   const [initial, setInitial] = useState(true);
   const [quiz, setQuiz] = useState(false);
   const [end, setEnd] = useState(false);
   const [results, setResults] = useState(false);
-  const [score, setScore] = useState(0);
+
+  
+  /* Quiz information */
+
+  const [quizUser, setQuizUser] = useState();
+  const [quizTitle, setQuizTitle] = useState();
+  const [quizData, setQuizData] = useState([]);
   const [response, setResponse] = useState([]);
+
+  /* Other */
+
+  const [index, setIndex] = useState(0);
+  const [done, setDone] = useState(false);
+  const [score, setScore] = useState(0);
+  
   const [selected, setSelected] = useState(false);
   const [correct, setCorrect] = useState(0);
 
@@ -31,8 +45,7 @@ export default function App() {
   const [currentAnswer, setCurrentAnswer] = useState(0);
   const [trueAnswer, setTrueAnswer] = useState(0);
   const [selectedButton, setSelectedButton] = useState(0);
-  
-  
+
 
 
   const testQuestions = [
@@ -56,14 +69,38 @@ export default function App() {
     }
   ];
 
-  const handleAnswerButtonClick = (newButton, text, isCorrect) => {
-    // console.log(button);
+  const anotherQuestions = [
+    // {
+    //   user: 'User',
+    //   quiz: 'id'
+    // }
+    {
+      questionText: 'What is 3/5 of 100?',
+      answerOptions: [
+        {answerText: "4", isCorrect: false},
+        {answerText: "5", isCorrect: false},
+        {answerText: "20", isCorrect: false},
+        {answerText: "60", isCorrect: true}
+      ]
+    },
+    {
+      questionText: 'If David’s age is 27 years old in 2011, what was his age in 2003?',
+      answerOptions: [
+        { answerText: '17 years', isCorrect: false },
+        { answerText: '37 years', isCorrect: false },
+        { answerText: '20 years', isCorrect: false },
+        { answerText: '19 years', isCorrect: true }
+      ]
+    }
+  ];
+
+  const handleAnswerButtonClick = (text, isCorrect) => {
     const answerButtonsElement = document.getElementById('answer-buttons');
     setCurrentAnswer(text);
     setCorrect(isCorrect);
 
 
-    testQuestions[currentQuestion].answerOptions.forEach((answer) => {
+    quizData[currentQuestion].answerOptions.forEach((answer) => {
       if(answer.isCorrect){
         setTrueAnswer(answer.answerText);
       }
@@ -95,208 +132,92 @@ export default function App() {
           // button.classList.remove('marked');
       }
   });
-
- 
-    
     
     
   }
-  
-    
-
-  // const highlight
-
-
-  const current = questions[index];
-  
-  // const answerButtonsElement = document.getElementById('answer-buttons');
-
-  
-
-  // function databaseQuestions(snapshot) {
-  //   let returnArr = [];
-  //   let keyArr = [];
-
-  //   snapshot.forEach((childSnapshot) => {
-  //     var num = 0;
-
-  //     childSnapshot.forEach((element) => {
-  //       var key = Object.keys(childSnapshot.val())[num];
-  //       console.log(element.val());
-
-  //       if (!keyArr.includes(key)) {
-  //         keyArr.push(key)
-  //         var text = element.val();
-  //       returnArr.push({text: text});
-
-  //       }
-  //       num = num + 1;
-        
-  //     });
-
-      
-
-  //   });
-   
-  //   return returnArr;
-
-
-  // }
-
-  // function databaseAnswers(snapshot) {
-  //   let returnArr = [];
-  //   let keyArr = [];
-
-  //   //each lot of answers
-  //   snapshot.forEach((childSnapshot) => {
-  //     var num = 0;
-      
-  //     //each answer
-  //     let newArr = [];
-  //     var numQuestion = 0;
-  //     childSnapshot.forEach((element) => {
-        
-        
-  //       // var key = Object.keys(childSnapshot.val())[num];
-        
-
-  //       //  if (!keyArr.includes(key)) {
-  //         // keyArr.push(key)
-       
-  //         var text = element.val().Text;
-          
-  //         var correct = element.val().Correct;
-        
-
-  //       //  }
-  //       newArr.push({text: text, correct:correct});
-  //       console.log(newArr);
-        
-        
-  //     });
-  //     returnArr.push(newArr);
-  //     console.log("returnArr");
-  //     console.log(returnArr);
-  //     num = num + 1;
-      
-
-  //   });
-  //   console.log(returnArr);
-   
-  //   return returnArr;
-
-
-  // }
 
   /* firebase */
 
+  const ref = firebase.database().ref();
+  
+  const dbRefObject = firebase.database().ref().child('object');  
+  const dbRefUsers = firebase.database().ref("Users"); 
+
+  
+  const dbTestQuizQuestions = ref.child('Quizzes/TestUser/TestQuiz/Questions');
+  const dbTestQuizAnswers = ref.child('Quizzes/TestUser/TestQuiz/Answers');
+
+  const dbTestUser = ref.child('Quizzes/TestUser');
+  const dbTestQuiz = ref.child('Quizzes/TestUser/TestQuiz');
+
   
 
-  // const ref = firebase.database().ref();
-  
-  // const dbRefObject = firebase.database().ref().child('object');  
-  // const dbRefUsers = firebase.database().ref("Users"); 
+  let testUser = "TestUser"
+  setQuizUser(testUser);
 
-  // const dbTestQuiz = ref.child('Quizzes/TestUser/TestQuiz');
-  // const dbTestQuizQuestions = ref.child('Quizzes/TestUser/TestQuiz/Questions');
-  // const dbTestQuizAnswers = ref.child('Quizzes/TestUser/TestQuiz/Answers');
+  if(!done){
+    dbRefObject.on('value', snap => 
+  console.log(snap.val())
+  );
 
-  // if(!done){
-  //   dbRefObject.on('value', snap => 
-  // console.log(snap.val())
-  // );
+  dbRefUsers.on('value', snap => 
+  //Each user
+  snap.forEach(childSnapshot => {
+    //Each element
+    console.log(childSnapshot.val());
+    childSnapshot.forEach((element) => {
+      console.log(element.val())
+    })
+  })
 
-  // dbRefUsers.on('value', snap => 
-  // //Each user
-  // snap.forEach(childSnapshot => {
-  //   //Each element
-  //   console.log(childSnapshot.val());
-  //   childSnapshot.forEach((element) => {
-  //     console.log(element.val())
-  //   })
-  // })
-
-  // );
+  );
 
 
-  // dbRefObject.on('value', snap => 
-  // setTest(snap.val())
-  // );
+  dbRefObject.on('value', snap => 
+  setTest(snap.val())
+  );
 
-  // dbTestQuiz.on('value', function(quizSnapshot){
-  //   var count = quizSnapshot.child("NumQuestions").val();
-  //   // var questions = dbTestQuizQuestions.once("value").then(function(snapshot){
-  //   //   // console.log(snapshot.val())
-  //   //   setQuestions(databaseQuestions(snapshot));
-      
-  //   // });
-  //   // var answers = dbTestQuizAnswers.once("value").then(function(snapshot){
-  //   //   setAnswers(databaseAnswers(snapshot));
+  dbTestQuiz.on('value', function(quizSnapshot){
+    var count = quizSnapshot.child("NumQuestions").val();
+    var testTitle = quizSnapshot.child("Title").val();
+    console.log(testTitle);
+    setQuizTitle(testTitle);
+    console.log(count);
+    for(var i=0; i<count; i++){
+      loadQuestions(quizSnapshot.child(i+1).val());
 
-  //   // });
-  //   // console.log(count);
-  // });
+    }
+  });
   
   
-  // setDone(true);
-  // }
+  setDone(true);
+  }
+
+  
 
   function loadQuestions(quiz: object){
+    console.log(quiz);
+    //var 
+    var answerOptionsData = quiz.answerOptions;
+    console.log(answerOptionsData);
+    var array = quizData;
+    console.log(quiz.questionText);
+
+
+    array.push({questionText: quiz.questionText, answerOptions: answerOptionsData});
+    setQuizData(array);
+
 
   }
   
   function handleStartButtonClick(){
-    console.log(questions);
+    console.log(quizData.length);
     console.log("press");
     setInitial(false);
     setQuiz(true);
-    // updateQuestion();
   }
 
-  function updateQuestion(){
-    
-    console.log(questions[0].text);
-    // setIndex(index++);
-    var question = document.getElementById('question');
-    // var answers = answers[0];
-    console.log("answers");
-    var tempAnswers = answers[0];
-    console.log(tempAnswers);
-    // tempAnswers.forEach(answer => {
-    //   const button = document.createElement('button');
-    //     button.innerText = answer.text;
-    //     button.classList.add('question-btn');
-    //     if(answer.correct){
-    //         button.dataset.correct = answer.correct;
-
-    //     }
-    //     // button.addEventListener('click', markAnswer);
-    //     if(answerButtonsElement!=null){
-
-    //     answerButtonsElement.appendChild(button);
-    //     }
-
-    // });
-
-    for(var i=0; i<tempAnswers.length; i++){
-      const button = document.createElement('button');
-        button.innerText = tempAnswers[i].text;
-        button.classList.add('question-btn');
-        if(tempAnswers[i].correct){
-            button.dataset.correct = tempAnswers[i].correct;
-
-        }
-        // button.addEventListener('click', markAnswer);
-        // if(answerButtonsElement!=null){
-
-        // answerButtonsElement.appendChild(button);
-        // }
-
-    }
-
-
-    // question.innerText = questions;
-  }
+ 
 
   function handleCheckButtonClick(){
     const answerButtonsElement = document.getElementById('answer-buttons');
@@ -310,19 +231,15 @@ export default function App() {
 
     if(correct){
       setScore(score+1);
-      currentResponse.push({question: testQuestions[currentQuestion].questionText, yourAnswer:currentAnswer, correctAnswer: trueAnswer, color: "green"});
+      currentResponse.push({question: quizData[currentQuestion].questionText, yourAnswer:currentAnswer, correctAnswer: trueAnswer, color: "green"});
      
     }
 
     else{
-      currentResponse.push({question: testQuestions[currentQuestion].questionText, yourAnswer:currentAnswer, correctAnswer: trueAnswer, color:"red"});
+      currentResponse.push({question: quizData[currentQuestion].questionText, yourAnswer:currentAnswer, correctAnswer: trueAnswer, color:"red"});
     }
 
-    
     setResponse(currentResponse);
-
-    // setCurrentAnswer(null);
-
       
     Array.from(answerButtonsElement.children).forEach(button => {
       console.log(currentAnswer);
@@ -354,7 +271,7 @@ export default function App() {
 
       const nextQuestion = currentQuestion + 1;
     document.getElementById('check-btn').hidden = true;
-    if(nextQuestion < testQuestions.length){
+    if(nextQuestion < quizData.length){
       
       document.getElementById('next-btn').hidden = false;
     }
@@ -376,16 +293,9 @@ export default function App() {
     refreshButtons();
 
     const nextQuestion = currentQuestion + 1;
-    if(nextQuestion < testQuestions.length){
+    if(nextQuestion < quizData.length){
       setCurrentQuestion(nextQuestion);
-      console.log(currentQuestion);
-    }
-
-    else{
-      alert("You have reached the end of the quiz");
-      handleNextButtonClick();
-    }
-    
+    }    
     
   }
 
@@ -452,7 +362,7 @@ export default function App() {
    
      <div id="initial">  
       <div id="title-section" >
-            <h1 id="quiz-title" >The Ultimate Quiz</h1>        
+            <h1 id="quiz-title" >{quizTitle}</h1>        
       </div>
 <div className="initial-button">
   
@@ -468,22 +378,15 @@ export default function App() {
 
 {quiz ? (
      <div id="mainPage" >
-     <h1 id="title">The Ultimate Quiz</h1>
+     <h1 id="title">{quizTitle}</h1>
      <hr />
      
     
      <div id="question-container" >
-         <p id="question">{testQuestions[currentQuestion].questionText}</p>
-        
-         {/* <div id="answer-buttons" >
-                 <Button variant="primary" size="lg" block className="question-btn neutral">Answer 1</Button>
-                 <Button variant="primary" size="lg" block className="question-btn neutral">Answer 2</Button>                
-             <Button variant="primary" size="lg" block className="question-btn neutral">Answer 3</Button>
-             <Button variant="primary" size="lg" block className="question-btn neutral">Answer 4</Button>
-         </div> */}
+         <p id="question">{quizData[currentQuestion].questionText}</p>
          <div id="answer-buttons" className="answer-section">
-           {testQuestions[currentQuestion].answerOptions.map((answerOption) => 
-           (<Button onClick={()=> handleAnswerButtonClick(this, answerOption.answerText, answerOption.isCorrect)}  variant="primary" size="lg" className="question-btn " >{answerOption.answerText}</Button>))} </div>
+           {quizData[currentQuestion].answerOptions.map((answerOption) => 
+           (<Button onClick={()=> handleAnswerButtonClick(answerOption.answerText, answerOption.isCorrect)}  variant="primary" size="lg" className="question-btn " >{answerOption.answerText}</Button>))} </div>
      </div>
      <hr />
      <div id="footer">
@@ -493,7 +396,7 @@ export default function App() {
              <div id="progressText" className="hud-prefix">
      
              </div>
-             <div>Question {currentQuestion +1} of {testQuestions.length} </div>
+             <div>Question {currentQuestion +1} of {quizData.length} </div>
  <div id="progressBar">
      <div id="progressBarFull"></div>
  
@@ -521,7 +424,7 @@ export default function App() {
      <h1>You have completed the Quiz</h1>
          <span  >
             
-                 <span >Your Score: You scored {score} out of {questions.length +1} </span>     
+                 <span >Your Score: You scored {score} out of {quizData.length} </span>     
          <span id="score"></span> 
          </span>
    
@@ -546,7 +449,7 @@ export default function App() {
        <thead>
          <tr>
              <td>Total Questions</td>
-             <td><span id="total-question">{testQuestions.length}</span></td>
+             <td><span id="total-question">{quizData.length}</span></td>
          </tr>
        </thead>
 
@@ -557,15 +460,15 @@ export default function App() {
          </tr>
          <tr>
              <td>Incorrect</td>
-             <td><span id="total-incorrect">{testQuestions.length - score}</span></td>
+             <td><span id="total-incorrect">{quizData.length - score}</span></td>
          </tr>
          <tr>
              <td>Percentage</td>
-             <td><span id="percentage">{Number(Number(score).toFixed(2)/Number(testQuestions.length).toFixed(2)).toFixed(2) * 100}%</span></td>
+             <td><span id="percentage">{Number(Number(score).toFixed(2)/Number(quizData.length).toFixed(2)).toFixed(2) * 100}%</span></td>
          </tr>
          <tr>
              <td>Total Score</td>
-             <td><span id="total-score">{score} / {testQuestions.length}</span></td>
+             <td><span id="total-score">{score} / {quizData.length}</span></td>
          </tr>
        </tbody>
          
@@ -581,12 +484,6 @@ export default function App() {
          </tr>
        </thead>
        <tbody>
-         {/* <tr>
-           <td>What is 3/5 of 100?</td>
-           <td>60</td>
-           <td>60</td>
-         </tr> */}
-
          {response.map((answer) => 
            (<tr className={answer.color} >
              <td >{answer.question}</td>
