@@ -11,32 +11,18 @@ const preObject = document.getElementById('object');
 const preUsers = document.getElementById('Users');
 
 export default function App() {
-  
-
-
+  const [index, setIndex] = useState(0);
+  const [questions, setQuestions] = useState(["test"]);
+  const [answers, setAnswers] = useState(["test"]);
+  const [done, setDone] = useState(false);
 
   const [test, setTest] = useState(null);
-  
-  /* Section */
   const [initial, setInitial] = useState(true);
   const [quiz, setQuiz] = useState(false);
   const [end, setEnd] = useState(false);
   const [results, setResults] = useState(false);
-
-  
-  /* Quiz information */
-
-  const [quizUser, setQuizUser] = useState();
-  const [quizTitle, setQuizTitle] = useState();
-  const [quizData, setQuizData] = useState([]);
-  const [response, setResponse] = useState([]);
-
-  /* Other */
-
-  const [index, setIndex] = useState(0);
-  const [done, setDone] = useState(false);
   const [score, setScore] = useState(0);
-  
+  const [response, setResponse] = useState([]);
   const [selected, setSelected] = useState(false);
   const [correct, setCorrect] = useState(0);
 
@@ -46,6 +32,9 @@ export default function App() {
   const [trueAnswer, setTrueAnswer] = useState(0);
   const [selectedButton, setSelectedButton] = useState(0);
 
+  const [quizData, setQuizData] = useState([]);
+  const [quizUser, setQuizUser] = useState();
+  const [quizTitle, setQuizTitle] = useState(null);
 
 
   const testQuestions = [
@@ -69,32 +58,8 @@ export default function App() {
     }
   ];
 
-  const anotherQuestions = [
-    // {
-    //   user: 'User',
-    //   quiz: 'id'
-    // }
-    {
-      questionText: 'What is 3/5 of 100?',
-      answerOptions: [
-        {answerText: "4", isCorrect: false},
-        {answerText: "5", isCorrect: false},
-        {answerText: "20", isCorrect: false},
-        {answerText: "60", isCorrect: true}
-      ]
-    },
-    {
-      questionText: 'If David’s age is 27 years old in 2011, what was his age in 2003?',
-      answerOptions: [
-        { answerText: '17 years', isCorrect: false },
-        { answerText: '37 years', isCorrect: false },
-        { answerText: '20 years', isCorrect: false },
-        { answerText: '19 years', isCorrect: true }
-      ]
-    }
-  ];
-
-  const handleAnswerButtonClick = (text, isCorrect) => {
+  const handleAnswerButtonClick = ( text, isCorrect) => {
+    // console.log(button);
     const answerButtonsElement = document.getElementById('answer-buttons');
     setCurrentAnswer(text);
     setCorrect(isCorrect);
@@ -132,28 +97,111 @@ export default function App() {
           // button.classList.remove('marked');
       }
   });
+
+ 
+    
     
     
   }
+  
+    
+
+  // const highlight
+
+
+  const current = questions[index];
+  
+  // const answerButtonsElement = document.getElementById('answer-buttons');
+
+  
+
+  // function databaseQuestions(snapshot) {
+  //   let returnArr = [];
+  //   let keyArr = [];
+
+  //   snapshot.forEach((childSnapshot) => {
+  //     var num = 0;
+
+  //     childSnapshot.forEach((element) => {
+  //       var key = Object.keys(childSnapshot.val())[num];
+  //       console.log(element.val());
+
+  //       if (!keyArr.includes(key)) {
+  //         keyArr.push(key)
+  //         var text = element.val();
+  //       returnArr.push({text: text});
+
+  //       }
+  //       num = num + 1;
+        
+  //     });
+
+      
+
+  //   });
+   
+  //   return returnArr;
+
+
+  // }
+
+  // function databaseAnswers(snapshot) {
+  //   let returnArr = [];
+  //   let keyArr = [];
+
+  //   //each lot of answers
+  //   snapshot.forEach((childSnapshot) => {
+  //     var num = 0;
+      
+  //     //each answer
+  //     let newArr = [];
+  //     var numQuestion = 0;
+  //     childSnapshot.forEach((element) => {
+        
+        
+  //       // var key = Object.keys(childSnapshot.val())[num];
+        
+
+  //       //  if (!keyArr.includes(key)) {
+  //         // keyArr.push(key)
+       
+  //         var text = element.val().Text;
+          
+  //         var correct = element.val().Correct;
+        
+
+  //       //  }
+  //       newArr.push({text: text, correct:correct});
+  //       console.log(newArr);
+        
+        
+  //     });
+  //     returnArr.push(newArr);
+  //     console.log("returnArr");
+  //     console.log(returnArr);
+  //     num = num + 1;
+      
+
+  //   });
+  //   console.log(returnArr);
+   
+  //   return returnArr;
+
+
+  // }
 
   /* firebase */
+
+  
 
   const ref = firebase.database().ref();
   
   const dbRefObject = firebase.database().ref().child('object');  
   const dbRefUsers = firebase.database().ref("Users"); 
 
-  
+  const dbTestQuiz = ref.child('Quizzes/TestUser/TestQuiz');
   const dbTestQuizQuestions = ref.child('Quizzes/TestUser/TestQuiz/Questions');
   const dbTestQuizAnswers = ref.child('Quizzes/TestUser/TestQuiz/Answers');
-
-  const dbTestUser = ref.child('Quizzes/TestUser');
-  const dbTestQuiz = ref.child('Quizzes/TestUser/TestQuiz');
-
-  
-
-  let testUser = "TestUser"
-  setQuizUser(testUser);
 
   if(!done){
     dbRefObject.on('value', snap => 
@@ -193,8 +241,6 @@ export default function App() {
   setDone(true);
   }
 
-  
-
   function loadQuestions(quiz: object){
     console.log(quiz);
     //var 
@@ -207,17 +253,60 @@ export default function App() {
     array.push({questionText: quiz.questionText, answerOptions: answerOptionsData});
     setQuizData(array);
 
-
   }
   
   function handleStartButtonClick(){
-    console.log(quizData.length);
+    console.log(questions);
     console.log("press");
     setInitial(false);
     setQuiz(true);
+    // updateQuestion();
   }
 
- 
+  function updateQuestion(){
+    
+    console.log(questions[0].text);
+    // setIndex(index++);
+    var question = document.getElementById('question');
+    // var answers = answers[0];
+    console.log("answers");
+    var tempAnswers = answers[0];
+    console.log(tempAnswers);
+    // tempAnswers.forEach(answer => {
+    //   const button = document.createElement('button');
+    //     button.innerText = answer.text;
+    //     button.classList.add('question-btn');
+    //     if(answer.correct){
+    //         button.dataset.correct = answer.correct;
+
+    //     }
+    //     // button.addEventListener('click', markAnswer);
+    //     if(answerButtonsElement!=null){
+
+    //     answerButtonsElement.appendChild(button);
+    //     }
+
+    // });
+
+    for(var i=0; i<tempAnswers.length; i++){
+      const button = document.createElement('button');
+        button.innerText = tempAnswers[i].text;
+        button.classList.add('question-btn');
+        if(tempAnswers[i].correct){
+            button.dataset.correct = tempAnswers[i].correct;
+
+        }
+        // button.addEventListener('click', markAnswer);
+        // if(answerButtonsElement!=null){
+
+        // answerButtonsElement.appendChild(button);
+        // }
+
+    }
+
+
+    // question.innerText = questions;
+  }
 
   function handleCheckButtonClick(){
     const answerButtonsElement = document.getElementById('answer-buttons');
@@ -239,7 +328,11 @@ export default function App() {
       currentResponse.push({question: quizData[currentQuestion].questionText, yourAnswer:currentAnswer, correctAnswer: trueAnswer, color:"red"});
     }
 
+    
     setResponse(currentResponse);
+
+    // setCurrentAnswer(null);
+
       
     Array.from(answerButtonsElement.children).forEach(button => {
       console.log(currentAnswer);
@@ -295,7 +388,14 @@ export default function App() {
     const nextQuestion = currentQuestion + 1;
     if(nextQuestion < quizData.length){
       setCurrentQuestion(nextQuestion);
-    }    
+      console.log(currentQuestion);
+    }
+
+    else{
+      alert("You have reached the end of the quiz");
+      handleNextButtonClick();
+    }
+    
     
   }
 
@@ -361,15 +461,25 @@ export default function App() {
       {initial ? (
    
      <div id="initial">  
-      <div id="title-section" >
-            <h1 id="quiz-title" >{quizTitle}</h1>        
-      </div>
+      {quizTitle!=null ? (
+      <div><div id="title-section" >
+
+        
+<h1 id="quiz-title" >{quizTitle}</h1>        
+</div>
 <div className="initial-button">
+
+<Button active type="button" onClick={handleStartButtonClick} id="start-btn" 
+className="btn btn-lg btn-primary"
+>Start</Button>   
+</div></div>) : (
+          <div>
+  <span>Loading</span>
+          </div> 
   
-            <Button active type="button" onClick={handleStartButtonClick} id="start-btn" 
-            className="btn btn-lg btn-primary"
-            >Start</Button>   
-        </div>
+    
+  )} 
+      
       </div>
         ) : (
           <div></div>
@@ -384,9 +494,16 @@ export default function App() {
     
      <div id="question-container" >
          <p id="question">{quizData[currentQuestion].questionText}</p>
+        
+         {/* <div id="answer-buttons" >
+                 <Button variant="primary" size="lg" block className="question-btn neutral">Answer 1</Button>
+                 <Button variant="primary" size="lg" block className="question-btn neutral">Answer 2</Button>                
+             <Button variant="primary" size="lg" block className="question-btn neutral">Answer 3</Button>
+             <Button variant="primary" size="lg" block className="question-btn neutral">Answer 4</Button>
+         </div> */}
          <div id="answer-buttons" className="answer-section">
            {quizData[currentQuestion].answerOptions.map((answerOption) => 
-           (<Button onClick={()=> handleAnswerButtonClick(answerOption.answerText, answerOption.isCorrect)}  variant="primary" size="lg" className="question-btn " >{answerOption.answerText}</Button>))} </div>
+           (<Button onClick={()=> handleAnswerButtonClick( answerOption.answerText, answerOption.isCorrect)}  variant="primary" size="lg" className="question-btn " >{answerOption.answerText}</Button>))} </div>
      </div>
      <hr />
      <div id="footer">
@@ -424,7 +541,7 @@ export default function App() {
      <h1>You have completed the Quiz</h1>
          <span  >
             
-                 <span >Your Score: You scored {score} out of {quizData.length} </span>     
+                 <span >Your Score: You scored {score} out of {questions.length +1} </span>     
          <span id="score"></span> 
          </span>
    
@@ -484,6 +601,12 @@ export default function App() {
          </tr>
        </thead>
        <tbody>
+         {/* <tr>
+           <td>What is 3/5 of 100?</td>
+           <td>60</td>
+           <td>60</td>
+         </tr> */}
+
          {response.map((answer) => 
            (<tr className={answer.color} >
              <td >{answer.question}</td>
@@ -514,5 +637,4 @@ export default function App() {
     
   );
 }
-
 
