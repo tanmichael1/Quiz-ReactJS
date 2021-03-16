@@ -8,9 +8,9 @@
  * This is the Newsfeed Screen. Available when user is logged in.
  */
  import React, { useState } from "react";
- import { Button, View } from "react-native";
- import { firebase, storage } from "../../firebase/config";
- import PostFeed from "../../components/container/PostFeed";
+//  import { Button, View } from "react-native";
+ import { firebase } from "../Config";
+//  import PostFeed from "../../components/container/PostFeed";
  
  /**
   *
@@ -44,7 +44,7 @@
            var date = element.val().date;
            var sortDate = element.val().sortDate;
            var likes = element.val().likes;
-           var imgRef = storage.ref().child("ProfilePictures/" + name_val);
+           var imgRef = firebase.storage.ref().child("ProfilePictures/" + name_val);
  
            imgRef.getDownloadURL().then(function (url) {
              if (profilePicURL != url) {
@@ -100,10 +100,13 @@
    }
  
    return (
-     <View>
-       <Button onPress={() => getUserPosts()} title="Refresh" color="#75DDDD" />
-       <PostFeed props={array} />
-     </View>
+    <div>
+    <h1>Welcome to Quizzes</h1>
+</div>
+    //  <View>
+    //    <Button onPress={() => getUserPosts()} title="Refresh" color="#75DDDD" />
+    //    <PostFeed props={array} />
+    //  </View>
    );
  }
  

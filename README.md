@@ -47,9 +47,9 @@ This project was created with
 - Create layout for mobile screen: DONE
 - Use local database to make quiz work: DONE
 - Make test quiz on realtime database work on app: DONE
-- Add tab bar
+- Add navbar
 - Add pages
-- Add progress bar to design
+- Add progress bar to quiz
 - Create quizzes and structure using realtime database
 - Add users and registration
 - Create layout for desktop screen
