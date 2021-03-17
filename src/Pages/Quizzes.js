@@ -100,8 +100,11 @@
    }
  
    return (
-    <div>
+    <div className="container">
     <h1>Welcome to Quizzes</h1>
+
+    {(array.length>0) ? (<div>Test</div> ): (<div>Empty</div>)}
+
 </div>
     //  <View>
     //    <Button onPress={() => getUserPosts()} title="Refresh" color="#75DDDD" />
