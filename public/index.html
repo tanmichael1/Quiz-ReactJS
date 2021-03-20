@@ -53,7 +53,24 @@
     
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-firestore.js"></script>
+<!-- <script src="https/gstatic.com/firebasejs/5.6.0/firebase-app.js"></script> -->
+<script>
+  var firebaseConfig = {
+        apiKey: "AIzaSyDrqUQ0KSgSr45PQJFlbNIg74GKvJGRmM4",
+        authDomain: "quiz---reactjs.firebaseapp.com",
+        databaseURL: "https://quiz---reactjs-default-rtdb.firebaseio.com",
+        projectId: "quiz---reactjs",
+        storageBucket: "quiz---reactjs.appspot.com",
+        messagingSenderId: "427668156485",
+        appId: "1:427668156485:web:dcd0fa2fb3d29efa27732c"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+</script>
+<script src="auth.js"></script>
     
   </body>
 </html>

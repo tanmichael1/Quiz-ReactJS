@@ -3,6 +3,8 @@
 // import "@firebase/firestore";
 import firebase from "firebase";
 import "@firebase/database";
+import "firebase/auth";
+
 import { useState } from "react";
 
 /**
@@ -21,6 +23,9 @@ const firebaseConfig = {
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
+
+const auth = firebase.auth();
+
 
 // Reference to storage service firebase
 const storage = firebase.storage();
