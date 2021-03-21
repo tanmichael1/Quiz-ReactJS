@@ -44,15 +44,16 @@ This project was created with
 - Host on Firebase: DONE
 - Add firebase's realtime database to project: DONE
 - Create basic layout recreating base app: DONE
-- Create layout for mobile screen: DONE
 - Use local database to make quiz work: DONE
 - Make test quiz on realtime database work on app: DONE
-- Add navbar
-- Add pages
-- Add progress bar to quiz
+- Add navbar: DONE
+- Add pages: DONE
+- Add users, logins, logouts, and registration: DONE
 - Create quizzes and structure using realtime database
-- Add users and registration
+- Finalise pages
+- Create layout for mobile screen
 - Create layout for desktop screen
+- Add progress bar to quiz
 - Give options to create, edit and delete quizzes
 - Add timers
 - Add scoreboards

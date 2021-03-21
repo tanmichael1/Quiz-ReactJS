@@ -135,6 +135,10 @@ nav {
   padding: 10%;
 }
 
+.hidden {
+  display: none;
+}
+
 /* Result Page */
 
 .result-box {
