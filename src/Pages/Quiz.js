@@ -17,6 +17,7 @@ export default function Quiz() {
   const [questions, setQuestions] = useState(["test"]);
   const [answers, setAnswers] = useState(["test"]);
   const [done, setDone] = useState(false);
+  const [numQuestions, setNumQuestions] = useState(0);
 
   const [test, setTest] = useState(null);
   const [initial, setInitial] = useState(true);
@@ -68,7 +69,7 @@ export default function Quiz() {
 
   // const highlight
 
-  const current = questions[index];
+  // const current = questions[index];
 
   /* firebase */
 
@@ -77,7 +78,8 @@ export default function Quiz() {
   const dbRefObject = firebase.database().ref().child("object");
   const dbRefUsers = firebase.database().ref("Users");
 
-  const dbTestQuiz = ref.child("Quizzes/TestUser/TestQuiz");
+  // const dbTestQuiz = ref.child("Quizzes/TestUser/TestQuiz");
+  const dbTestQuiz = ref.child("Quizzes/AnotherUser/Test title");
   const dbTestQuizQuestions = ref.child("Quizzes/TestUser/TestQuiz/Questions");
   const dbTestQuizAnswers = ref.child("Quizzes/TestUser/TestQuiz/Answers");
 
@@ -99,6 +101,7 @@ export default function Quiz() {
 
     dbTestQuiz.on("value", function (quizSnapshot) {
       var count = quizSnapshot.child("NumQuestions").val();
+      setNumQuestions(count);
       var testTitle = quizSnapshot.child("Title").val();
       console.log(testTitle);
       setQuizTitle(testTitle);
@@ -127,7 +130,7 @@ export default function Quiz() {
   }
 
   function handleStartButtonClick() {
-    console.log(questions);
+    // console.log(questions);
     console.log("press");
     setInitial(false);
     setQuiz(true);
@@ -135,7 +138,7 @@ export default function Quiz() {
   }
 
   function updateQuestion() {
-    console.log(questions[0].text);
+    // console.log(questions[0].text);
     // setIndex(index++);
     var question = document.getElementById("question");
     // var answers = answers[0];
@@ -418,7 +421,7 @@ export default function Quiz() {
             <h1>You have completed the Quiz</h1>
             <span>
               <span>
-                Your Score: You scored {score} out of {questions.length + 1}{" "}
+                Your Score: You scored {score} out of {numQuestions}{" "}
               </span>
               <span id="score"></span>
             </span>
