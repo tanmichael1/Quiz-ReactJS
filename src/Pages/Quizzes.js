@@ -46,14 +46,19 @@ export default function Quizzes() {
           var tempArray = titleArray;
           var newTitle = element.val().Title;
           var questions = addQuestions(element);
+
           tempArray.push({ test: newTitle });
           setTitleArray(tempArray);
-          console.log(titleArray);
-          console.log(titleArray.length);
+          // console.log(titleArray);
+          // console.log(titleArray.length);
+
           var currentArray = quizArray;
-          setQuizArray(currentArray.push({ title: newTitle, questions }));
+          currentArray.push({ title: newTitle, storedQuestions: questions });
+          setQuizArray(currentArray);
 
           console.log(quizArray);
+
+          console.log(quizArray.length);
         });
       })
     );
@@ -158,6 +163,9 @@ export default function Quizzes() {
           {titleArray.map((title) => (
             <div>{title.test}</div>
           ))}
+          {/* {quizArray.map((quiz) => (
+            <div>Test</div>
+          ))} */}
         </div>
       ) : (
         <div>No quizzes</div>

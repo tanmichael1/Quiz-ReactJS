@@ -17,12 +17,19 @@ window.onload = function () {
       e.preventDefault();
 
       // get user info
+      const newUsername = signupForm["signup-username"].value;
       const email = signupForm["signup-email"].value;
       const password = signupForm["signup-password"].value;
 
       // sign up the user
       auth.createUserWithEmailAndPassword(email, password).then((cred) => {
         console.log(cred.user);
+        console.log(cred.user.uid);
+        const userID = cred.user.uid;
+
+        database.ref(`Users/${userID}`).set({
+          username: newUsername,
+        });
         signupForm.reset();
       });
     });
@@ -37,7 +44,7 @@ window.onload = function () {
       e.preventDefault();
       auth.signOut().then(() => {
         console.log("User signed out");
-        window.location.reload();
+        window.location.href = "/";
       });
     });
   }
