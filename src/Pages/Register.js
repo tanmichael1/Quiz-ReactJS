@@ -8,6 +8,8 @@ function Register() {
         <div>
           <label>Username</label>
           <input
+            readOnly
+            required
             type="text"
             className="form-control"
             id="signup-username"
@@ -18,6 +20,7 @@ function Register() {
         <div>
           <label>Email address</label>
           <input
+            required
             type="email"
             className="form-control"
             id="signup-email"
@@ -28,6 +31,7 @@ function Register() {
         <div>
           <label>Password</label>
           <input
+            required
             type="password"
             className="form-control"
             id="signup-password"

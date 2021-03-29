@@ -3,7 +3,37 @@ import { firebase } from "./../Config";
 
 function Home() {
   const [done, setDone] = useState(false);
-  let latestQuiz = "Test Quiz";
+  const [latestQuiz, setLatestQuiz] = useState("");
+  const [latestCreator, setLatestCreator] = useState("");
+  const [latestDate, setLatestDate] = useState();
+  const latestQuizRef = firebase.database().ref("Quizzes");
+
+  if (!done) {
+    latestQuizRef.on("value", (snap) =>
+      snap.forEach((childSnapshot) => {
+        childSnapshot.forEach((element) => {
+          var tempDate = element.val().createdSortDate;
+          if (tempDate != undefined) {
+            console.log("Here: " + tempDate);
+            console.log("Here: " + element.val().Title);
+            if (latestQuiz == "") {
+              setLatestQuiz(element.val().Title);
+              setLatestDate(tempDate);
+              setLatestCreator(element.val().creator);
+            } else {
+              if (tempDate > latestDate) {
+                setLatestQuiz(element.val().Title);
+                setLatestDate(tempDate);
+                setLatestCreator(element.val().creator);
+              }
+            }
+          }
+        });
+      })
+    );
+    setDone(true);
+  }
+
   function setup() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -20,7 +50,17 @@ function Home() {
   return (
     <div className="container">
       <h1>Welcome to the Website</h1>
-      {latestQuiz}
+      <h2>Latest Quiz</h2>
+      {latestQuiz != "" ? (
+        <div>
+          <p>
+            {" "}
+            {latestQuiz} from {latestCreator}{" "}
+          </p>{" "}
+        </div>
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 }

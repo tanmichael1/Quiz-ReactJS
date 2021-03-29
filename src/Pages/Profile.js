@@ -12,16 +12,23 @@ function Profile() {
       const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
       const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
       dbRefUsers.on("value", (snap) => {
-        setUsername(snap.val().username);
+        console.log(snap.val().createdQuizzes);
         if (snap.val().createdQuizzes == undefined) {
+          console.log("undefined");
         } else {
           dbCreatedQuizzes.on("value", (snap) =>
             snap.forEach((childSnapshot) => {
               var tempArray = createdQuizzes;
-              setCreatedQuizzes(tempArray.push(childSnapshot.val().title));
+              tempArray.push({
+                title: childSnapshot.val().title,
+              });
+
+              setCreatedQuizzes(tempArray);
+              console.log(createdQuizzes.length);
             })
           );
         }
+        setUsername(snap.val().username);
       });
     });
 
@@ -35,8 +42,12 @@ function Profile() {
       <h1>{username}</h1>
 
       <h2>Created quizzes</h2>
-      {createdQuizzes > 0 ? (
-        <div>Test</div>
+      {createdQuizzes.length > 0 ? (
+        <div>
+          {createdQuizzes.map((quiz) => (
+            <div>{quiz.title}</div>
+          ))}
+        </div>
       ) : (
         <div>Not created any quizzes</div>
       )}
