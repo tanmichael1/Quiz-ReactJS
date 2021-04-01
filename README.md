@@ -49,6 +49,7 @@ This project was created with
 - Add navbar: DONE
 - Add pages: DONE
 - Add users, logins, logouts, and registration: DONE
+- Generate pages for quizzes: DONE
 - Create quizzes and structure using realtime database
 - Finalise pages
 - Create layout for mobile screen

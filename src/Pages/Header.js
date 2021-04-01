@@ -49,6 +49,7 @@ function Header() {
                     Home
                   </a>
                 </li>
+
                 <li class="nav-item">
                   <a class="nav-link" href="/quiz">
                     Quiz Test
@@ -109,7 +110,7 @@ function Header() {
                 </div>
               )}
               <li className="nav-item" id="logoutVisible">
-                <a className="nav-link" id="logout">
+                <a href="/" className="nav-link" id="logout">
                   Log Out
                 </a>
               </li>

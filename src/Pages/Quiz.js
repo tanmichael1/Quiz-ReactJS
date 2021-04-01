@@ -1,16 +1,8 @@
 import "../App.css";
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { firebase } from "./../Config";
-
-const preObject = document.getElementById("object");
-const preUsers = document.getElementById("Users");
-
-export function editQuiz() {}
-
-export function removeQuiz() {}
 
 export default function Quiz() {
   const [index, setIndex] = useState(0);
@@ -79,7 +71,7 @@ export default function Quiz() {
   const dbRefUsers = firebase.database().ref("Users");
 
   // const dbTestQuiz = ref.child("Quizzes/TestUser/TestQuiz");
-  const dbTestQuiz = ref.child("Quizzes/AnotherUser/Test title");
+  const dbTestQuiz = ref.child("Quizzes/TestUser/TestQuiz");
   const dbTestQuizQuestions = ref.child("Quizzes/TestUser/TestQuiz/Questions");
   const dbTestQuizAnswers = ref.child("Quizzes/TestUser/TestQuiz/Answers");
 
@@ -97,10 +89,11 @@ export default function Quiz() {
       })
     );
 
-    dbRefObject.on("value", (snap) => setTest(snap.val()));
+    dbRefObject.on("value", (snap) => console.log(snap.val()));
 
     dbTestQuiz.on("value", function (quizSnapshot) {
       var count = quizSnapshot.child("NumQuestions").val();
+
       setNumQuestions(count);
       var testTitle = quizSnapshot.child("Title").val();
       console.log(testTitle);

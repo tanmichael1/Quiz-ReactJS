@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { firebase } from "./../Config";
 
 function Home() {
+  const [currentDate, setCurrentDate] = useState(null);
   const [done, setDone] = useState(false);
   const [latestQuiz, setLatestQuiz] = useState("");
   const [latestCreator, setLatestCreator] = useState("");
-  const [latestDate, setLatestDate] = useState();
+
   const latestQuizRef = firebase.database().ref("Quizzes");
 
   if (!done) {
@@ -13,25 +14,30 @@ function Home() {
       snap.forEach((childSnapshot) => {
         childSnapshot.forEach((element) => {
           var tempDate = element.val().createdSortDate;
-          if (tempDate != undefined) {
-            console.log("Here: " + tempDate);
-            console.log("Here: " + element.val().Title);
-            if (latestQuiz == "") {
-              setLatestQuiz(element.val().Title);
-              setLatestDate(tempDate);
-              setLatestCreator(element.val().creator);
-            } else {
-              if (tempDate > latestDate) {
-                setLatestQuiz(element.val().Title);
-                setLatestDate(tempDate);
-                setLatestCreator(element.val().creator);
-              }
-            }
-          }
+
+          console.log("tempDate: " + tempDate);
+          console.log("latestDate: " + currentDate);
+          console.log(element.val().Title);
+          setValues(element);
+
+          // console.log(tempDate > currentDate);
         });
       })
     );
     setDone(true);
+  }
+
+  function setValues(element) {
+    var object = element.val();
+    if (currentDate == null || object.createdSortDate > currentDate) {
+      setLatestQuiz(object.Title);
+      let newDate = object.createdSortDate;
+      console.log(newDate);
+      setCurrentDate();
+      setCurrentDate(newDate);
+      setLatestCreator(object.creator);
+      console.log(currentDate);
+    }
   }
 
   function setup() {
@@ -51,7 +57,7 @@ function Home() {
     <div className="container">
       <h1>Welcome to the Website</h1>
       <h2>Latest Quiz</h2>
-      {latestQuiz != "" ? (
+      {latestQuiz !== "" ? (
         <div>
           <p>
             {" "}

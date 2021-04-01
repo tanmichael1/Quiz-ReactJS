@@ -6,6 +6,7 @@ export default function Create() {
   const [numAnswers, setNumAnswers] = useState(["Answer 1", "Answer 2"]);
   const [savedQuestions, setSavedQuestions] = useState([{ title: "test" }]);
   let array = [{ title: "questiontitle" }];
+  console.log(window.location.href);
 
   function replace() {
     firebase.database().ref("Quizzes/TestUser/TestQuiz").push({

@@ -1,20 +1,10 @@
-// export function displayQuizList(){
-
-// }
-
 /**
  * This is the Quizzes Screen.
  */
 import React, { useState } from "react";
 import { firebase } from "../Config";
-
-//Get Quizzes
-//Each user - each quiz
-
-//Put each quiz in an array of quizzes - title for now
-//Sort quizzes in alphabetical order by title for now
-
-//Link them and post the information there
+import { Link, BrowserRouter as Router } from "react-router-dom";
+import Button from "react-bootstrap/Button";
 
 /**
  *
@@ -22,153 +12,75 @@ import { firebase } from "../Config";
  *
  */
 export default function Quizzes() {
-  const [array, setArray] = useState([]);
-  const [calledFunction, setCalledFunction] = useState(false);
-  const [profilePicURL, setProfilePicURL] = useState("");
   const [done, setDone] = useState(false);
-  const [titleArray, setTitleArray] = useState([]);
   const [quizArray, setQuizArray] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [finished, setFinished] = useState(false);
 
   const quizzesRef = firebase.database().ref("Quizzes");
+  const ref = firebase.database().ref();
 
   if (!done) {
-    quizzesRef.on("value", (snap) => console.log(snap.val()));
-
-    quizzesRef.on("value", (snap) =>
-      //childsnapshot - each user
-      snap.forEach((childSnapshot) => {
-        //Each element
-        console.log(childSnapshot.val());
-        childSnapshot.forEach((element) => {
-          //element - each quiz
-          console.log(element.val());
-          console.log(element.val().Title);
-          var tempArray = titleArray;
-          var newTitle = element.val().Title;
-          var questions = addQuestions(element);
-
-          tempArray.push({ test: newTitle });
-          setTitleArray(tempArray);
-          // console.log(titleArray);
-          // console.log(titleArray.length);
-
-          var currentArray = quizArray;
-          currentArray.push({ title: newTitle, storedQuestions: questions });
-          setQuizArray(currentArray);
-
-          console.log(quizArray);
-
-          console.log(quizArray.length);
-        });
-      })
-    );
-
+    doStuff();
+    setTimeout(() => {
+      setLoading(false);
+      setFinished(true);
+    }, 2000);
     setDone(true);
   }
 
-  //Get Quizzes
-  //Each user - each quiz
+  function doStuff() {
+    quizzesRef.on("value", (snap) =>
+      //childsnapshot - each user
 
-  function addQuestions(snapshot) {
-    var questionsArray = [];
-    console.log(snapshot.val());
-    var count = snapshot.val().NumQuestions;
-    var testTitle = snapshot.child("Title").val();
-    console.log(testTitle);
+      snap.forEach((childSnapshot) => {
+        var currentArray = quizArray;
 
-    for (var i = 0; i < count; i++) {
-      questionsArray.push(loadQuestions(snapshot.child(i + 1).val()));
-    }
-    return questionsArray;
-  }
+        //Each element
 
-  function loadQuestions(quiz: object) {
-    var answerOptionsData = quiz.answerOptions;
-    // console.log(answerOptionsData);
-    var array = [];
-    console.log(quiz.questionText);
-    //// currentResponse.push({question:
-    //quizData[currentQuestion].questionText, yourAnswer:currentAnswer, correctAnswer: trueAnswer, color: "green"});
+        childSnapshot.forEach((element) => {
+          //element - each quiz
 
-    array.push({
-      questionText: quiz.questionText,
-      answerOptions: answerOptionsData,
-    });
-    console.log(array);
-    return array;
-  }
+          var newTitle = element.val().Title;
+          var newUser = element.val().creator;
 
-  /**
-   * Returns an array of all the posts in the correct order.
-   * @param snapshot All the posts
-   */
-  function databaseArray(snapshot) {
-    let returnArr = [];
-    let keyArr = [];
-
-    snapshot.forEach((childSnapshot) => {
-      var num = 0;
-      childSnapshot.forEach((element) => {
-        var key = Object.keys(childSnapshot.val())[num];
-
-        if (!keyArr.includes(key)) {
-          keyArr.push(key);
-          var name_val = element.val().username;
-          var captionVal = element.val().caption;
-          var imgLocation = element.val().imgLocation;
-          var time = element.val().time;
-          var date = element.val().date;
-          var sortDate = element.val().sortDate;
-          var likes = element.val().likes;
-          var imgRef = firebase.storage
-            .ref()
-            .child("ProfilePictures/" + name_val);
-
-          imgRef.getDownloadURL().then(function (url) {
-            if (profilePicURL != url) {
-              setProfilePicURL(url);
-            }
+          currentArray.push({
+            title: newTitle,
+            user: newUser,
           });
-
-          var profilePic = profilePicURL;
-
-          returnArr.push({
-            key: key,
-            name: name_val,
-            caption: captionVal,
-            imgLocation: imgLocation,
-            date: date,
-            time: time,
-            sortDate: sortDate,
-            likes: likes,
-            profilePic: profilePicURL,
-          });
-          num = num + 1;
-        }
-      });
-    });
-    returnArr.sort((a, b) => a.sortDate.localeCompare(b.sortDate));
-
-    returnArr.reverse();
-
-    return returnArr;
+          setQuizArray(currentArray);
+        });
+      })
+    );
   }
 
   return (
     <div className="container">
       <h1>Welcome to Quizzes</h1>
 
-      {done ? (
-        <div>
-          {titleArray.map((title) => (
-            <div>{title.test}</div>
+      <Button id="refresh">Refresh Quizzes</Button>
+
+      {loading ? <div id="loading">Loading</div> : <div id="notLoading"></div>}
+
+      {finished ? (
+        <div id="finished">
+          {quizArray.map((quiz) => (
+            <div>
+              <Link
+                model="Mustang"
+                to={{
+                  pathname: `${quiz.user}/${quiz.title}`,
+                }}
+              >
+                {quiz.title}
+              </Link>
+
+              {/* <a href={`${quiz.user}/${quiz.title}`}> {quiz.title}</a> */}
+            </div>
           ))}
-          {/* {quizArray.map((quiz) => (
-            <div>Test</div>
-          ))} */}
         </div>
       ) : (
-        <div>No quizzes</div>
+        <div id="notFinished"></div>
       )}
     </div>
   );

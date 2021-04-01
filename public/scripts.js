@@ -1,8 +1,6 @@
-// $(document).ready(function () {
-//   //   $("#storedQuestions").load(document.URL + " #storedQuestions");
-//   $("#addQuestionID").click(function () {
-//     // $("#demo").html("Hello, World!");
-//     console.log(document.URL);
-//     $("#storedQuestions").html("array");
-//   });
-// });
+$(document).ready(function () {
+  $("#refresh").on("click", function () {
+    $("#finished").load("index.html");
+    return false;
+  });
+});
