@@ -70,6 +70,7 @@ export default function Post() {
     var currentURL = window.location.pathname;
     var splittable = currentURL.split("/");
     var user = splittable[1];
+    setQuizUser(user);
     var newQuizTitle = splittable[2];
     dbRefObject.on("value", (snap) => console.log(snap.val()));
 
@@ -273,6 +274,9 @@ export default function Post() {
             <div>
               <div id="title-section">
                 <h1 id="quiz-title">{quizTitle}</h1>
+              </div>
+              <div>
+                <h2>From {quizUser}</h2>
               </div>
               <div className="initial-button">
                 <Button
