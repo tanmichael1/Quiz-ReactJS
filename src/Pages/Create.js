@@ -2,11 +2,32 @@ import React, { useState } from "react";
 import { firebase } from "./../Config";
 
 export default function Create() {
+  const [done, setDone] = useState(false);
   const [questionsForm, setQuestionsForm] = useState(["Question"]);
   const [numAnswers, setNumAnswers] = useState(["Answer 1", "Answer 2"]);
   const [savedQuestions, setSavedQuestions] = useState([{ title: "test" }]);
+  const [currentUser, setCurrentUser] = useState();
   let array = [{ title: "questiontitle" }];
-  console.log(window.location.href);
+  //console.log(window.location.href);
+
+  if (!done) {
+    setup();
+    setDone(true);
+  }
+  function setup() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        const dbRefUsers = firebase
+          .database()
+          .ref("Users/" + user.uid + "/username");
+        console.log(user.uid);
+        dbRefUsers.on("value", function (snap) {
+          setCurrentUser(snap.val());
+        });
+      } else {
+      }
+    });
+  }
 
   function replace() {
     firebase.database().ref("Quizzes/TestUser/TestQuiz").push({
@@ -41,10 +62,11 @@ export default function Create() {
       //First things
       firebase
         .database()
-        .ref(`Quizzes/AnotherUser/${title}`)
+        .ref(`Quizzes/${currentUser}/${title}`)
         .set({
           NumQuestions: 1,
           Title: title,
+          creator: currentUser,
           dateCreated: new Date().toLocaleDateString("en-NZ"),
           timeCreated: new Date().toLocaleTimeString("en-NZ"),
           createdSortDate: new Date().toISOString(),
@@ -58,10 +80,13 @@ export default function Create() {
       var question = "What is 3/5 of 100?";
 
       for (var i = 1; i < index + 1; i++) {
-        firebase.database().ref(`Quizzes/AnotherUser/${title}/${index}`).set({
-          questionText: question,
-          answerOptions: answerOptionsTest1,
-        });
+        firebase
+          .database()
+          .ref(`Quizzes/${currentUser}/${title}/${index}`)
+          .set({
+            questionText: question,
+            answerOptions: answerOptionsTest1,
+          });
       }
 
       const createQuizForm = document.querySelector("#createQuizForm");

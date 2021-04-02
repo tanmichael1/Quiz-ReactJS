@@ -11,6 +11,8 @@ export default function Post() {
   const [answers, setAnswers] = useState(["test"]);
   const [done, setDone] = useState(false);
   const [numQuestions, setNumQuestions] = useState(0);
+  const [currentUser, setCurrentUser] = useState();
+  const [isCreator, setIsCreator] = useState(false);
 
   const [test, setTest] = useState(null);
   const [initial, setInitial] = useState(true);
@@ -66,11 +68,12 @@ export default function Post() {
   if (!done) {
     const ref = firebase.database().ref();
     const dbRefObject = firebase.database().ref().child("object");
-    const dbRefUsers = firebase.database().ref("Users");
+
     var currentURL = window.location.pathname;
     var splittable = currentURL.split("/");
     var user = splittable[1];
     setQuizUser(user);
+    setup(user);
     var newQuizTitle = splittable[2];
     dbRefObject.on("value", (snap) => console.log(snap.val()));
 
@@ -90,6 +93,34 @@ export default function Post() {
     });
 
     setDone(true);
+  }
+
+  function setup(currUser) {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        const dbRefUsers = firebase
+          .database()
+          .ref("Users/" + user.uid + "/username");
+        console.log(user.uid);
+        dbRefUsers.on("value", function (snap) {
+          console.log("snap.val(): " + snap.val());
+          console.log("quizUser: " + currUser);
+          setCurrentUser(snap.val());
+          if (snap.val() == currUser) {
+            document
+              .getElementById("creatorButtons")
+              .classList.remove("hidden");
+            setIsCreator(true);
+            console.log("User's Quiz");
+          } else {
+            console.log("Not creator");
+          }
+        });
+      } else {
+        console.log("User is not logged in");
+        setCurrentUser("guest");
+      }
+    });
   }
 
   function loadQuestions(quiz: object) {
@@ -503,6 +534,14 @@ export default function Post() {
       ) : (
         <div></div>
       )}
+      <div className="hidden" id="creatorButtons">
+        <Button id="deleteQuizButton" onClick={editQuiz}>
+          Edit
+        </Button>
+        <Button id="deleteQuizButton" onClick={removeQuiz}>
+          Delete
+        </Button>
+      </div>
     </div>
   );
 }
