@@ -13,6 +13,7 @@ export default function Post() {
   const [numQuestions, setNumQuestions] = useState(0);
   const [currentUser, setCurrentUser] = useState();
   const [isCreator, setIsCreator] = useState(false);
+  const [editingMode, setEditingMode] = useState(false);
 
   const [test, setTest] = useState(null);
   const [initial, setInitial] = useState(true);
@@ -33,9 +34,21 @@ export default function Post() {
   const [quizUser, setQuizUser] = useState();
   const [quizTitle, setQuizTitle] = useState(null);
 
-  function editQuiz() {}
+  function editQuiz() {
+    setEditingMode(true);
+  }
 
-  function removeQuiz() {}
+  function removeQuiz(e) {
+    if (window.confirm("Are you sure you wish to delete this Quiz?")) {
+      //this.deleteItem(e);
+      const ref = firebase.database().ref();
+      const dbTestQuiz = ref.child("Quizzes/" + quizUser + "/" + quizTitle);
+      dbTestQuiz.remove();
+
+      //Redirects
+      window.location.href = "/";
+    }
+  }
 
   const handleAnswerButtonClick = (text, isCorrect) => {
     const answerButtonsElement = document.getElementById("answer-buttons");
@@ -299,249 +312,283 @@ export default function Post() {
 
   return (
     <div id="box" className="container">
-      {initial ? (
-        <div id="initial">
-          {quizTitle != null ? (
+      {editingMode ? (
+        <div id="editingQuiz">
+          <form>
+            <h1>Quiz</h1>
             <div>
-              <div id="title-section">
-                <h1 id="quiz-title">{quizTitle}</h1>
-              </div>
-              <div>
-                <h2>From {quizUser}</h2>
-              </div>
-              <div className="initial-button">
-                <Button
-                  active
-                  type="button"
-                  onClick={handleStartButtonClick}
-                  id="start-btn"
-                  className="btn btn-lg btn-primary"
-                >
-                  Start
-                </Button>
-              </div>
+              {quizData.map((question) => (
+                <div>
+                  <h1>{question.questionText}</h1>
+                  {question.answerOptions.map((answer, i) => (
+                    <div>
+                      <input type="text" value={answer.answerText}></input>
+                      <input type="checkbox" value={answer.isCorrect} />
+                    </div>
+                  ))}
+                </div>
+              ))}
             </div>
-          ) : (
-            <div>
-              <span>Loading</span>
-            </div>
-          )}
+          </form>
+
+          <Button>Submit Quiz</Button>
         </div>
       ) : (
-        <div></div>
-      )}
+        <div id="takingQuiz">
+          {initial ? (
+            <div id="initial">
+              {quizTitle != null ? (
+                <div>
+                  <div id="title-section">
+                    <h1 id="quiz-title">{quizTitle}</h1>
+                  </div>
+                  <div>
+                    <h2>From {quizUser}</h2>
+                  </div>
+                  <div className="initial-button">
+                    <Button
+                      active
+                      type="button"
+                      onClick={handleStartButtonClick}
+                      id="start-btn"
+                      className="btn btn-lg btn-primary"
+                    >
+                      Start
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <span>Loading</span>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div></div>
+          )}
 
-      {quiz ? (
-        <div id="mainPage">
-          <h1 id="title">{quizTitle}</h1>
-          <hr />
+          {quiz ? (
+            <div id="mainPage">
+              <h1 id="title">{quizTitle}</h1>
+              <hr />
 
-          <div id="question-container">
-            <p id="question">{quizData[currentQuestion].questionText}</p>
+              <div id="question-container">
+                <p id="question">{quizData[currentQuestion].questionText}</p>
 
-            {/* <div id="answer-buttons" >
+                {/* <div id="answer-buttons" >
            <Button variant="primary" size="lg" block className="question-btn neutral">Answer 1</Button>
            <Button variant="primary" size="lg" block className="question-btn neutral">Answer 2</Button>                
        <Button variant="primary" size="lg" block className="question-btn neutral">Answer 3</Button>
        <Button variant="primary" size="lg" block className="question-btn neutral">Answer 4</Button>
    </div> */}
-            <div id="answer-buttons" className="answer-section">
-              {quizData[currentQuestion].answerOptions.map(
-                (answerOption, i) => (
+                <div id="answer-buttons" className="answer-section">
+                  {quizData[currentQuestion].answerOptions.map(
+                    (answerOption, i) => (
+                      <Button
+                        key={i}
+                        onClick={() =>
+                          handleAnswerButtonClick(
+                            answerOption.answerText,
+                            answerOption.isCorrect
+                          )
+                        }
+                        variant="primary"
+                        size="lg"
+                        className="question-btn "
+                      >
+                        {answerOption.answerText}
+                      </Button>
+                    )
+                  )}{" "}
+                </div>
+              </div>
+              <hr />
+              <div id="footer">
+                <div id="hud">
+                  <div id="progressText" className="hud-prefix"></div>
+                  <div>
+                    Question {currentQuestion + 1} of {quizData.length}{" "}
+                  </div>
+                  <div id="progressBar">
+                    <div id="progressBarFull"></div>
+                  </div>
+                </div>
+
+                <div id="control-buttons" className="controls hud-prefix">
                   <Button
-                    key={i}
-                    onClick={() =>
-                      handleAnswerButtonClick(
-                        answerOption.answerText,
-                        answerOption.isCorrect
-                      )
-                    }
-                    variant="primary"
-                    size="lg"
-                    className="question-btn "
+                    active
+                    type="button"
+                    onClick={handleCheckButtonClick}
+                    id="check-btn"
+                    className="check-btn btn neutral hide"
                   >
-                    {answerOption.answerText}
+                    Check
                   </Button>
-                )
-              )}{" "}
-            </div>
-          </div>
-          <hr />
-          <div id="footer">
-            <div id="hud">
-              <div id="progressText" className="hud-prefix"></div>
-              <div>
-                Question {currentQuestion + 1} of {quizData.length}{" "}
+                  <Button
+                    active
+                    type="button"
+                    hidden
+                    onClick={handleNextButtonClick}
+                    id="next-btn"
+                    className="next-btn btn neutral hide"
+                  >
+                    Next
+                  </Button>
+                  <Button
+                    active
+                    type="button"
+                    hidden
+                    onClick={handleFinishButtonClick}
+                    id="finish-btn"
+                    className="next-btn btn neutral hide"
+                  >
+                    Finish
+                  </Button>
+                </div>
               </div>
-              <div id="progressBar">
-                <div id="progressBarFull"></div>
+            </div>
+          ) : (
+            <div></div>
+          )}
+
+          {end ? (
+            <div id="end" className="">
+              <h1>You have completed the Quiz</h1>
+              <span>
+                <span>
+                  Your Score: You scored {score} out of {numQuestions}{" "}
+                </span>
+                <span id="score"></span>
+              </span>
+
+              <div className="controls">
+                <Button
+                  onClick={handleRestartButtonClick}
+                  id="restart-btn"
+                  className="restart-btn btn "
+                >
+                  Restart
+                </Button>
+                <Button
+                  onClick={handleResultsButtonClick}
+                  id="results-btn"
+                  className="results-btn btn "
+                >
+                  Results
+                </Button>
+                <Button
+                  onClick={handleHomeButtonClick}
+                  id="home-btn"
+                  className="home-btn btn"
+                >
+                  Go home
+                </Button>
               </div>
             </div>
+          ) : (
+            <div></div>
+          )}
 
-            <div id="control-buttons" className="controls hud-prefix">
+          {results ? (
+            <div id="new-results" className="result-box">
+              <h1>Results</h1>
+              <table>
+                <thead>
+                  <tr>
+                    <td>Total Questions</td>
+                    <td>
+                      <span id="total-question">{quizData.length}</span>
+                    </td>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td>Correct</td>
+                    <td>
+                      <span id="total-correct">{score}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Incorrect</td>
+                    <td>
+                      <span id="total-incorrect">
+                        {quizData.length - score}
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Percentage</td>
+                    <td>
+                      <span id="percentage">
+                        {Number(
+                          Number(score).toFixed(2) /
+                            Number(quizData.length).toFixed(2)
+                        ).toFixed(2) * 100}
+                        %
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Total Score</td>
+                    <td>
+                      <span id="total-score">
+                        {score} / {quizData.length}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <table id="breakdown">
+                <thead>
+                  <tr>
+                    <th>Questions</th>
+                    <th>Your Answer</th>
+                    <th>Correct Answer</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {response.map((answer, i) => (
+                    <tr className={answer.color} key={i}>
+                      <td>{answer.question}</td>
+                      <td>{answer.yourAnswer}</td>
+                      <td>{answer.correctAnswer}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
               <Button
                 active
                 type="button"
-                onClick={handleCheckButtonClick}
-                id="check-btn"
-                className="check-btn btn neutral hide"
+                onClick={handleReturnEndButtonClick}
+                id="toEndPage"
+                className="toEndPage-btn btn"
               >
-                Check
-              </Button>
-              <Button
-                active
-                type="button"
-                hidden
-                onClick={handleNextButtonClick}
-                id="next-btn"
-                className="next-btn btn neutral hide"
-              >
-                Next
-              </Button>
-              <Button
-                active
-                type="button"
-                hidden
-                onClick={handleFinishButtonClick}
-                id="finish-btn"
-                className="next-btn btn neutral hide"
-              >
-                Finish
+                Back to end page
               </Button>
             </div>
-          </div>
-        </div>
-      ) : (
-        <div></div>
-      )}
-
-      {end ? (
-        <div id="end" className="">
-          <h1>You have completed the Quiz</h1>
-          <span>
-            <span>
-              Your Score: You scored {score} out of {numQuestions}{" "}
-            </span>
-            <span id="score"></span>
-          </span>
-
-          <div className="controls">
-            <Button
-              onClick={handleRestartButtonClick}
-              id="restart-btn"
-              className="restart-btn btn "
-            >
-              Restart
+          ) : (
+            <div></div>
+          )}
+          <div className="hidden" id="creatorButtons">
+            <Button id="editQuizButton" onClick={editQuiz}>
+              Edit
             </Button>
-            <Button
-              onClick={handleResultsButtonClick}
-              id="results-btn"
-              className="results-btn btn "
-            >
-              Results
-            </Button>
-            <Button
-              onClick={handleHomeButtonClick}
-              id="home-btn"
-              className="home-btn btn"
-            >
-              Go home
+            <Button id="deleteQuizButton" onClick={(e) => removeQuiz(e)}>
+              Delete
             </Button>
           </div>
+
+          {/* if (window.confirm("Are you sure you wish to delete this item?"))
+                this.deleteItem(e);
+            }} */}
+          {/* <button  onClick={(e) => { if (window.confirm('Are you sure you wish to delete this item?')) this.deleteItem(e) } }>
+              Delete
+</button> */}
         </div>
-      ) : (
-        <div></div>
       )}
-
-      {results ? (
-        <div id="new-results" className="result-box">
-          <h1>Results</h1>
-          <table>
-            <thead>
-              <tr>
-                <td>Total Questions</td>
-                <td>
-                  <span id="total-question">{quizData.length}</span>
-                </td>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <td>Correct</td>
-                <td>
-                  <span id="total-correct">{score}</span>
-                </td>
-              </tr>
-              <tr>
-                <td>Incorrect</td>
-                <td>
-                  <span id="total-incorrect">{quizData.length - score}</span>
-                </td>
-              </tr>
-              <tr>
-                <td>Percentage</td>
-                <td>
-                  <span id="percentage">
-                    {Number(
-                      Number(score).toFixed(2) /
-                        Number(quizData.length).toFixed(2)
-                    ).toFixed(2) * 100}
-                    %
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td>Total Score</td>
-                <td>
-                  <span id="total-score">
-                    {score} / {quizData.length}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <table id="breakdown">
-            <thead>
-              <tr>
-                <th>Questions</th>
-                <th>Your Answer</th>
-                <th>Correct Answer</th>
-              </tr>
-            </thead>
-            <tbody>
-              {response.map((answer, i) => (
-                <tr className={answer.color} key={i}>
-                  <td>{answer.question}</td>
-                  <td>{answer.yourAnswer}</td>
-                  <td>{answer.correctAnswer}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <Button
-            active
-            type="button"
-            onClick={handleReturnEndButtonClick}
-            id="toEndPage"
-            className="toEndPage-btn btn"
-          >
-            Back to end page
-          </Button>
-        </div>
-      ) : (
-        <div></div>
-      )}
-      <div className="hidden" id="creatorButtons">
-        <Button id="deleteQuizButton" onClick={editQuiz}>
-          Edit
-        </Button>
-        <Button id="deleteQuizButton" onClick={removeQuiz}>
-          Delete
-        </Button>
-      </div>
     </div>
   );
 }
