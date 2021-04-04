@@ -67,7 +67,6 @@ export default function Quizzes() {
           {quizArray.map((quiz) => (
             <div>
               <Link
-                model="Mustang"
                 to={{
                   pathname: `${quiz.user}/${quiz.title}`,
                 }}

@@ -7,6 +7,7 @@ export default function Create() {
   const [numAnswers, setNumAnswers] = useState(["Answer 1", "Answer 2"]);
   const [savedQuestions, setSavedQuestions] = useState([{ title: "test" }]);
   const [currentUser, setCurrentUser] = useState();
+  const [currentUserID, setCurrentUserID] = useState();
   let array = [{ title: "questiontitle" }];
   //console.log(window.location.href);
 
@@ -21,6 +22,7 @@ export default function Create() {
           .database()
           .ref("Users/" + user.uid + "/username");
         console.log(user.uid);
+        setCurrentUserID(user.uid);
         dbRefUsers.on("value", function (snap) {
           setCurrentUser(snap.val());
         });
@@ -49,6 +51,12 @@ export default function Create() {
 
       // var answerOptionsTest: [1, { answerText: "4", isCorrect: false }];
 
+      //Add quiz
+      const dbQuizForUser = firebase
+        .database()
+        .ref("Users/" + currentUserID + "/createdQuizzes/" + title);
+
+      dbQuizForUser.set({ title: title });
       //Num questions
 
       //All questions

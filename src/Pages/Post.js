@@ -12,6 +12,7 @@ export default function Post() {
   const [done, setDone] = useState(false);
   const [numQuestions, setNumQuestions] = useState(0);
   const [currentUser, setCurrentUser] = useState();
+  const [currentUserID, setCurrentUserID] = useState();
   const [isCreator, setIsCreator] = useState(false);
   const [editingMode, setEditingMode] = useState(false);
 
@@ -34,8 +35,8 @@ export default function Post() {
   const [quizUser, setQuizUser] = useState();
   const [quizTitle, setQuizTitle] = useState(null);
 
-  function editQuiz() {
-    setEditingMode(true);
+  function toggleEditQuiz() {
+    setEditingMode(!editingMode);
   }
 
   function removeQuiz(e) {
@@ -44,6 +45,10 @@ export default function Post() {
       const ref = firebase.database().ref();
       const dbTestQuiz = ref.child("Quizzes/" + quizUser + "/" + quizTitle);
       dbTestQuiz.remove();
+      const dbQuizForUser = firebase
+        .database()
+        .ref("Users/" + currentUserID + "/createdQuizzes/" + quizTitle);
+      dbQuizForUser.remove();
 
       //Redirects
       window.location.href = "/";
@@ -115,6 +120,7 @@ export default function Post() {
           .database()
           .ref("Users/" + user.uid + "/username");
         console.log(user.uid);
+        setCurrentUserID(user.uid);
         dbRefUsers.on("value", function (snap) {
           console.log("snap.val(): " + snap.val());
           console.log("quizUser: " + currUser);
@@ -330,6 +336,7 @@ export default function Post() {
               ))}
             </div>
           </form>
+          <Button onClick={toggleEditQuiz}>Exit Editing Mode</Button>
 
           <Button>Submit Quiz</Button>
         </div>
@@ -573,7 +580,7 @@ export default function Post() {
             <div></div>
           )}
           <div className="hidden" id="creatorButtons">
-            <Button id="editQuizButton" onClick={editQuiz}>
+            <Button id="editQuizButton" onClick={toggleEditQuiz}>
               Edit
             </Button>
             <Button id="deleteQuizButton" onClick={(e) => removeQuiz(e)}>

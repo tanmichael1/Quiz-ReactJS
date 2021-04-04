@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { firebase } from "./../Config";
+import { Link } from "react-router-dom";
 function Profile() {
   const [done, setDone] = useState(false);
   const [id, setId] = useState();
@@ -45,7 +46,16 @@ function Profile() {
       {createdQuizzes.length > 0 ? (
         <div>
           {createdQuizzes.map((quiz) => (
-            <div>{quiz.title}</div>
+            <div>
+              <Link
+                to={{
+                  pathname: `${username}/${quiz.title}`,
+                }}
+              >
+                {quiz.title}
+              </Link>
+              <br />
+            </div>
           ))}
         </div>
       ) : (
