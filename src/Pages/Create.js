@@ -49,7 +49,8 @@ export default function Create() {
       document.getElementById("upload-title").value == null ||
       document.getElementById("upload-title").value == ""
     ) {
-      alert("Empty");
+    } else if (savedQuestions.length == 0) {
+      alert("Need at least one question before submitting");
     } else {
       var title = document.getElementById("upload-title").value;
 
@@ -110,7 +111,7 @@ export default function Create() {
         .database()
         .ref(`Quizzes/${currentUser}/${title}`)
         .set({
-          NumQuestions: 1,
+          NumQuestions: savedQuestions.length,
           Title: title,
           creator: currentUser,
           dateCreated: new Date().toLocaleDateString("en-NZ"),
@@ -122,7 +123,7 @@ export default function Create() {
 
       //Each question
 
-      var index = 1;
+      var index = savedQuestions.length;
       // var question = "What is 3/5 of 100?";
 
       for (var i = 1; i < index + 1; i++) {
@@ -131,9 +132,9 @@ export default function Create() {
         var question = questionArray[i - 1];
         firebase
           .database()
-          .ref(`Quizzes/${currentUser}/${title}/${index}`)
+          .ref(`Quizzes/${currentUser}/${title}/${i}`)
           .set({
-            answerOptions: answerOptions[0],
+            answerOptions: answerOptions[i - 1],
             questionText: question,
             // answerOptions: answerOptionsTest1,
           });
@@ -155,63 +156,104 @@ export default function Create() {
 
   function addQuestion(e) {
     e.preventDefault();
+    var correctIndex = document.getElementById("correctAnswerIndex").value;
+    console.log("correctIndex: " + correctIndex);
 
     let newQuestion = document.getElementById("upload-question").value;
     if (newQuestion == null || newQuestion == "") {
       alert("Needs a question");
+    } else if (correctIndex == "" || correctIndex == null) {
+      alert("Must specify which option is correct");
+    }
+    //Check that correct Index is valid value
+    else if (
+      correctIndex < 0 ||
+      correctIndex > document.getElementsByClassName("Answer").length
+    ) {
+      alert("Must input a valid index");
     } else {
       setTimeout(() => {
         setDisplaySetQuestions(false);
       }, 2000);
-
-      //Save question
-      var currentQuestions = savedQuestions;
-      currentQuestions.push(newQuestion);
-      // array.push({ questionText: newQuestion });
-      //
-      setSavedQuestions(currentQuestions);
 
       //Save answer options
       var answerArray = [];
       var displayArray = [];
       var newSavedAnswers = answerOptions;
       var x = document.getElementsByClassName("Answer");
-      var correctIndex = document.getElementById("correctAnswerIndex").value;
+
       var i;
+
+      //If less than 2 options are filled in
+      var min2Options = false;
+      var numOptionsCount = 0;
+
+      //If correct answer is blank
+      var validAnswer = false;
+
+      //If any options are blank - CHECK
+
       for (i = 0; i < x.length; i++) {
         console.log(x[i].value);
-        if (i + 1 == correctIndex) {
-          answerArray.push({ answerText: x[i].value, isCorrect: true });
-          displayArray.push({ answerText: x[i].value, color: "green" });
-        } else {
-          answerArray.push({ answerText: x[i].value, isCorrect: false });
-          displayArray.push({ answerText: x[i].value, color: "red" });
+        if (x[i].value != "" && x[i].value != null) {
+          numOptionsCount++;
+          console.log("i: " + (i + 1));
+          console.log("correctIndex: " + correctIndex);
+          if (i + 1 == correctIndex) {
+            if (x[i].value != "") {
+              validAnswer = true;
+            }
+            answerArray.push({ answerText: x[i].value, isCorrect: true });
+            displayArray.push({ answerText: x[i].value, color: "green" });
+          } else {
+            answerArray.push({ answerText: x[i].value, isCorrect: false });
+            displayArray.push({ answerText: x[i].value, color: "red" });
+          }
         }
       }
-      console.log(displayArray);
-      newSavedAnswers.push(answerArray);
-      console.log(correctIndex);
+      if (numOptionsCount >= 2) {
+        min2Options = true;
+      }
 
-      console.log(answerArray);
-      console.log(newSavedAnswers);
-      setAnswerOptions(newSavedAnswers);
+      if (min2Options) {
+        if (validAnswer) {
+          console.log(displayArray);
+          newSavedAnswers.push(answerArray);
+          console.log(correctIndex);
 
-      //Display questions
+          console.log(answerArray);
+          console.log(newSavedAnswers);
+          setAnswerOptions(newSavedAnswers);
 
-      var tempQuestions = displayQuestions;
-      tempQuestions.push({
-        question: newQuestion,
-        answerOptions: displayArray,
-      });
-      console.log(tempQuestions);
+          //Save question
+          var currentQuestions = savedQuestions;
+          currentQuestions.push(newQuestion);
 
-      setDisplayQuestions(tempQuestions);
-      console.log(displayQuestions);
+          setSavedQuestions(currentQuestions);
 
-      console.log(savedQuestions);
-      setTimeout(() => {
-        setDisplaySetQuestions(true);
-      }, 2000);
+          //Display questions
+
+          var tempQuestions = displayQuestions;
+          tempQuestions.push({
+            question: newQuestion,
+            answerOptions: displayArray,
+          });
+          console.log(tempQuestions);
+
+          setDisplayQuestions(tempQuestions);
+          console.log(displayQuestions);
+
+          console.log(savedQuestions);
+          console.log(savedQuestions.length);
+          setTimeout(() => {
+            setDisplaySetQuestions(true);
+          }, 2000);
+        } else {
+          alert("Chosen correct answer is blank");
+        }
+      } else {
+        alert("Need to fill in at least 2 options");
+      }
 
       // document.getElementById("storedQuestions").innerHTML()
     }
@@ -327,7 +369,6 @@ export default function Create() {
                 placeholder="Index of correct answer, i.e. 1, 2"
               />
               <br />
-              <button onClick={(e) => test(e)}>Add Answer</button>
             </div>
             <button
               id="addQuestionID"
