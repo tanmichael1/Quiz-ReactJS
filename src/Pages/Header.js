@@ -51,11 +51,6 @@ function Header() {
                 </li>
 
                 <li class="nav-item">
-                  <a class="nav-link" href="/quiz">
-                    Quiz Test
-                  </a>
-                </li>
-                <li class="nav-item">
                   <a class="nav-link" href="/quizzes">
                     Quizzes List
                   </a>

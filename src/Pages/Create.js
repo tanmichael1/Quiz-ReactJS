@@ -5,11 +5,15 @@ export default function Create() {
   const [done, setDone] = useState(false);
   const [questionsForm, setQuestionsForm] = useState(["Question"]);
   const [numAnswers, setNumAnswers] = useState(["Answer 1", "Answer 2"]);
-  const [savedQuestions, setSavedQuestions] = useState([{ title: "test" }]);
+  const [displayQuestions, setDisplayQuestions] = useState([]);
+  const [savedQuestions, setSavedQuestions] = useState([]);
+  const [answerOptions, setAnswerOptions] = useState([]);
   const [currentUser, setCurrentUser] = useState();
   const [currentUserID, setCurrentUserID] = useState();
-  let array = [{ title: "questiontitle" }];
+  const [displaySetQuestions, setDisplaySetQuestions] = useState(true);
+  let array = [{ questionText: "questiontitle" }];
   //console.log(window.location.href);
+  const answerFieldsElement = document.getElementById("answer-buttons");
 
   if (!done) {
     setup();
@@ -67,6 +71,40 @@ export default function Create() {
         { answerText: "60", isCorrect: true },
       ];
 
+      //1 question upload
+
+      //First things
+      // firebase
+      //   .database()
+      //   .ref(`Quizzes/${currentUser}/${title}`)
+      //   .set({
+      //     NumQuestions: 1,
+      //     Title: title,
+      //     creator: currentUser,
+      //     dateCreated: new Date().toLocaleDateString("en-NZ"),
+      //     timeCreated: new Date().toLocaleTimeString("en-NZ"),
+      //     createdSortDate: new Date().toISOString(),
+      //     updatedSortDate: new Date().toISOString(),
+      //     // 1: [answerOptions: [answerOptionsTest1]],
+      //   });
+
+      // //Each question
+
+      // var index = 1;
+      // var question = "What is 3/5 of 100?";
+
+      // for (var i = 1; i < index + 1; i++) {
+      //   firebase
+      //     .database()
+      //     .ref(`Quizzes/${currentUser}/${title}/${index}`)
+      //     .set({
+      //       questionText: question,
+      //       answerOptions: answerOptionsTest1,
+      //     });
+      // }
+
+      //2 uploads
+
       //First things
       firebase
         .database()
@@ -85,15 +123,19 @@ export default function Create() {
       //Each question
 
       var index = 1;
-      var question = "What is 3/5 of 100?";
+      // var question = "What is 3/5 of 100?";
 
       for (var i = 1; i < index + 1; i++) {
+        var questionArray = savedQuestions;
+        //var question = document.getElementById("upload-question").value;
+        var question = questionArray[i - 1];
         firebase
           .database()
           .ref(`Quizzes/${currentUser}/${title}/${index}`)
           .set({
+            answerOptions: answerOptions[0],
             questionText: question,
-            answerOptions: answerOptionsTest1,
+            // answerOptions: answerOptionsTest1,
           });
       }
 
@@ -113,16 +155,64 @@ export default function Create() {
 
   function addQuestion(e) {
     e.preventDefault();
-    let newAnswer = [];
+
     let newQuestion = document.getElementById("upload-question").value;
     if (newQuestion == null || newQuestion == "") {
       alert("Needs a question");
     } else {
+      setTimeout(() => {
+        setDisplaySetQuestions(false);
+      }, 2000);
+
+      //Save question
       var currentQuestions = savedQuestions;
-      currentQuestions.push({ title: newQuestion });
-      array.push({ title: newQuestion });
+      currentQuestions.push(newQuestion);
+      // array.push({ questionText: newQuestion });
+      //
       setSavedQuestions(currentQuestions);
+
+      //Save answer options
+      var answerArray = [];
+      var displayArray = [];
+      var newSavedAnswers = answerOptions;
+      var x = document.getElementsByClassName("Answer");
+      var correctIndex = document.getElementById("correctAnswerIndex").value;
+      var i;
+      for (i = 0; i < x.length; i++) {
+        console.log(x[i].value);
+        if (i + 1 == correctIndex) {
+          answerArray.push({ answerText: x[i].value, isCorrect: true });
+          displayArray.push({ answerText: x[i].value, color: "green" });
+        } else {
+          answerArray.push({ answerText: x[i].value, isCorrect: false });
+          displayArray.push({ answerText: x[i].value, color: "red" });
+        }
+      }
+      console.log(displayArray);
+      newSavedAnswers.push(answerArray);
+      console.log(correctIndex);
+
+      console.log(answerArray);
+      console.log(newSavedAnswers);
+      setAnswerOptions(newSavedAnswers);
+
+      //Display questions
+
+      var tempQuestions = displayQuestions;
+      tempQuestions.push({
+        question: newQuestion,
+        answerOptions: displayArray,
+      });
+      console.log(tempQuestions);
+
+      setDisplayQuestions(tempQuestions);
+      console.log(displayQuestions);
+
       console.log(savedQuestions);
+      setTimeout(() => {
+        setDisplaySetQuestions(true);
+      }, 2000);
+
       // document.getElementById("storedQuestions").innerHTML()
     }
     // var database = firebase.database();
@@ -141,6 +231,30 @@ export default function Create() {
         profile_picture: imageUrl,
       });
   }
+
+  function test(e) {
+    e.preventDefault();
+    //console.log(document.getElementById("answer").value);
+    var answerArray = [];
+    var newSavedAnswers = answerOptions;
+    var x = document.getElementsByClassName("Answer");
+    var correctIndex = document.getElementById("correctAnswerIndex").value;
+    var i;
+    for (i = 0; i < x.length; i++) {
+      console.log(x[i].value);
+      if (i + 1 == correctIndex) {
+        answerArray.push({ answerText: x[i].value, isCorrect: true });
+      } else {
+        answerArray.push({ answerText: x[i].value, isCorrect: false });
+      }
+    }
+    newSavedAnswers.push(answerArray);
+    console.log(correctIndex);
+
+    console.log(answerArray);
+    console.log(newSavedAnswers);
+    setAnswerOptions(newSavedAnswers);
+  }
   return (
     <div className="container">
       <h1>Create Quiz</h1>
@@ -157,6 +271,22 @@ export default function Create() {
           />
         </div>
         <p id="demo"></p>
+
+        {displaySetQuestions ? (
+          <div>
+            <h1>displaySetQuestions</h1>
+            {displayQuestions.map((section) => (
+              <div>
+                <h2>{section.question}</h2>
+                {section.answerOptions.map((answer, i) => (
+                  <div className={answer.color}>{answer.answerText} </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div></div>
+        )}
 
         <div id="storedQuestions">
           {array.map((question) => (
@@ -178,14 +308,26 @@ export default function Create() {
 
             <div>
               <label>Answers</label>
-              {}
+              {numAnswers.map((answer) => (
+                <input
+                  type="text"
+                  className="form-control Answer"
+                  id="answer"
+                  placeholder="Answer"
+                />
+              ))}
+              {/* <input
+                id="correctAnswerNum"
+                type="number"
+                placeholder="Number of correct answer, i.e. 2"
+              /> */}
               <input
-                type="text"
-                className="form-control"
-                id="answer"
-                placeholder="Answer"
+                id="correctAnswerIndex"
+                type="number"
+                placeholder="Index of correct answer, i.e. 1, 2"
               />
-              <button>Add Answer</button>
+              <br />
+              <button onClick={(e) => test(e)}>Add Answer</button>
             </div>
             <button
               id="addQuestionID"

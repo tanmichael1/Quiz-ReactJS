@@ -81,6 +81,16 @@ export default function Quizzes() {
       ) : (
         <div id="notFinished"></div>
       )}
+      <br />
+      <div>
+        <Link
+          to={{
+            pathname: "/quiz",
+          }}
+        >
+          Test Quiz
+        </Link>
+      </div>
     </div>
   );
 }
