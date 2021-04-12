@@ -245,6 +245,9 @@ export default function Create() {
 
           console.log(savedQuestions);
           console.log(savedQuestions.length);
+          document.getElementById("addQuestions").reset();
+          setNumAnswers(["Answer 1", "Answer 2"]);
+
           setTimeout(() => {
             setDisplaySetQuestions(true);
           }, 2000);
@@ -272,6 +275,16 @@ export default function Create() {
         email: email,
         profile_picture: imageUrl,
       });
+  }
+
+  function addAnswerOption(e) {
+    e.preventDefault();
+    var length = numAnswers.length;
+    if (length == 2) {
+      setNumAnswers(["Answer 1", "Answer 2", "Answer 3"]);
+    } else if (length == 3) {
+      setNumAnswers(["Answer 1", "Answer 2", "Answer 3", "Answer 4"]);
+    }
   }
 
   function test(e) {
@@ -316,7 +329,7 @@ export default function Create() {
 
         {displaySetQuestions ? (
           <div>
-            <h1>displaySetQuestions</h1>
+            <h1>Saved Questions</h1>
             {displayQuestions.map((section) => (
               <div>
                 <h2>{section.question}</h2>
@@ -363,6 +376,18 @@ export default function Create() {
                 type="number"
                 placeholder="Number of correct answer, i.e. 2"
               /> */}
+              {numAnswers.length < 4 ? (
+                <button
+                  id="addAnswerOption"
+                  onClick={(e) => addAnswerOption(e)}
+                  className="btn btn-primary"
+                >
+                  Add Answer Option
+                </button>
+              ) : (
+                <div></div>
+              )}
+
               <input
                 id="correctAnswerIndex"
                 type="number"
