@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { firebase } from "./../Config";
+import Widget from "./Widget";
 
 export default function Create() {
   const [done, setDone] = useState(false);
@@ -11,6 +12,7 @@ export default function Create() {
   const [currentUser, setCurrentUser] = useState();
   const [currentUserID, setCurrentUserID] = useState();
   const [displaySetQuestions, setDisplaySetQuestions] = useState(true);
+  const [notes, setNotes] = useState([]);
   let array = [{ questionText: "questiontitle" }];
   //console.log(window.location.href);
   const answerFieldsElement = document.getElementById("answer-buttons");
@@ -18,6 +20,30 @@ export default function Create() {
   if (!done) {
     setup();
     setDone(true);
+  }
+
+  function addNote(newNote) {
+    setNotes((prevNotes) => {
+      return [...prevNotes, newNote];
+    });
+  }
+  function deleteNote(id) {
+    console.log(id);
+    setSavedQuestions((prevQuestions) => {
+      return prevQuestions.filter((noteItem, index) => {
+        return index !== id;
+      });
+    });
+    setDisplayQuestions((prevQuestions) => {
+      return prevQuestions.filter((noteItem, index) => {
+        return index !== id;
+      });
+    });
+    setNotes((prevNotes) => {
+      return prevNotes.filter((noteItem, index) => {
+        return index !== id;
+      });
+    });
   }
   function setup() {
     firebase.auth().onAuthStateChanged((user) => {
@@ -35,12 +61,6 @@ export default function Create() {
     });
   }
 
-  function replace() {
-    firebase.database().ref("Quizzes/TestUser/TestQuiz").push({
-      text: "test2",
-    });
-  }
-
   function addQuizTest() {
     //Add check that title doesn't already exist
     console.log(document.getElementById("upload-title").value);
@@ -53,8 +73,6 @@ export default function Create() {
       alert("Need at least one question before submitting");
     } else {
       var title = document.getElementById("upload-title").value;
-
-      // var answerOptionsTest: [1, { answerText: "4", isCorrect: false }];
 
       //Add quiz
       const dbQuizForUser = firebase
@@ -173,7 +191,7 @@ export default function Create() {
       alert("Must input a valid index");
     } else {
       setTimeout(() => {
-        setDisplaySetQuestions(false);
+        //setDisplaySetQuestions(false);
       }, 2000);
 
       //Save answer options
@@ -223,13 +241,13 @@ export default function Create() {
 
           console.log(answerArray);
           console.log(newSavedAnswers);
-          setAnswerOptions(newSavedAnswers);
+          //setAnswerOptions(newSavedAnswers);
 
           //Save question
           var currentQuestions = savedQuestions;
           currentQuestions.push(newQuestion);
 
-          setSavedQuestions(currentQuestions);
+          //setSavedQuestions(currentQuestions);
 
           //Display questions
 
@@ -240,16 +258,18 @@ export default function Create() {
           });
           console.log(tempQuestions);
 
-          setDisplayQuestions(tempQuestions);
+          //setDisplayQuestions(tempQuestions);
           console.log(displayQuestions);
 
           console.log(savedQuestions);
           console.log(savedQuestions.length);
+          var tempNotes = notes;
+          setNotes(tempQuestions);
           document.getElementById("addQuestions").reset();
           setNumAnswers(["Answer 1", "Answer 2"]);
 
           setTimeout(() => {
-            setDisplaySetQuestions(true);
+            //setDisplaySetQuestions(true);
           }, 2000);
         } else {
           alert("Chosen correct answer is blank");
@@ -330,22 +350,33 @@ export default function Create() {
         {displaySetQuestions ? (
           <div>
             <h1>Saved Questions</h1>
-            {displayQuestions.map((section) => (
+            {notes.map((noteItem, index) => {
+              return (
+                <Widget
+                  key={index}
+                  answers={noteItem.answerOptions}
+                  question={noteItem.question}
+                  id={index}
+                  onDelete={deleteNote}
+                />
+              );
+            })}
+            {/* {displayQuestions.map((section, index) => (
               <div>
                 <h2>{section.question}</h2>
                 {section.answerOptions.map((answer, i) => (
                   <div className={answer.color}>{answer.answerText} </div>
                 ))}
               </div>
-            ))}
+            ))} */}
           </div>
         ) : (
           <div></div>
         )}
 
         <div id="storedQuestions">
-          {array.map((question) => (
-            <div>{question.title}</div>
+          {array.map((question, i) => (
+            <div key={i}>{question.title}</div>
           ))}
         </div>
 
@@ -363,8 +394,9 @@ export default function Create() {
 
             <div>
               <label>Answers</label>
-              {numAnswers.map((answer) => (
+              {numAnswers.map((answer, i) => (
                 <input
+                  key={i}
                   type="text"
                   className="form-control Answer"
                   id="answer"
@@ -387,6 +419,7 @@ export default function Create() {
               ) : (
                 <div></div>
               )}
+              <br />
 
               <input
                 id="correctAnswerIndex"

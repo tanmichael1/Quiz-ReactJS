@@ -45,8 +45,8 @@ function Profile() {
       <h2>Created quizzes</h2>
       {createdQuizzes.length > 0 ? (
         <div>
-          {createdQuizzes.map((quiz) => (
-            <div>
+          {createdQuizzes.map((quiz, i) => (
+            <div key={i}>
               <Link
                 to={{
                   pathname: `${username}/${quiz.title}`,
