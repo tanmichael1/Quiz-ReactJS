@@ -92,7 +92,8 @@ export default function Post() {
     var user = splittable[1];
     setQuizUser(user);
     setup(user);
-    var newQuizTitle = splittable[2];
+
+    var newQuizTitle = unescape(splittable[2]);
     dbRefObject.on("value", (snap) => console.log(snap.val()));
 
     const dbTestQuiz = ref.child("Quizzes/" + user + "/" + newQuizTitle);
