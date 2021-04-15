@@ -25,7 +25,6 @@ function Profile() {
               });
 
               setCreatedQuizzes(tempArray);
-              console.log(createdQuizzes.length);
             })
           );
         }

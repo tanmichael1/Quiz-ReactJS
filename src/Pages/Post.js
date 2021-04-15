@@ -35,6 +35,11 @@ export default function Post() {
   const [quizUser, setQuizUser] = useState();
   const [quizTitle, setQuizTitle] = useState(null);
 
+  //Other quiz details
+  const [savedDateCreated, setSavedDateCreated] = useState();
+  const [savedTimeCreated, setSavedTimeCreated] = useState();
+  const [savedCreatedSortDate, setSavedCreatedSortDate] = useState();
+
   function toggleEditQuiz() {
     setEditingMode(!editingMode);
   }
@@ -101,8 +106,10 @@ export default function Post() {
     dbTestQuiz.on("value", function (quizSnapshot) {
       var count = quizSnapshot.child("NumQuestions").val();
       console.log(quizSnapshot.val());
-
       setNumQuestions(count);
+      setSavedDateCreated(quizSnapshot.child("dateCreated").val());
+      setSavedTimeCreated(quizSnapshot.child("timeCreated").val());
+      setSavedCreatedSortDate(quizSnapshot.child("createdSortDate").val());
       var testTitle = quizSnapshot.child("Title").val();
 
       for (var i = 0; i < count; i++) {
@@ -127,9 +134,9 @@ export default function Post() {
           console.log("quizUser: " + currUser);
           setCurrentUser(snap.val());
           if (snap.val() == currUser) {
-            document
-              .getElementById("creatorButtons")
-              .classList.remove("hidden");
+            // document
+            //   .getElementById("creatorButtons")
+            //   .classList.remove("hidden");
             setIsCreator(true);
             console.log("User's Quiz");
           } else {
@@ -158,31 +165,13 @@ export default function Post() {
   function handleStartButtonClick() {
     setInitial(false);
     setQuiz(true);
-    // updateQuestion();
   }
 
   function updateQuestion() {
-    // console.log(questions[0].text);
-    // setIndex(index++);
     var question = document.getElementById("question");
 
     var tempAnswers = answers[0];
     console.log(tempAnswers);
-    // tempAnswers.forEach(answer => {
-    //   const button = document.createElement('button');
-    //     button.innerText = answer.text;
-    //     button.classList.add('question-btn');
-    //     if(answer.correct){
-    //         button.dataset.correct = answer.correct;
-
-    //     }
-    //     // button.addEventListener('click', markAnswer);
-    //     if(answerButtonsElement!=null){
-
-    //     answerButtonsElement.appendChild(button);
-    //     }
-
-    // });
 
     for (var i = 0; i < tempAnswers.length; i++) {
       const button = document.createElement("button");
@@ -191,14 +180,7 @@ export default function Post() {
       if (tempAnswers[i].correct) {
         button.dataset.correct = tempAnswers[i].correct;
       }
-      // button.addEventListener('click', markAnswer);
-      // if(answerButtonsElement!=null){
-
-      // answerButtonsElement.appendChild(button);
-      // }
     }
-
-    // question.innerText = questions;
   }
 
   function handleCheckButtonClick() {
@@ -226,8 +208,6 @@ export default function Post() {
       }
 
       setResponse(currentResponse);
-
-      // setCurrentAnswer(null);
 
       Array.from(answerButtonsElement.children).forEach((button) => {
         console.log(currentAnswer);
@@ -317,20 +297,113 @@ export default function Post() {
     setResponse([]);
   }
 
+  function updateQuiz() {
+    var editQuestions = document.getElementsByClassName("editQuestions");
+    var checkboxes = document.getElementsByClassName("checkboxes");
+    var answersEdit = document.getElementsByClassName("answer");
+    var i;
+
+    var finalArray = [];
+    for (i = 0; i < editQuestions.length; i++) {
+      var questionNumTest = i;
+      var answersArray = [];
+      for (var j = 0; j < answersEdit.length; j++) {
+        console.log(answersEdit[j]);
+        console.log(answersEdit[j].getAttribute("questionnum2"));
+        console.log("checkboxes[j].value: " + checkboxes[j].value);
+        if (answersEdit[j].getAttribute("questionnum2") == questionNumTest) {
+          answersArray.push({
+            answerText: answersEdit[j].value,
+
+            isCorrect: checkboxes[j].checked,
+          });
+          console.log(answersEdit);
+        }
+      }
+
+      finalArray.push({
+        question: editQuestions[i].innerHTML,
+        answerOptions: answersArray,
+      });
+    }
+
+    firebase.database().ref(`Quizzes/${currentUser}/${quizTitle}`).set({
+      updatedSortDate: new Date().toISOString(),
+
+      NumQuestions: numQuestions,
+      Title: quizTitle,
+      creator: currentUser,
+      dateCreated: savedDateCreated,
+      timeCreated: savedTimeCreated,
+      createdSortDate: savedCreatedSortDate,
+    });
+
+    var index = editQuestions.length;
+
+    for (var i = 1; i < index + 1; i++) {
+      console.log(i);
+      var question = finalArray[i - 1];
+      console.log(question);
+      console.log(question.answerOptions);
+      console.log(question.question);
+      firebase.database().ref(`Quizzes/${currentUser}/${quizTitle}/${i}`).set({
+        answerOptions: question.answerOptions,
+        questionText: question.question,
+      });
+    }
+
+    window.location.reload();
+  }
+
+  function updateTicked(checkbox, input) {
+    var currentInput = input;
+    var checkboxes = document.getElementsByClassName("checkboxes");
+    var i;
+    for (i = 0; i < checkboxes.length; i++) {
+      console.log(currentInput);
+      console.log(i);
+      if (currentInput == i) {
+        console.log(document.getElementsByClassName("checkboxes")[i]);
+        document.getElementsByClassName("checkboxes")[i].checked = true;
+      } else {
+        document.getElementsByClassName("checkboxes")[i].checked = false;
+      }
+    }
+  }
+
   return (
     <div id="box" className="container">
       {editingMode ? (
         <div id="editingQuiz">
-          <form>
+          <form id="editForm">
             <h1>Quiz</h1>
             <div>
-              {quizData.map((question) => (
+              {quizData.map((question, questionIndex) => (
                 <div>
-                  <h1>{question.questionText}</h1>
+                  <h1
+                    questionnum={questionIndex}
+                    id="editQuestion"
+                    className="editQuestions"
+                  >
+                    {question.questionText}
+                  </h1>
                   {question.answerOptions.map((answer, i) => (
                     <div>
-                      <input type="text" value={answer.answerText}></input>
-                      <input type="checkbox" value={answer.isCorrect} />
+                      <input
+                        answernum={i}
+                        questionnum2={questionIndex}
+                        className="answer"
+                        type="text"
+                        defaultValue={answer.answerText}
+                      ></input>
+                      <input
+                        onChange={(e) => updateTicked(e, i)}
+                        id="myCheck"
+                        answernum={i}
+                        className="checkboxes"
+                        type="checkbox"
+                        defaultChecked={answer.isCorrect == true}
+                      />
                     </div>
                   ))}
                 </div>
@@ -339,7 +412,7 @@ export default function Post() {
           </form>
           <Button onClick={toggleEditQuiz}>Exit Editing Mode</Button>
 
-          <Button>Submit Quiz</Button>
+          <Button onClick={updateQuiz}>Submit Quiz</Button>
         </div>
       ) : (
         <div id="takingQuiz">
@@ -383,12 +456,6 @@ export default function Post() {
               <div id="question-container">
                 <p id="question">{quizData[currentQuestion].questionText}</p>
 
-                {/* <div id="answer-buttons" >
-           <Button variant="primary" size="lg" block className="question-btn neutral">Answer 1</Button>
-           <Button variant="primary" size="lg" block className="question-btn neutral">Answer 2</Button>                
-       <Button variant="primary" size="lg" block className="question-btn neutral">Answer 3</Button>
-       <Button variant="primary" size="lg" block className="question-btn neutral">Answer 4</Button>
-   </div> */}
                 <div id="answer-buttons" className="answer-section">
                   {quizData[currentQuestion].answerOptions.map(
                     (answerOption, i) => (
@@ -580,21 +647,19 @@ export default function Post() {
           ) : (
             <div></div>
           )}
-          <div className="hidden" id="creatorButtons">
-            <Button id="editQuizButton" onClick={toggleEditQuiz}>
-              Edit
-            </Button>
-            <Button id="deleteQuizButton" onClick={(e) => removeQuiz(e)}>
-              Delete
-            </Button>
-          </div>
 
-          {/* if (window.confirm("Are you sure you wish to delete this item?"))
-                this.deleteItem(e);
-            }} */}
-          {/* <button  onClick={(e) => { if (window.confirm('Are you sure you wish to delete this item?')) this.deleteItem(e) } }>
-              Delete
-</button> */}
+          {isCreator ? (
+            <div className="" id="creatorButtons">
+              <Button id="editQuizButton" onClick={toggleEditQuiz}>
+                Edit
+              </Button>
+              <Button id="deleteQuizButton" onClick={(e) => removeQuiz(e)}>
+                Delete
+              </Button>
+            </div>
+          ) : (
+            <div></div>
+          )}
         </div>
       )}
     </div>
