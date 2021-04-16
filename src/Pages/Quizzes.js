@@ -3,7 +3,7 @@
  */
 import React, { useState } from "react";
 import { firebase } from "../Config";
-import { Link, BrowserRouter as Router } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 
 /**
@@ -18,7 +18,6 @@ export default function Quizzes() {
   const [finished, setFinished] = useState(false);
 
   const quizzesRef = firebase.database().ref("Quizzes");
-  const ref = firebase.database().ref();
 
   if (!done) {
     doStuff();
@@ -82,15 +81,6 @@ export default function Quizzes() {
         <div id="notFinished"></div>
       )}
       <br />
-      <div>
-        <Link
-          to={{
-            pathname: "/quiz",
-          }}
-        >
-          Test Quiz
-        </Link>
-      </div>
     </div>
   );
 }

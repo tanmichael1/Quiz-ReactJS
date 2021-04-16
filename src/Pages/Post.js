@@ -1,14 +1,10 @@
 import "../App.css";
 import React, { useState } from "react";
-
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { firebase } from "./../Config";
 
 export default function Post() {
-  const [index, setIndex] = useState(0);
-  const [questions, setQuestions] = useState(["test"]);
-  const [answers, setAnswers] = useState(["test"]);
   const [done, setDone] = useState(false);
   const [numQuestions, setNumQuestions] = useState(0);
   const [currentUser, setCurrentUser] = useState();
@@ -16,7 +12,6 @@ export default function Post() {
   const [isCreator, setIsCreator] = useState(false);
   const [editingMode, setEditingMode] = useState(false);
 
-  const [test, setTest] = useState(null);
   const [initial, setInitial] = useState(true);
   const [quiz, setQuiz] = useState(false);
   const [end, setEnd] = useState(false);
@@ -29,7 +24,6 @@ export default function Post() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [currentAnswer, setCurrentAnswer] = useState(0);
   const [trueAnswer, setTrueAnswer] = useState(0);
-  const [selectedButton, setSelectedButton] = useState(0);
 
   const [quizData, setQuizData] = useState([]);
   const [quizUser, setQuizUser] = useState();
@@ -110,7 +104,6 @@ export default function Post() {
       setSavedDateCreated(quizSnapshot.child("dateCreated").val());
       setSavedTimeCreated(quizSnapshot.child("timeCreated").val());
       setSavedCreatedSortDate(quizSnapshot.child("createdSortDate").val());
-      var testTitle = quizSnapshot.child("Title").val();
 
       for (var i = 0; i < count; i++) {
         loadQuestions(quizSnapshot.child(i + 1).val());
@@ -165,22 +158,6 @@ export default function Post() {
   function handleStartButtonClick() {
     setInitial(false);
     setQuiz(true);
-  }
-
-  function updateQuestion() {
-    var question = document.getElementById("question");
-
-    var tempAnswers = answers[0];
-    console.log(tempAnswers);
-
-    for (var i = 0; i < tempAnswers.length; i++) {
-      const button = document.createElement("button");
-      button.innerText = tempAnswers[i].text;
-      button.classList.add("question-btn");
-      if (tempAnswers[i].correct) {
-        button.dataset.correct = tempAnswers[i].correct;
-      }
-    }
   }
 
   function handleCheckButtonClick() {
@@ -301,10 +278,9 @@ export default function Post() {
     var editQuestions = document.getElementsByClassName("editQuestions");
     var checkboxes = document.getElementsByClassName("checkboxes");
     var answersEdit = document.getElementsByClassName("answer");
-    var i;
 
     var finalArray = [];
-    for (i = 0; i < editQuestions.length; i++) {
+    for (var i = 0; i < editQuestions.length; i++) {
       var questionNumTest = i;
       var answersArray = [];
       for (var j = 0; j < answersEdit.length; j++) {
@@ -368,9 +344,6 @@ export default function Post() {
     //Identify the correct boxes first
     //input - index of the answers in answer options
     //questionIndex - index of the question
-
-    var questionsLength = document.getElementsByClassName("editQuestions")
-      .length;
 
     for (i = 0; i < checkboxes.length; i++) {
       //console.log(currentInput);

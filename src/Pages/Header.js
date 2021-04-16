@@ -5,12 +5,20 @@ import { firebase } from "../Config";
 function Header() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [done, setDone] = useState(false);
+  const [currentUser, setCurrentUser] = useState("");
 
   function begin() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         setLoggedIn(true);
         document.getElementById("logoutVisible").classList.remove("hidden");
+        const dbRefUsers = firebase
+          .database()
+          .ref("Users/" + user.uid + "/username");
+
+        dbRefUsers.on("value", function (snap) {
+          setCurrentUser(snap.val());
+        });
       } else {
         document.getElementById("logoutVisible").classList.add("hidden");
       }
@@ -24,14 +32,14 @@ function Header() {
 
   return (
     <div>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <div className="container-fluid">
+          <a className="navbar-brand" href="/">
             Navbar
           </a>
-          <h1 id="user"></h1>
+          <h1 id="user">{currentUser}</h1>
           <button
-            class="navbar-toggler"
+            className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent"
@@ -39,35 +47,34 @@ function Header() {
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
-            <span class="navbar-toggler-icon"></span>
+            <span className="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <div>
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/">
+                <li className="nav-item">
+                  <a className="nav-link active" aria-current="page" href="/">
                     Home
                   </a>
                 </li>
 
-                <li class="nav-item">
-                  <a class="nav-link" href="/quizzes">
+                <li className="nav-item">
+                  <a className="nav-link" href="/quizzes">
                     Quizzes List
                   </a>
                 </li>
               </div>
               {loggedIn ? (
                 <div>
-                  <li class="nav-item">
-                    <a class="nav-link" href="/create">
+                  <li className="nav-item">
+                    <a className="nav-link" href="/create">
                       Create Quiz
                     </a>
                   </li>
 
-                  <li class="nav-item dropdown">
+                  <li className="nav-item dropdown">
                     <a
-                      class="nav-link dropdown-toggle"
-                      href="#"
+                      className="nav-link dropdown-toggle"
                       id="navbarDropdown"
                       role="button"
                       data-bs-toggle="dropdown"
@@ -75,14 +82,17 @@ function Header() {
                     >
                       User
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <ul
+                      className="dropdown-menu"
+                      aria-labelledby="navbarDropdown"
+                    >
                       <li>
-                        <a class="dropdown-item" href="/profile">
+                        <a className="dropdown-item" href="/profile">
                           Profile
                         </a>
                       </li>
                       <li>
-                        <a class="dropdown-item" href="/profile">
+                        <a className="dropdown-item" href="/profile">
                           My Quizzes
                         </a>
                       </li>
@@ -91,14 +101,14 @@ function Header() {
                 </div>
               ) : (
                 <div>
-                  <li class="nav-item">
-                    <a class="nav-link" href="/login">
+                  <li className="nav-item">
+                    <a className="nav-link" href="/login">
                       Log In
                     </a>
                   </li>
 
-                  <li class="nav-item">
-                    <a class="nav-link" href="/register">
+                  <li className="nav-item">
+                    <a className="nav-link" href="/register">
                       Register
                     </a>
                   </li>

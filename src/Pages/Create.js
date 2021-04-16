@@ -4,29 +4,21 @@ import Widget from "./Widget";
 
 export default function Create() {
   const [done, setDone] = useState(false);
-  const [questionsForm, setQuestionsForm] = useState(["Question"]);
   const [numAnswers, setNumAnswers] = useState(["Answer 1", "Answer 2"]);
   const [displayQuestions, setDisplayQuestions] = useState([]);
   const [savedQuestions, setSavedQuestions] = useState([]);
   const [answerOptions, setAnswerOptions] = useState([]);
   const [currentUser, setCurrentUser] = useState();
   const [currentUserID, setCurrentUserID] = useState();
-  const [displaySetQuestions, setDisplaySetQuestions] = useState(true);
+
   const [notes, setNotes] = useState([]);
   let array = [{ questionText: "questiontitle" }];
-  //console.log(window.location.href);
-  const answerFieldsElement = document.getElementById("answer-buttons");
 
   if (!done) {
     setup();
     setDone(true);
   }
 
-  function addNote(newNote) {
-    setNotes((prevNotes) => {
-      return [...prevNotes, newNote];
-    });
-  }
   function deleteNote(id) {
     console.log(id);
     setSavedQuestions((prevQuestions) => {
@@ -69,6 +61,7 @@ export default function Create() {
       document.getElementById("upload-title").value == null ||
       document.getElementById("upload-title").value == ""
     ) {
+      alert("Requires a title");
     } else if (savedQuestions.length == 0) {
       alert("Need at least one question before submitting");
     } else {
@@ -83,44 +76,6 @@ export default function Create() {
       //Num questions
 
       //All questions
-      var answerOptionsTest1 = [
-        { answerText: "4", isCorrect: false },
-        { answerText: "5", isCorrect: false },
-        { answerText: "20", isCorrect: false },
-        { answerText: "60", isCorrect: true },
-      ];
-
-      //1 question upload
-
-      //First things
-      // firebase
-      //   .database()
-      //   .ref(`Quizzes/${currentUser}/${title}`)
-      //   .set({
-      //     NumQuestions: 1,
-      //     Title: title,
-      //     creator: currentUser,
-      //     dateCreated: new Date().toLocaleDateString("en-NZ"),
-      //     timeCreated: new Date().toLocaleTimeString("en-NZ"),
-      //     createdSortDate: new Date().toISOString(),
-      //     updatedSortDate: new Date().toISOString(),
-      //     // 1: [answerOptions: [answerOptionsTest1]],
-      //   });
-
-      // //Each question
-
-      // var index = 1;
-      // var question = "What is 3/5 of 100?";
-
-      // for (var i = 1; i < index + 1; i++) {
-      //   firebase
-      //     .database()
-      //     .ref(`Quizzes/${currentUser}/${title}/${index}`)
-      //     .set({
-      //       questionText: question,
-      //       answerOptions: answerOptionsTest1,
-      //     });
-      // }
 
       //2 uploads
 
@@ -136,27 +91,27 @@ export default function Create() {
           timeCreated: new Date().toLocaleTimeString("en-NZ"),
           createdSortDate: new Date().toISOString(),
           updatedSortDate: new Date().toISOString(),
-          // 1: [answerOptions: [answerOptionsTest1]],
         });
 
       //Each question
 
       var index = savedQuestions.length;
-      // var question = "What is 3/5 of 100?";
 
       for (var i = 1; i < index + 1; i++) {
         var questionArray = savedQuestions;
-        //var question = document.getElementById("upload-question").value;
+
         var question = questionArray[i - 1];
+        console.log(answerOptions);
         firebase
           .database()
           .ref(`Quizzes/${currentUser}/${title}/${i}`)
           .set({
             answerOptions: answerOptions[i - 1],
             questionText: question,
-            // answerOptions: answerOptionsTest1,
           });
       }
+
+      setNotes([]);
 
       const createQuizForm = document.querySelector("#createQuizForm");
       createQuizForm.reset();
@@ -166,11 +121,6 @@ export default function Create() {
   //set - write or replace data to a defined path
   //update - update some of the keys for a defined path
   //push - add to a list of data in the database
-
-  function addAnswerOption() {
-    var num = numAnswers;
-    setNumAnswers(num++);
-  }
 
   function addQuestion(e) {
     e.preventDefault();
@@ -190,10 +140,6 @@ export default function Create() {
     ) {
       alert("Must input a valid index");
     } else {
-      setTimeout(() => {
-        //setDisplaySetQuestions(false);
-      }, 2000);
-
       //Save answer options
       var answerArray = [];
       var displayArray = [];
@@ -263,14 +209,10 @@ export default function Create() {
 
           console.log(savedQuestions);
           console.log(savedQuestions.length);
-          var tempNotes = notes;
+
           setNotes(tempQuestions);
           document.getElementById("addQuestions").reset();
           setNumAnswers(["Answer 1", "Answer 2"]);
-
-          setTimeout(() => {
-            //setDisplaySetQuestions(true);
-          }, 2000);
         } else {
           alert("Chosen correct answer is blank");
         }
@@ -286,17 +228,6 @@ export default function Create() {
     //add answers
   }
 
-  function writeUserData(userId, name, email, imageUrl) {
-    firebase
-      .database()
-      .ref("users/" + userId)
-      .set({
-        username: name,
-        email: email,
-        profile_picture: imageUrl,
-      });
-  }
-
   function addAnswerOption(e) {
     e.preventDefault();
     var length = numAnswers.length;
@@ -307,29 +238,6 @@ export default function Create() {
     }
   }
 
-  function test(e) {
-    e.preventDefault();
-    //console.log(document.getElementById("answer").value);
-    var answerArray = [];
-    var newSavedAnswers = answerOptions;
-    var x = document.getElementsByClassName("Answer");
-    var correctIndex = document.getElementById("correctAnswerIndex").value;
-    var i;
-    for (i = 0; i < x.length; i++) {
-      console.log(x[i].value);
-      if (i + 1 == correctIndex) {
-        answerArray.push({ answerText: x[i].value, isCorrect: true });
-      } else {
-        answerArray.push({ answerText: x[i].value, isCorrect: false });
-      }
-    }
-    newSavedAnswers.push(answerArray);
-    console.log(correctIndex);
-
-    console.log(answerArray);
-    console.log(newSavedAnswers);
-    setAnswerOptions(newSavedAnswers);
-  }
   return (
     <div className="container">
       <h1>Create Quiz</h1>
@@ -347,32 +255,20 @@ export default function Create() {
         </div>
         <p id="demo"></p>
 
-        {displaySetQuestions ? (
-          <div>
-            <h1>Saved Questions</h1>
-            {notes.map((noteItem, index) => {
-              return (
-                <Widget
-                  key={index}
-                  answers={noteItem.answerOptions}
-                  question={noteItem.question}
-                  id={index}
-                  onDelete={deleteNote}
-                />
-              );
-            })}
-            {/* {displayQuestions.map((section, index) => (
-              <div>
-                <h2>{section.question}</h2>
-                {section.answerOptions.map((answer, i) => (
-                  <div className={answer.color}>{answer.answerText} </div>
-                ))}
-              </div>
-            ))} */}
-          </div>
-        ) : (
-          <div></div>
-        )}
+        <div>
+          <h1>Saved Questions</h1>
+          {notes.map((noteItem, index) => {
+            return (
+              <Widget
+                key={index}
+                answers={noteItem.answerOptions}
+                question={noteItem.question}
+                id={index}
+                onDelete={deleteNote}
+              />
+            );
+          })}
+        </div>
 
         <div id="storedQuestions">
           {array.map((question, i) => (
@@ -403,11 +299,7 @@ export default function Create() {
                   placeholder="Answer"
                 />
               ))}
-              {/* <input
-                id="correctAnswerNum"
-                type="number"
-                placeholder="Number of correct answer, i.e. 2"
-              /> */}
+
               {numAnswers.length < 4 ? (
                 <button
                   id="addAnswerOption"

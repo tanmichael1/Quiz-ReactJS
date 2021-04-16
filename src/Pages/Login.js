@@ -5,12 +5,6 @@ function Login() {
     <div className="container">
       <h1>Login</h1>
       <form id="login-form">
-        {/* <div>
-                    <label>Username</label>
-                    <input type="text" className="form-control" id="username" placeholder="Enter username" />
-
-                </div> */}
-
         <div>
           <label>Email address</label>
           <input
