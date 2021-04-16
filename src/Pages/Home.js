@@ -13,11 +13,11 @@ function Home() {
     latestQuizRef.on("value", (snap) =>
       snap.forEach((childSnapshot) => {
         childSnapshot.forEach((element) => {
-          var tempDate = element.val().createdSortDate;
+          //var tempDate = element.val().createdSortDate;
 
-          console.log("tempDate: " + tempDate);
-          console.log("latestDate: " + currentDate);
-          console.log(element.val().Title);
+          // console.log("tempDate: " + tempDate);
+          // console.log("latestDate: " + currentDate);
+          // console.log(element.val().Title);
           setValues(element);
 
           // console.log(tempDate > currentDate);
@@ -32,11 +32,11 @@ function Home() {
     if (currentDate == null || object.createdSortDate > currentDate) {
       setLatestQuiz(object.Title);
       let newDate = object.createdSortDate;
-      console.log(newDate);
+      //console.log(newDate);
       setCurrentDate();
       setCurrentDate(newDate);
       setLatestCreator(object.creator);
-      console.log(currentDate);
+      // console.log(currentDate);
     }
   }
 

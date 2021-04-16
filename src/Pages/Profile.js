@@ -3,13 +3,13 @@ import { firebase } from "./../Config";
 import { Link } from "react-router-dom";
 function Profile() {
   const [done, setDone] = useState(false);
-  const [id, setId] = useState();
+  //const [id, setId] = useState();
   const [username, setUsername] = useState("");
   const [createdQuizzes, setCreatedQuizzes] = useState([]);
   let takenQuizzes = [];
   function setup() {
     firebase.auth().onAuthStateChanged((user) => {
-      setId(user.uid);
+      //setId(user.uid);
       const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
       const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
       dbRefUsers.on("value", (snap) => {

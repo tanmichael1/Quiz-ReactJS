@@ -1,6 +1,6 @@
 import "../App.css";
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
+import React, { useState } from "react";
+
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { firebase } from "./../Config";
@@ -70,7 +70,7 @@ export default function Post() {
         setTrueAnswer(answer.answerText);
       }
 
-      if (answer.answerText == text) {
+      if (answer.answerText === text) {
         console.log(answer);
       }
     });
@@ -79,7 +79,7 @@ export default function Post() {
     Array.from(answerButtonsElement.children).forEach((button) => {
       console.log(currentAnswer);
 
-      if (text == button.innerHTML) {
+      if (text === button.innerHTML) {
         //Save button
         // button.classList.add('marked');
       } else {
@@ -133,7 +133,7 @@ export default function Post() {
           console.log("snap.val(): " + snap.val());
           console.log("quizUser: " + currUser);
           setCurrentUser(snap.val());
-          if (snap.val() == currUser) {
+          if (snap.val() === currUser) {
             // document
             //   .getElementById("creatorButtons")
             //   .classList.remove("hidden");
@@ -212,8 +212,8 @@ export default function Post() {
       Array.from(answerButtonsElement.children).forEach((button) => {
         console.log(currentAnswer);
 
-        if (currentAnswer == button.innerHTML) {
-          if (currentAnswer == trueAnswer) {
+        if (currentAnswer === button.innerHTML) {
+          if (currentAnswer === trueAnswer) {
             button.classList.add("correct");
           } else {
             button.classList.add("incorrect");
@@ -222,7 +222,7 @@ export default function Post() {
           //Save button
           // button.classList.add('marked');
         } else {
-          if (button.innerHTML == trueAnswer) {
+          if (button.innerHTML === trueAnswer) {
             button.classList.add("correct");
           }
           // button.classList.remove('marked');
@@ -309,14 +309,18 @@ export default function Post() {
       var answersArray = [];
       for (var j = 0; j < answersEdit.length; j++) {
         console.log(answersEdit[j]);
-        console.log(answersEdit[j].getAttribute("questionnum2"));
-        console.log("checkboxes[j].value: " + checkboxes[j].value);
+        console.log(
+          "questionnum2: " + answersEdit[j].getAttribute("questionnum2")
+        );
+        console.log("questionNumTest: " + questionNumTest);
+        // console.log("checkboxes[j].value: " + checkboxes[j].value);
         if (answersEdit[j].getAttribute("questionnum2") == questionNumTest) {
           answersArray.push({
             answerText: answersEdit[j].value,
 
             isCorrect: checkboxes[j].checked,
           });
+          console.log(answersArray);
           console.log(answersEdit);
         }
       }
@@ -327,6 +331,7 @@ export default function Post() {
       });
     }
 
+    console.log(finalArray);
     firebase.database().ref(`Quizzes/${currentUser}/${quizTitle}`).set({
       updatedSortDate: new Date().toISOString(),
 
@@ -355,18 +360,44 @@ export default function Post() {
     window.location.reload();
   }
 
-  function updateTicked(checkbox, input) {
+  function updateTicked(checkbox, input, questionIndex) {
+    console.log("HEREEEEEEEEEEEEEEE");
     var currentInput = input;
     var checkboxes = document.getElementsByClassName("checkboxes");
     var i;
+    //Identify the correct boxes first
+    //input - index of the answers in answer options
+    //questionIndex - index of the question
+
+    var questionsLength = document.getElementsByClassName("editQuestions")
+      .length;
+
     for (i = 0; i < checkboxes.length; i++) {
-      console.log(currentInput);
-      console.log(i);
-      if (currentInput == i) {
-        console.log(document.getElementsByClassName("checkboxes")[i]);
-        document.getElementsByClassName("checkboxes")[i].checked = true;
-      } else {
-        document.getElementsByClassName("checkboxes")[i].checked = false;
+      //console.log(currentInput);
+      //console.log(i);
+      console.log("questionIndex: " + questionIndex);
+      console.log(
+        document
+          .getElementsByClassName("checkboxes")
+          [i].getAttribute("questionnum2")
+      );
+
+      if (
+        questionIndex ==
+        document
+          .getElementsByClassName("checkboxes")
+          [i].getAttribute("questionnum2")
+      ) {
+        if (
+          currentInput ==
+          document
+            .getElementsByClassName("checkboxes")
+            [i].getAttribute("answernum")
+        ) {
+          document.getElementsByClassName("checkboxes")[i].checked = true;
+        } else {
+          document.getElementsByClassName("checkboxes")[i].checked = false;
+        }
       }
     }
   }
@@ -397,12 +428,13 @@ export default function Post() {
                         defaultValue={answer.answerText}
                       ></input>
                       <input
-                        onChange={(e) => updateTicked(e, i)}
+                        onChange={(e) => updateTicked(e, i, questionIndex)}
+                        questionnum2={questionIndex}
                         id="myCheck"
                         answernum={i}
                         className="checkboxes"
                         type="checkbox"
-                        defaultChecked={answer.isCorrect == true}
+                        defaultChecked={answer.isCorrect === true}
                       />
                     </div>
                   ))}
