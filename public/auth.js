@@ -31,6 +31,7 @@ window.onload = function () {
           username: newUsername,
         });
         signupForm.reset();
+        window.location.href = "/";
       });
     });
   }

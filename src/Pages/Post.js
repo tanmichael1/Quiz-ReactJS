@@ -127,9 +127,6 @@ export default function Post() {
           console.log("quizUser: " + currUser);
           setCurrentUser(snap.val());
           if (snap.val() === currUser) {
-            // document
-            //   .getElementById("creatorButtons")
-            //   .classList.remove("hidden");
             setIsCreator(true);
             console.log("User's Quiz");
           } else {
@@ -337,7 +334,6 @@ export default function Post() {
   }
 
   function updateTicked(checkbox, input, questionIndex) {
-    console.log("HEREEEEEEEEEEEEEEE");
     var currentInput = input;
     var checkboxes = document.getElementsByClassName("checkboxes");
     var i;

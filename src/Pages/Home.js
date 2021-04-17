@@ -10,33 +10,31 @@ function Home() {
   const latestQuizRef = firebase.database().ref("Quizzes");
 
   if (!done) {
+    var date = null;
     latestQuizRef.on("value", (snap) =>
       snap.forEach((childSnapshot) => {
         childSnapshot.forEach((element) => {
-          //var tempDate = element.val().createdSortDate;
-
-          // console.log("tempDate: " + tempDate);
-          // console.log("latestDate: " + currentDate);
-          // console.log(element.val().Title);
-          setValues(element);
-
-          // console.log(tempDate > currentDate);
+          var tempVal = setValues(element, date);
+          if (tempVal != date) {
+            date = tempVal;
+          }
         });
       })
     );
     setDone(true);
   }
 
-  function setValues(element) {
+  function setValues(element, latestDate) {
     var object = element.val();
-    if (currentDate == null || object.createdSortDate > currentDate) {
+    if (latestDate === null || object.createdSortDate > latestDate) {
       setLatestQuiz(object.Title);
       let newDate = object.createdSortDate;
-      //console.log(newDate);
-      setCurrentDate();
       setCurrentDate(newDate);
+
       setLatestCreator(object.creator);
-      // console.log(currentDate);
+      return newDate;
+    } else {
+      return latestDate;
     }
   }
 
@@ -59,10 +57,12 @@ function Home() {
       <h2>Latest Quiz</h2>
       {latestQuiz !== "" ? (
         <div>
-          <p>
-            {" "}
-            {latestQuiz} from {latestCreator}{" "}
-          </p>{" "}
+          <a href={`${latestCreator}/${latestQuiz}`}>
+            <p>
+              {" "}
+              {latestQuiz} from {latestCreator}{" "}
+            </p>{" "}
+          </a>
         </div>
       ) : (
         <div></div>

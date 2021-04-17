@@ -8,7 +8,6 @@ function Register() {
         <div>
           <label>Username</label>
           <input
-            readOnly
             required
             type="text"
             className="form-control"
