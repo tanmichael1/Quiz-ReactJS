@@ -323,7 +323,7 @@ export default function Create() {
             <button
               id="addQuestionID"
               onClick={(e) => addQuestion(e)}
-              className="centre btn btn-primary"
+              className=" btn btn-primary"
             >
               Save Question
             </button>

@@ -478,7 +478,7 @@ export default function Post() {
                         }
                         variant="primary"
                         size="lg"
-                        className="question-btn "
+                        className="answer-btn "
                       >
                         {answerOption.answerText}
                       </Button>
@@ -487,7 +487,7 @@ export default function Post() {
                 </div>
               </div>
               <hr />
-              <div className="centre" id="footer">
+              <div className="" id="footer">
                 <div id="hud">
                   <div id="progressText" className="hud-prefix"></div>
                   <div>
