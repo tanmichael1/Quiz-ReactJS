@@ -38,8 +38,6 @@ window.onload = function () {
 
   // logout
   const logout = document.querySelector("#logout");
-  console.log("here");
-  console.log("Null or not: ", logout);
   if (logout) {
     logout.addEventListener("click", (e) => {
       e.preventDefault();

@@ -323,13 +323,14 @@ export default function Create() {
             <button
               id="addQuestionID"
               onClick={(e) => addQuestion(e)}
-              className="btn btn-primary"
+              className="centre btn btn-primary"
             >
-              Add Question
+              Save Question
             </button>
           </form>
         </div>
       </form>
+      <br />
       <button onClick={() => addQuizTest()} className="btn btn-primary">
         Submit Quiz
       </button>

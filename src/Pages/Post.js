@@ -75,9 +75,9 @@ export default function Post() {
 
       if (text === button.innerHTML) {
         //Save button
-        // button.classList.add('marked');
+        button.classList.add("marked");
       } else {
-        // button.classList.remove('marked');
+        button.classList.remove("marked");
       }
     });
   };
@@ -373,10 +373,12 @@ export default function Post() {
 
   return (
     <div id="box" className="container">
+      <h2 id="mobile">Mobile</h2>
       {editingMode ? (
         <div id="editingQuiz">
           <form id="editForm">
             <h1>Quiz</h1>
+
             <div>
               {quizData.map((question, questionIndex) => (
                 <div>
@@ -479,7 +481,7 @@ export default function Post() {
                 </div>
               </div>
               <hr />
-              <div id="footer">
+              <div className="centre" id="footer">
                 <div id="hud">
                   <div id="progressText" className="hud-prefix"></div>
                   <div>
@@ -496,7 +498,7 @@ export default function Post() {
                     type="button"
                     onClick={handleCheckButtonClick}
                     id="check-btn"
-                    className="check-btn btn neutral hide"
+                    className=" check-btn btn neutral hide"
                   >
                     Check
                   </Button>

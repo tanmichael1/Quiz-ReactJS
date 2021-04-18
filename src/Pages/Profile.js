@@ -13,8 +13,7 @@ function Profile() {
       const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
       const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
       dbRefUsers.on("value", (snap) => {
-        console.log(snap.val().createdQuizzes);
-        if (snap.val().createdQuizzes == undefined) {
+        if (snap.val().createdQuizzes === undefined) {
           console.log("undefined");
         } else {
           dbCreatedQuizzes.on("value", (snap) =>
