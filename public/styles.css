@@ -143,6 +143,13 @@ nav {
   display: none;
 }
 
+#finished {
+  /* margin-left: 25vw;
+  text-align: left; */
+
+  /* text-align: center; */
+}
+
 /* Result Page */
 
 .result-box {
@@ -286,8 +293,24 @@ Button.marked {
 
 .btn:hover {
   border-color: black;
-  box-shadow: 0 0.4rem 1.4rem 0 rgba(8, 114, 244, 0.6);
+
   transform: scale(1.03);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0.4rem 1.4rem 0 rgba(8, 114, 244, 0.6);
+}
+
+.btn-danger:hover {
+  box-shadow: 0 0.4rem 1.4rem 0 rgba(206, 8, 8, 0.6);
+}
+
+.btn-success:hover {
+  box-shadow: 0 0.4rem 1.4rem 0 rgb(19, 102, 33);
+}
+
+.btn-secondary:hover {
+  box-shadow: 0 0.4rem 1.4rem 0 rgb(83, 82, 79);
 }
 
 .question-btn {
@@ -311,6 +334,14 @@ Button.marked {
   transform: scale(1.03);
 }
 
+.delete-btn:hover {
+  border-color: red;
+  cursor: pointer;
+  box-shadow: 0 0.4rem 1.4rem 0 rgba(8, 114, 244, 0.6);
+  transition: transform 150ms;
+  transform: scale(1.03);
+}
+
 .answer-buttons {
   align-items: center;
   align-content: center;
@@ -327,6 +358,10 @@ Button.marked {
 
 .green {
   background-color: green;
+}
+
+.widget {
+  color: white;
 }
 
 .question-btn.correct:hover {

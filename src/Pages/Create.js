@@ -304,7 +304,7 @@ export default function Create() {
                 <button
                   id="addAnswerOption"
                   onClick={(e) => addAnswerOption(e)}
-                  className="btn btn-primary"
+                  className="btn btn-secondary"
                 >
                   Add Answer Option
                 </button>
@@ -331,7 +331,7 @@ export default function Create() {
         </div>
       </form>
       <br />
-      <button onClick={() => addQuizTest()} className="btn btn-primary">
+      <button onClick={() => addQuizTest()} className="btn btn-success">
         Submit Quiz
       </button>
     </div>

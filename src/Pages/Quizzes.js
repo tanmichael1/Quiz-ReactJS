@@ -27,7 +27,7 @@ export default function Quizzes() {
     setTimeout(() => {
       setLoading(false);
       setFinished(true);
-    }, 5000);
+    }, 2000);
     setDone(true);
   }
 
@@ -69,7 +69,9 @@ export default function Quizzes() {
     <div className="container">
       <h1>Welcome to Quizzes</h1>
 
-      <Button id="refresh">Refresh Quizzes</Button>
+      <Button className="hidden" id="refresh">
+        Refresh Quizzes
+      </Button>
 
       {loading ? <div id="loading">Loading</div> : <div id="notLoading"></div>}
 

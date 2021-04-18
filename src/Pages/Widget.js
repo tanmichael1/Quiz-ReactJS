@@ -14,7 +14,9 @@ function Widget(props) {
           {answer.answerText}{" "}
         </div>
       ))}
-      <button onClick={handleClick}>DELETE</button>
+      <button className="btn btn-danger delete-btn" onClick={handleClick}>
+        DELETE
+      </button>
     </div>
   );
 }

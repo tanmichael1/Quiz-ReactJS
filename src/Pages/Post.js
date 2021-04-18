@@ -11,6 +11,7 @@ export default function Post() {
   const [currentUserID, setCurrentUserID] = useState();
   const [isCreator, setIsCreator] = useState(false);
   const [editingMode, setEditingMode] = useState(false);
+  const [answered, setAnswered] = useState(false);
 
   const [initial, setInitial] = useState(true);
   const [quiz, setQuiz] = useState(false);
@@ -55,31 +56,33 @@ export default function Post() {
   }
 
   const handleAnswerButtonClick = (text, isCorrect) => {
-    const answerButtonsElement = document.getElementById("answer-buttons");
-    setCurrentAnswer(text);
-    setCorrect(isCorrect);
+    if (!answered) {
+      const answerButtonsElement = document.getElementById("answer-buttons");
+      setCurrentAnswer(text);
+      setCorrect(isCorrect);
 
-    quizData[currentQuestion].answerOptions.forEach((answer) => {
-      if (answer.isCorrect) {
-        setTrueAnswer(answer.answerText);
-      }
+      quizData[currentQuestion].answerOptions.forEach((answer) => {
+        if (answer.isCorrect) {
+          setTrueAnswer(answer.answerText);
+        }
 
-      if (answer.answerText === text) {
-        console.log(answer);
-      }
-    });
-    setSelected(true);
+        if (answer.answerText === text) {
+          console.log(answer);
+        }
+      });
+      setSelected(true);
 
-    Array.from(answerButtonsElement.children).forEach((button) => {
-      console.log(currentAnswer);
+      Array.from(answerButtonsElement.children).forEach((button) => {
+        console.log(currentAnswer);
 
-      if (text === button.innerHTML) {
-        //Save button
-        button.classList.add("marked");
-      } else {
-        button.classList.remove("marked");
-      }
-    });
+        if (text === button.innerHTML) {
+          //Save button
+          button.classList.add("marked");
+        } else {
+          button.classList.remove("marked");
+        }
+      });
+    }
   };
 
   if (!done) {
@@ -202,6 +205,7 @@ export default function Post() {
           // button.classList.remove('marked');
         }
       });
+      setAnswered(true);
 
       const nextQuestion = currentQuestion + 1;
       document.getElementById("check-btn").hidden = true;
@@ -222,6 +226,7 @@ export default function Post() {
     const nextQuestion = currentQuestion + 1;
     if (nextQuestion < quizData.length) {
       setCurrentQuestion(nextQuestion);
+      setAnswered(false);
       console.log(currentQuestion);
     } else {
       alert("You have reached the end of the quiz");
@@ -234,6 +239,7 @@ export default function Post() {
     Array.from(answerButtonsElement.children).forEach((button) => {
       button.classList.remove("incorrect");
       button.classList.remove("correct");
+      button.classList.remove("marked");
     });
   }
 
