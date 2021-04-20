@@ -208,6 +208,19 @@ nav {
   color: white;
 }
 
+#answer {
+  width: 80%;
+  display: inline-block;
+}
+
+#answerOption {
+  display: inline-block;
+}
+
+#answerCheckbox {
+  display: inline-block;
+}
+
 /* Quizzes */
 
 #finished {

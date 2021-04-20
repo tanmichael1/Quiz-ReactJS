@@ -122,24 +122,31 @@ export default function Create() {
   //update - update some of the keys for a defined path
   //push - add to a list of data in the database
 
+  function checkCheckboxes() {
+    var checkboxes = document.getElementsByClassName("checkboxes");
+    var i;
+
+    for (i = 0; i < checkboxes.length; i++) {
+      if (document.getElementsByClassName("checkboxes")[i].checked == true) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   function addQuestion(e) {
     e.preventDefault();
-    var correctIndex = document.getElementById("correctAnswerIndex").value;
-    console.log("correctIndex: " + correctIndex);
+
+    var checkboxes = document.getElementsByClassName("checkboxes");
 
     let newQuestion = document.getElementById("upload-question").value;
     if (newQuestion == null || newQuestion == "") {
       alert("Needs a question");
-    } else if (correctIndex == "" || correctIndex == null) {
+    } else if (!checkCheckboxes()) {
       alert("Must specify which option is correct");
     }
     //Check that correct Index is valid value
-    else if (
-      correctIndex < 0 ||
-      correctIndex > document.getElementsByClassName("Answer").length
-    ) {
-      alert("Must input a valid index");
-    } else {
+    else {
       //Save answer options
       var answerArray = [];
       var displayArray = [];
@@ -155,15 +162,13 @@ export default function Create() {
       //If correct answer is blank
       var validAnswer = false;
 
-      //If any options are blank - CHECK
-
       for (i = 0; i < x.length; i++) {
-        console.log(x[i].value);
         if (x[i].value != "" && x[i].value != null) {
           numOptionsCount++;
-          console.log("i: " + (i + 1));
-          console.log("correctIndex: " + correctIndex);
-          if (i + 1 == correctIndex) {
+          console.log(numOptionsCount);
+          if (
+            document.getElementsByClassName("checkboxes")[i].checked == true
+          ) {
             if (x[i].value != "") {
               validAnswer = true;
             }
@@ -175,6 +180,7 @@ export default function Create() {
           }
         }
       }
+
       if (numOptionsCount >= 2) {
         min2Options = true;
       }
@@ -183,7 +189,6 @@ export default function Create() {
         if (validAnswer) {
           console.log(displayArray);
           newSavedAnswers.push(answerArray);
-          console.log(correctIndex);
 
           console.log(answerArray);
           console.log(newSavedAnswers);
@@ -192,8 +197,6 @@ export default function Create() {
           //Save question
           var currentQuestions = savedQuestions;
           currentQuestions.push(newQuestion);
-
-          //setSavedQuestions(currentQuestions);
 
           //Display questions
 
@@ -235,6 +238,22 @@ export default function Create() {
       setNumAnswers(["Answer 1", "Answer 2", "Answer 3"]);
     } else if (length == 3) {
       setNumAnswers(["Answer 1", "Answer 2", "Answer 3", "Answer 4"]);
+    }
+  }
+
+  function updateTicked(checkbox, input) {
+    var currentInput = input;
+    var checkboxes = document.getElementsByClassName("checkboxes");
+    var i;
+
+    for (i = 0; i < checkboxes.length; i++) {
+      //console.log(currentInput);
+      //console.log(i);
+      if (input == i) {
+        document.getElementsByClassName("checkboxes")[i].checked = true;
+      } else {
+        document.getElementsByClassName("checkboxes")[i].checked = false;
+      }
     }
   }
 
@@ -291,13 +310,24 @@ export default function Create() {
             <div>
               <label>Answers</label>
               {numAnswers.map((answer, i) => (
-                <input
-                  key={i}
-                  type="text"
-                  className="form-control Answer"
-                  id="answer"
-                  placeholder="Answer"
-                />
+                <div className="answerOption">
+                  <input
+                    key={i}
+                    type="text"
+                    className="form-control Answer"
+                    id="answer"
+                    placeholder="Answer"
+                  />
+                  <input
+                    type="checkbox"
+                    id="answerCheckbox"
+                    onChange={(e) => updateTicked(e, i)}
+                    answernum={i}
+                    className="checkboxes"
+                    type="checkbox"
+                  />
+                  <br /> <br />
+                </div>
               ))}
 
               {numAnswers.length < 4 ? (
@@ -313,11 +343,6 @@ export default function Create() {
               )}
               <br />
 
-              <input
-                id="correctAnswerIndex"
-                type="number"
-                placeholder="Index of correct answer, i.e. 1, 2"
-              />
               <br />
             </div>
             <button
