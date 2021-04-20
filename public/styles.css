@@ -78,6 +78,23 @@ body {
   background-color: rgb(29, 26, 26);
 }
 
+.container-fluid {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.navbar {
+  text-align: center;
+}
+
+.nav {
+  display: inline-block;
+}
+
+#user {
+  color: black;
+}
+
 /* fonts */
 @font-face {
   font-family: "Rubik Regular";
