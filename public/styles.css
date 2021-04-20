@@ -83,18 +83,6 @@ body {
   white-space: nowrap;
 }
 
-.navbar {
-  text-align: center;
-}
-
-.nav {
-  display: inline-block;
-}
-
-#user {
-  color: black;
-}
-
 /* fonts */
 @font-face {
   font-family: "Rubik Regular";
@@ -154,6 +142,20 @@ nav {
   color: rgb(185, 185, 185);
 } */
 
+/* Header */
+
+.navbar {
+  text-align: center;
+}
+
+.nav {
+  display: inline-block;
+}
+
+#user {
+  color: black;
+}
+
 /* Buttons */
 
 .btn {
@@ -206,12 +208,16 @@ nav {
   color: white;
 }
 
-.delete-btn:hover {
-  border-color: red;
-  cursor: pointer;
-  box-shadow: 0 0.4rem 1.4rem 0 rgba(8, 114, 244, 0.6);
-  transition: transform 150ms;
-  transform: scale(1.03);
+/* Quizzes */
+
+#finished {
+  text-align: left;
+  margin-left: 20vw;
+}
+
+#quizzesTitle {
+  text-align: left;
+  margin-left: 20vw;
 }
 
 /* Post */
