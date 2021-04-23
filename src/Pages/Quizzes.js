@@ -66,7 +66,7 @@ export default function Quizzes() {
   }
 
   return (
-    <div className="container">
+    <div className="container box">
       <h1 id="quizzesTitle">Welcome to Quizzes</h1>
 
       <Button className="hidden" id="refresh">

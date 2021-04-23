@@ -11,6 +11,7 @@ function Home() {
 
   if (!done) {
     var date = null;
+
     latestQuizRef.on("value", (snap) =>
       snap.forEach((childSnapshot) => {
         childSnapshot.forEach((element) => {
@@ -52,7 +53,7 @@ function Home() {
   }
 
   return (
-    <div className="container">
+    <div className="container box">
       <h1>Welcome to the Website</h1>
       <h2>Latest Quiz</h2>
       {latestQuiz !== "" ? (

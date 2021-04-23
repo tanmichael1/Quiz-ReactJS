@@ -281,6 +281,8 @@ export default function Post() {
     var editQuestions = document.getElementsByClassName("editQuestions");
     var checkboxes = document.getElementsByClassName("checkboxes");
     var answersEdit = document.getElementsByClassName("answer");
+    var deleteCheckboxes = document.getElementsByClassName("deleteCheckboxes");
+    var numDeleteCheckboxes = 0;
 
     var finalArray = [];
     for (var i = 0; i < editQuestions.length; i++) {
@@ -304,32 +306,39 @@ export default function Post() {
         }
       }
 
-      finalArray.push({
-        question: editQuestions[i].innerHTML,
-        answerOptions: answersArray,
-      });
+      if (deleteCheckboxes[i].checked == false) {
+        finalArray.push({
+          question: editQuestions[i].innerHTML,
+          answerOptions: answersArray,
+        });
+      } else {
+        numDeleteCheckboxes++;
+      }
     }
 
     console.log(finalArray);
-    firebase.database().ref(`Quizzes/${currentUser}/${quizTitle}`).set({
-      updatedSortDate: new Date().toISOString(),
+    firebase
+      .database()
+      .ref(`Quizzes/${currentUser}/${quizTitle}`)
+      .set({
+        updatedSortDate: new Date().toISOString(),
 
-      NumQuestions: numQuestions,
-      Title: quizTitle,
-      creator: currentUser,
-      dateCreated: savedDateCreated,
-      timeCreated: savedTimeCreated,
-      createdSortDate: savedCreatedSortDate,
-    });
+        NumQuestions: numQuestions - numDeleteCheckboxes,
+        Title: quizTitle,
+        creator: currentUser,
+        dateCreated: savedDateCreated,
+        timeCreated: savedTimeCreated,
+        createdSortDate: savedCreatedSortDate,
+      });
 
     var index = editQuestions.length;
 
-    for (var i = 1; i < index + 1; i++) {
-      console.log(i);
+    for (var i = 1; i < numQuestions - numDeleteCheckboxes + 1; i++) {
+      // console.log(i);
       var question = finalArray[i - 1];
-      console.log(question);
-      console.log(question.answerOptions);
-      console.log(question.question);
+      // console.log(question);
+      // console.log(question.answerOptions);
+      // console.log(question.question);
       firebase.database().ref(`Quizzes/${currentUser}/${quizTitle}/${i}`).set({
         answerOptions: question.answerOptions,
         questionText: question.question,
@@ -377,8 +386,51 @@ export default function Post() {
     }
   }
 
+  function updateDelete(checkbox, input) {
+    var currentInput = input;
+    var deleteCheckboxes = document.getElementsByClassName("deleteCheckboxes");
+
+    if (deleteCheckboxes.length == 1) {
+      alert("dont");
+    }
+
+    // var i;
+    // //Identify the correct boxes first
+    // //input - index of the answers in answer options
+    // //questionIndex - index of the question
+    // for (i = 0; i < deleteCheckboxes.length; i++) {
+    //   //console.log(currentInput);
+    //   //console.log(i);
+    //   console.log("questionIndex: " + questionIndex);
+    //   console.log(
+    //     document
+    //       .getElementsByClassName("deleteCheckboxes")
+    //       [i].getAttribute("questionnum2")
+    //   );
+    //   if(  document.getElementsByClassName("deleteCheckboxes")[i].checked == true){
+    //   }
+    //   if (
+    //     questionIndex ==
+    //     document
+    //       .getElementsByClassName("deleteCheckboxes")
+    //       [i].getAttribute("questionnum2")
+    //   ) {
+    //     if (
+    //       currentInput ==
+    //       document
+    //         .getElementsByClassName("deleteCheckboxes")
+    //         [i].getAttribute("answernum")
+    //     ) {
+    //       document.getElementsByClassName("deleteCheckboxes")[i].checked = true;
+    //     } else {
+    //       document.getElementsByClassName("deleteCheckboxes")[i].checked = false;
+    //     }
+    //   }
+    // }
+  }
+
   return (
-    <div id="box" className="container">
+    <div className="container box">
       <h2 id="mobile">Mobile</h2>
       {editingMode ? (
         <div id="editingQuiz">
@@ -415,6 +467,12 @@ export default function Post() {
                       />
                     </div>
                   ))}
+                  <label>Delete Question </label>{" "}
+                  <input
+                    onChange={(e) => updateDelete(e, questionIndex)}
+                    type="checkbox"
+                    className="deleteCheckboxes"
+                  />
                 </div>
               ))}
             </div>

@@ -8,17 +8,22 @@ function Profile() {
   const [createdQuizzes, setCreatedQuizzes] = useState([]);
   let takenQuizzes = [];
   function setup() {
+    console.log("Here");
     firebase.auth().onAuthStateChanged((user) => {
       setId(user.uid);
       const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
       const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
+      console.log("here2");
+
       dbRefUsers.on("value", (snap) => {
-        if (snap.val().createdQuizzes === undefined) {
+        console.log(snap.val());
+        if (snap.val().createdQuizzes == undefined) {
           console.log("undefined");
         } else {
           dbCreatedQuizzes.on("value", (snap) =>
             snap.forEach((childSnapshot) => {
               var tempArray = createdQuizzes;
+              console.log(childSnapshot.val());
               tempArray.push({
                 title: childSnapshot.val().title,
               });
@@ -37,7 +42,7 @@ function Profile() {
     setup();
   }
   return (
-    <div className="container">
+    <div className="container box">
       <h1>{username}</h1>
 
       <h2>Created quizzes</h2>

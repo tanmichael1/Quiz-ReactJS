@@ -2,7 +2,7 @@ import React from "react";
 
 function Register() {
   return (
-    <div className="container">
+    <div className="container box">
       <h1>Register</h1>
       <form id="signup-form">
         <div>

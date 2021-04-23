@@ -258,7 +258,7 @@ export default function Create() {
   }
 
   return (
-    <div className="container">
+    <div className="container box">
       <h1>Create Quiz</h1>
 
       <form id="createQuizForm">
