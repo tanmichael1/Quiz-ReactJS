@@ -4,10 +4,10 @@ import { firebase } from "../Config";
 
 function Header() {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [done, setDone] = useState(false);
+  const [setupDone, setSetupDone] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
 
-  function begin() {
+  function setup() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         setLoggedIn(true);
@@ -25,9 +25,9 @@ function Header() {
     });
   }
 
-  if (!done) {
-    begin();
-    setDone(true);
+  if (!setupDone) {
+    setup();
+    setSetupDone(true);
   }
 
   return (
@@ -99,7 +99,7 @@ function Header() {
                 </li>
               </>
             ) : (
-              <div className="">
+              <>
                 <li className="nav-item">
                   <a className="nav-link" href="/login">
                     Log In
@@ -111,7 +111,7 @@ function Header() {
                     Register
                   </a>
                 </li>
-              </div>
+              </>
             )}
             <li className="nav-item" id="logoutVisible">
               <a href="/" className="nav-link" id="logout">
