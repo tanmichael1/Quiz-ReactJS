@@ -12,10 +12,10 @@ function Home() {
   if (!done) {
     var date = null;
 
-    latestQuizRef.on("value", (snap) =>
-      snap.forEach((childSnapshot) => {
-        childSnapshot.forEach((element) => {
-          var tempVal = setValues(element, date);
+    latestQuizRef.on("value", (quizzes) =>
+      quizzes.forEach((user) => {
+        user.forEach((quiz) => {
+          var tempVal = setValues(quiz, date);
           if (tempVal != date) {
             date = tempVal;
           }
@@ -25,8 +25,8 @@ function Home() {
     setDone(true);
   }
 
-  function setValues(element, latestDate) {
-    var object = element.val();
+  function setValues(quiz, latestDate) {
+    var object = quiz.val();
     if (latestDate === null || object.createdSortDate > latestDate) {
       setLatestQuiz(object.Title);
       let newDate = object.createdSortDate;

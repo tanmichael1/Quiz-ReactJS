@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { firebase } from "./../Config";
-import Widget from "./Widget";
+import Widget from "./components/AddQuestionWidget";
 
 export default function Create() {
   const [done, setDone] = useState(false);
@@ -10,17 +10,16 @@ export default function Create() {
   const [answerOptions, setAnswerOptions] = useState([]);
   const [currentUser, setCurrentUser] = useState();
   const [currentUserID, setCurrentUserID] = useState();
+  const [quizTitles, setQuizTitles] = useState([]);
 
   const [notes, setNotes] = useState([]);
-  let array = [{ questionText: "questiontitle" }];
 
   if (!done) {
     setup();
     setDone(true);
   }
 
-  function deleteNote(id) {
-    console.log(id);
+  function deleteQuestion(id) {
     setSavedQuestions((prevQuestions) => {
       return prevQuestions.filter((noteItem, index) => {
         return index !== id;
@@ -43,43 +42,68 @@ export default function Create() {
         const dbRefUsers = firebase
           .database()
           .ref("Users/" + user.uid + "/username");
-        console.log(user.uid);
+
         setCurrentUserID(user.uid);
         dbRefUsers.on("value", function (snap) {
           setCurrentUser(snap.val());
         });
       } else {
+        alert("Must have be logged in to create a quiz");
+        window.location = "/";
       }
     });
+    const quizzesRef = firebase.database().ref("Quizzes");
+
+    quizzesRef.on("value", (snap) =>
+      snap.forEach((user) => {
+        var currentArray = quizTitles;
+
+        user.forEach((quiz) => {
+          var newTitle = quiz.val().Title;
+
+          currentArray.push(newTitle);
+          currentArray.sort(function (a, b) {
+            if (a < b) {
+              return -1;
+            }
+            if (a > b) {
+              return 1;
+            }
+            return 0;
+          });
+          setQuizTitles(currentArray);
+        });
+      })
+    );
   }
 
-  function addQuizTest() {
-    //Add check that title doesn't already exist
-    console.log(document.getElementById("upload-title").value);
+  //Checks that quiz doesn't already exist
 
-    if (
-      document.getElementById("upload-title").value == null ||
-      document.getElementById("upload-title").value == ""
-    ) {
+  function checkTitle() {
+    if (quizTitles.includes(document.getElementById("upload-title").value)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function submitQuiz() {
+    var title = document.getElementById("upload-title").value;
+
+    if (title == null || title == "") {
       alert("Requires a title");
     } else if (savedQuestions.length == 0) {
       alert("Need at least one question before submitting");
+    } else if (checkTitle()) {
+      alert("Quiz title already used, please other title");
     } else {
-      var title = document.getElementById("upload-title").value;
-
       //Add quiz
       const dbQuizForUser = firebase
         .database()
         .ref("Users/" + currentUserID + "/createdQuizzes/" + title);
 
       dbQuizForUser.set({ title: title });
-      //Num questions
 
-      //All questions
-
-      //2 uploads
-
-      //First things
       firebase
         .database()
         .ref(`Quizzes/${currentUser}/${title}`)
@@ -118,9 +142,6 @@ export default function Create() {
       alert("Your quiz has been submitted");
     }
   }
-  //set - write or replace data to a defined path
-  //update - update some of the keys for a defined path
-  //push - add to a list of data in the database
 
   function checkCheckboxes() {
     var checkboxes = document.getElementsByClassName("checkboxes");
@@ -205,13 +226,6 @@ export default function Create() {
             question: newQuestion,
             answerOptions: displayArray,
           });
-          console.log(tempQuestions);
-
-          //setDisplayQuestions(tempQuestions);
-          console.log(displayQuestions);
-
-          console.log(savedQuestions);
-          console.log(savedQuestions.length);
 
           setNotes(tempQuestions);
           document.getElementById("addQuestions").reset();
@@ -222,13 +236,7 @@ export default function Create() {
       } else {
         alert("Need to fill in at least 2 options");
       }
-
-      // document.getElementById("storedQuestions").innerHTML()
     }
-    // var database = firebase.database();
-
-    //add question
-    //add answers
   }
 
   function addAnswerOption(e) {
@@ -247,8 +255,6 @@ export default function Create() {
     var i;
 
     for (i = 0; i < checkboxes.length; i++) {
-      //console.log(currentInput);
-      //console.log(i);
       if (input == i) {
         document.getElementsByClassName("checkboxes")[i].checked = true;
       } else {
@@ -283,16 +289,10 @@ export default function Create() {
                 answers={noteItem.answerOptions}
                 question={noteItem.question}
                 id={index}
-                onDelete={deleteNote}
+                onDelete={deleteQuestion}
               />
             );
           })}
-        </div>
-
-        <div id="storedQuestions">
-          {array.map((question, i) => (
-            <div key={i}>{question.title}</div>
-          ))}
         </div>
 
         <div>
@@ -356,7 +356,7 @@ export default function Create() {
         </div>
       </form>
       <br />
-      <button onClick={() => addQuizTest()} className="btn btn-success">
+      <button onClick={() => submitQuiz()} className="btn btn-success">
         Submit Quiz
       </button>
     </div>

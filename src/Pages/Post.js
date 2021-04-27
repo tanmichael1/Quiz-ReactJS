@@ -35,55 +35,7 @@ export default function Post() {
   const [savedTimeCreated, setSavedTimeCreated] = useState();
   const [savedCreatedSortDate, setSavedCreatedSortDate] = useState();
 
-  function toggleEditQuiz() {
-    setEditingMode(!editingMode);
-  }
-
-  function removeQuiz(e) {
-    if (window.confirm("Are you sure you wish to delete this Quiz?")) {
-      //this.deleteItem(e);
-      const ref = firebase.database().ref();
-      const dbTestQuiz = ref.child("Quizzes/" + quizUser + "/" + quizTitle);
-      dbTestQuiz.remove();
-      const dbQuizForUser = firebase
-        .database()
-        .ref("Users/" + currentUserID + "/createdQuizzes/" + quizTitle);
-      dbQuizForUser.remove();
-
-      //Redirects
-      window.location.href = "/";
-    }
-  }
-
-  const handleAnswerButtonClick = (text, isCorrect) => {
-    if (!answered) {
-      const answerButtonsElement = document.getElementById("answer-buttons");
-      setCurrentAnswer(text);
-      setCorrect(isCorrect);
-
-      quizData[currentQuestion].answerOptions.forEach((answer) => {
-        if (answer.isCorrect) {
-          setTrueAnswer(answer.answerText);
-        }
-
-        if (answer.answerText === text) {
-          console.log(answer);
-        }
-      });
-      setSelected(true);
-
-      Array.from(answerButtonsElement.children).forEach((button) => {
-        console.log(currentAnswer);
-
-        if (text === button.innerHTML) {
-          //Save button
-          button.classList.add("marked");
-        } else {
-          button.classList.remove("marked");
-        }
-      });
-    }
-  };
+  /* Setup */
 
   if (!done) {
     const ref = firebase.database().ref();
@@ -100,16 +52,16 @@ export default function Post() {
 
     const dbTestQuiz = ref.child("Quizzes/" + user + "/" + newQuizTitle);
 
-    dbTestQuiz.on("value", function (quizSnapshot) {
-      var count = quizSnapshot.child("NumQuestions").val();
-      console.log(quizSnapshot.val());
+    dbTestQuiz.on("value", function (quiz) {
+      var count = quiz.child("NumQuestions").val();
+      console.log(quiz.val());
       setNumQuestions(count);
-      setSavedDateCreated(quizSnapshot.child("dateCreated").val());
-      setSavedTimeCreated(quizSnapshot.child("timeCreated").val());
-      setSavedCreatedSortDate(quizSnapshot.child("createdSortDate").val());
+      setSavedDateCreated(quiz.child("dateCreated").val());
+      setSavedTimeCreated(quiz.child("timeCreated").val());
+      setSavedCreatedSortDate(quiz.child("createdSortDate").val());
 
       for (var i = 0; i < count; i++) {
-        loadQuestions(quizSnapshot.child(i + 1).val());
+        loadQuestions(quiz.child(i + 1).val());
       }
       setQuizTitle(newQuizTitle);
     });
@@ -125,11 +77,11 @@ export default function Post() {
           .ref("Users/" + user.uid + "/username");
         console.log(user.uid);
         setCurrentUserID(user.uid);
-        dbRefUsers.on("value", function (snap) {
-          console.log("snap.val(): " + snap.val());
+        dbRefUsers.on("value", function (snapUser) {
+          console.log("snap.val(): " + snapUser.val());
           console.log("quizUser: " + currUser);
-          setCurrentUser(snap.val());
-          if (snap.val() === currUser) {
+          setCurrentUser(snapUser.val());
+          if (snapUser.val() === currUser) {
             setIsCreator(true);
             console.log("User's Quiz");
           } else {
@@ -155,6 +107,8 @@ export default function Post() {
     setQuizData(array);
   }
 
+  /* Quiz Buttons */
+
   function handleStartButtonClick() {
     setInitial(false);
     setQuiz(true);
@@ -164,7 +118,6 @@ export default function Post() {
     const answerButtonsElement = document.getElementById("answer-buttons");
 
     if (selected) {
-      //Check
       var currentResponse = response;
 
       if (correct) {
@@ -195,14 +148,10 @@ export default function Post() {
           } else {
             button.classList.add("incorrect");
           }
-
-          //Save button
-          // button.classList.add('marked');
         } else {
           if (button.innerHTML === trueAnswer) {
             button.classList.add("correct");
           }
-          // button.classList.remove('marked');
         }
       });
       setAnswered(true);
@@ -273,8 +222,56 @@ export default function Post() {
     setEnd(true);
   }
 
-  function refreshResults() {
-    setResponse([]);
+  const handleAnswerButtonClick = (text, isCorrect) => {
+    if (!answered) {
+      const answerButtonsElement = document.getElementById("answer-buttons");
+      setCurrentAnswer(text);
+      setCorrect(isCorrect);
+
+      quizData[currentQuestion].answerOptions.forEach((answer) => {
+        if (answer.isCorrect) {
+          setTrueAnswer(answer.answerText);
+        }
+
+        if (answer.answerText === text) {
+          console.log(answer);
+        }
+      });
+      setSelected(true);
+
+      Array.from(answerButtonsElement.children).forEach((button) => {
+        console.log(currentAnswer);
+
+        if (text === button.innerHTML) {
+          //Save button
+          button.classList.add("marked");
+        } else {
+          button.classList.remove("marked");
+        }
+      });
+    }
+  };
+
+  /* Editing Mode */
+
+  function toggleEditQuiz() {
+    setEditingMode(!editingMode);
+  }
+
+  function removeQuiz(e) {
+    if (window.confirm("Are you sure you wish to delete this Quiz?")) {
+      //this.deleteItem(e);
+      const ref = firebase.database().ref();
+      const dbTestQuiz = ref.child("Quizzes/" + quizUser + "/" + quizTitle);
+      dbTestQuiz.remove();
+      const dbQuizForUser = firebase
+        .database()
+        .ref("Users/" + currentUserID + "/createdQuizzes/" + quizTitle);
+      dbQuizForUser.remove();
+
+      //Redirects
+      window.location.href = "/";
+    }
   }
 
   function updateQuiz() {
@@ -293,16 +290,12 @@ export default function Post() {
         console.log(
           "questionnum2: " + answersEdit[j].getAttribute("questionnum2")
         );
-        console.log("questionNumTest: " + questionNumTest);
-        // console.log("checkboxes[j].value: " + checkboxes[j].value);
+
         if (answersEdit[j].getAttribute("questionnum2") == questionNumTest) {
           answersArray.push({
             answerText: answersEdit[j].value,
-
             isCorrect: checkboxes[j].checked,
           });
-          console.log(answersArray);
-          console.log(answersEdit);
         }
       }
 
@@ -316,7 +309,6 @@ export default function Post() {
       }
     }
 
-    console.log(finalArray);
     firebase
       .database()
       .ref(`Quizzes/${currentUser}/${quizTitle}`)
@@ -334,11 +326,7 @@ export default function Post() {
     var index = editQuestions.length;
 
     for (var i = 1; i < numQuestions - numDeleteCheckboxes + 1; i++) {
-      // console.log(i);
       var question = finalArray[i - 1];
-      // console.log(question);
-      // console.log(question.answerOptions);
-      // console.log(question.question);
       firebase.database().ref(`Quizzes/${currentUser}/${quizTitle}/${i}`).set({
         answerOptions: question.answerOptions,
         questionText: question.question,
@@ -348,24 +336,11 @@ export default function Post() {
     window.location.reload();
   }
 
-  function updateTicked(checkbox, input, questionIndex) {
-    var currentInput = input;
+  function updateTicked(answerIndex, questionIndex) {
     var checkboxes = document.getElementsByClassName("checkboxes");
     var i;
-    //Identify the correct boxes first
-    //input - index of the answers in answer options
-    //questionIndex - index of the question
 
     for (i = 0; i < checkboxes.length; i++) {
-      //console.log(currentInput);
-      //console.log(i);
-      console.log("questionIndex: " + questionIndex);
-      console.log(
-        document
-          .getElementsByClassName("checkboxes")
-          [i].getAttribute("questionnum2")
-      );
-
       if (
         questionIndex ==
         document
@@ -373,7 +348,7 @@ export default function Post() {
           [i].getAttribute("questionnum2")
       ) {
         if (
-          currentInput ==
+          answerIndex ==
           document
             .getElementsByClassName("checkboxes")
             [i].getAttribute("answernum")
@@ -386,47 +361,25 @@ export default function Post() {
     }
   }
 
-  function updateDelete(checkbox, input) {
-    var currentInput = input;
+  function updateDelete(input) {
     var deleteCheckboxes = document.getElementsByClassName("deleteCheckboxes");
+    var inputElements = [].slice.call(
+      document.getElementsByClassName("deleteCheckboxes")
+    );
+    var checkedValue = inputElements.filter((chk) => chk.checked).length;
 
-    if (deleteCheckboxes.length == 1) {
-      alert("dont");
+    if (deleteCheckboxes[input].checked == true) {
+      if (deleteCheckboxes.length == 1 || checkedValue == numQuestions) {
+        alert("dont");
+        deleteCheckboxes[input].checked = false;
+      }
     }
+  }
 
-    // var i;
-    // //Identify the correct boxes first
-    // //input - index of the answers in answer options
-    // //questionIndex - index of the question
-    // for (i = 0; i < deleteCheckboxes.length; i++) {
-    //   //console.log(currentInput);
-    //   //console.log(i);
-    //   console.log("questionIndex: " + questionIndex);
-    //   console.log(
-    //     document
-    //       .getElementsByClassName("deleteCheckboxes")
-    //       [i].getAttribute("questionnum2")
-    //   );
-    //   if(  document.getElementsByClassName("deleteCheckboxes")[i].checked == true){
-    //   }
-    //   if (
-    //     questionIndex ==
-    //     document
-    //       .getElementsByClassName("deleteCheckboxes")
-    //       [i].getAttribute("questionnum2")
-    //   ) {
-    //     if (
-    //       currentInput ==
-    //       document
-    //         .getElementsByClassName("deleteCheckboxes")
-    //         [i].getAttribute("answernum")
-    //     ) {
-    //       document.getElementsByClassName("deleteCheckboxes")[i].checked = true;
-    //     } else {
-    //       document.getElementsByClassName("deleteCheckboxes")[i].checked = false;
-    //     }
-    //   }
-    // }
+  /* Other */
+
+  function refreshResults() {
+    setResponse([]);
   }
 
   return (
@@ -457,7 +410,7 @@ export default function Post() {
                         defaultValue={answer.answerText}
                       ></input>
                       <input
-                        onChange={(e) => updateTicked(e, i, questionIndex)}
+                        onChange={() => updateTicked(i, questionIndex)}
                         questionnum2={questionIndex}
                         id="myCheck"
                         answernum={i}
@@ -469,7 +422,7 @@ export default function Post() {
                   ))}
                   <label>Delete Question </label>{" "}
                   <input
-                    onChange={(e) => updateDelete(e, questionIndex)}
+                    onChange={() => updateDelete(questionIndex)}
                     type="checkbox"
                     className="deleteCheckboxes"
                   />

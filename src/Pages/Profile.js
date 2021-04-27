@@ -15,24 +15,24 @@ function Profile() {
       const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
       console.log("here2");
 
-      dbRefUsers.on("value", (snap) => {
-        console.log(snap.val());
-        if (snap.val().createdQuizzes == undefined) {
+      dbRefUsers.on("value", (user) => {
+        console.log(user.val());
+        if (user.val().createdQuizzes == undefined) {
           console.log("undefined");
         } else {
-          dbCreatedQuizzes.on("value", (snap) =>
-            snap.forEach((childSnapshot) => {
+          dbCreatedQuizzes.on("value", (userQuizzes) =>
+            userQuizzes.forEach((quiz) => {
               var tempArray = createdQuizzes;
-              console.log(childSnapshot.val());
+              console.log(quiz.val());
               tempArray.push({
-                title: childSnapshot.val().title,
+                title: quiz.val().title,
               });
 
               setCreatedQuizzes(tempArray);
             })
           );
         }
-        setUsername(snap.val().username);
+        setUsername(user.val().username);
       });
     });
 

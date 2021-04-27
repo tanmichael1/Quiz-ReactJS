@@ -305,7 +305,6 @@ nav {
 
 .answer-btn {
   text-align: center;
-  /* width: 80%; */
   --hue: var(--hue-neutral);
   border: 1px solid hsl(var(--hue), 100%, 30%);
   background-color: hsl(var(--hue), 100%, 50%);

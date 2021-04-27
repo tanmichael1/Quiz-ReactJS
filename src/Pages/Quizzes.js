@@ -16,14 +16,10 @@ export default function Quizzes() {
   const [quizArray, setQuizArray] = useState([]);
   const [loading, setLoading] = useState(true);
   const [finished, setFinished] = useState(false);
-
   const quizzesRef = firebase.database().ref("Quizzes");
 
-  //quizArray
-
   if (!done) {
-    doStuff();
-
+    listQuizzes();
     setTimeout(() => {
       setLoading(false);
       setFinished(true);
@@ -31,20 +27,14 @@ export default function Quizzes() {
     setDone(true);
   }
 
-  function doStuff() {
+  function listQuizzes() {
     quizzesRef.on("value", (snap) =>
-      //childsnapshot - each user
-
-      snap.forEach((childSnapshot) => {
+      snap.forEach((user) => {
         var currentArray = quizArray;
 
-        //Each element
-
-        childSnapshot.forEach((element) => {
-          //element - each quiz
-
-          var newTitle = element.val().Title;
-          var newUser = element.val().creator;
+        user.forEach((quiz) => {
+          var newTitle = quiz.val().Title;
+          var newUser = quiz.val().creator;
 
           currentArray.push({
             title: newTitle,
@@ -69,9 +59,9 @@ export default function Quizzes() {
     <div className="container box">
       <h1 id="quizzesTitle">Welcome to Quizzes</h1>
 
-      <Button className="hidden" id="refresh">
-        Refresh Quizzes
-      </Button>
+      <div className="hidden">
+        <Button id="refresh">Refresh Quizzes</Button>
+      </div>
 
       {loading ? <div id="loading">Loading</div> : <div id="notLoading"></div>}
 

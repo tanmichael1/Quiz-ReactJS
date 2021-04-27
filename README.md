@@ -51,7 +51,7 @@ This project was created with
 - Add users, logins, logouts, and registration: DONE
 - Generate pages for quizzes: DONE
 - Create quizzes and structure using realtime database: DONE
-- Give options to create, edit and delete quizzes
+- Give options to create, edit and delete quizzes: DONE
 - Finalise pages
 - Create layout for mobile screen
 - Create layout for desktop screen
