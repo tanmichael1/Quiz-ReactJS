@@ -56,11 +56,23 @@ window.onload = function () {
       // get user info
       const email = loginForm["login-email"].value;
       const password = loginForm["login-password"].value;
-      auth.signInWithEmailAndPassword(email, password).then((cred) => {
-        console.log(cred.user);
-        loginForm.reset();
-        window.location.href = "/";
-      });
+      auth
+        .signInWithEmailAndPassword(email, password)
+        .then((cred) => {
+          console.log(cred.user);
+          loginForm.reset();
+          window.location.href = "/";
+        })
+        .catch(function (error) {
+          // Handle Errors here
+
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          console.log("user did not sign up correctly");
+          console.log(errorCode);
+          console.log(errorMessage);
+          alert(errorMessage);
+        });
     });
   }
 };
