@@ -363,6 +363,7 @@ export default function Post() {
 
   function updateDelete(input) {
     var deleteCheckboxes = document.getElementsByClassName("deleteCheckboxes");
+    var questionWidget = document.getElementsByClassName("questionWidget");
     var inputElements = [].slice.call(
       document.getElementsByClassName("deleteCheckboxes")
     );
@@ -370,9 +371,13 @@ export default function Post() {
 
     if (deleteCheckboxes[input].checked == true) {
       if (deleteCheckboxes.length == 1 || checkedValue == numQuestions) {
-        alert("dont");
+        alert("Quiz needs at least one question");
         deleteCheckboxes[input].checked = false;
+      } else {
+        questionWidget[input].classList.add("red");
       }
+    } else {
+      questionWidget[input].classList.remove("red");
     }
   }
 
@@ -392,7 +397,7 @@ export default function Post() {
 
             <div>
               {quizData.map((question, questionIndex) => (
-                <div>
+                <div className="questionWidget">
                   <h1
                     questionnum={questionIndex}
                     id="editQuestion"
@@ -426,6 +431,7 @@ export default function Post() {
                     type="checkbox"
                     className="deleteCheckboxes"
                   />
+                  <hr />
                 </div>
               ))}
             </div>
