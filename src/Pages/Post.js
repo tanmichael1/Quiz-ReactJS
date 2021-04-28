@@ -301,7 +301,7 @@ export default function Post() {
 
       if (deleteCheckboxes[i].checked == false) {
         finalArray.push({
-          question: editQuestions[i].innerHTML,
+          question: editQuestions[i].value,
           answerOptions: answersArray,
         });
       } else {
@@ -331,6 +331,7 @@ export default function Post() {
         answerOptions: question.answerOptions,
         questionText: question.question,
       });
+      console.log(question.question);
     }
 
     window.location.reload();
@@ -396,17 +397,21 @@ export default function Post() {
             <h1>Quiz</h1>
 
             <div>
+              <hr />
               {quizData.map((question, questionIndex) => (
-                <div className="questionWidget">
-                  <h1
+                <div key={questionIndex} className="questionWidget">
+                  <h3>Question</h3>
+                  <input
+                    type="text"
                     questionnum={questionIndex}
                     id="editQuestion"
                     className="editQuestions"
-                  >
-                    {question.questionText}
-                  </h1>
+                    defaultValue={question.questionText}
+                  />
+                  <br /> <br />
+                  <h3>Answer Options</h3>
                   {question.answerOptions.map((answer, i) => (
-                    <div>
+                    <div key={i}>
                       <input
                         answernum={i}
                         questionnum2={questionIndex}
