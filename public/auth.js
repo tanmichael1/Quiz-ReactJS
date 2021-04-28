@@ -21,18 +21,56 @@ window.onload = function () {
       const email = signupForm["signup-email"].value;
       const password = signupForm["signup-password"].value;
 
-      // sign up the user
-      auth.createUserWithEmailAndPassword(email, password).then((cred) => {
-        console.log(cred.user);
-        console.log(cred.user.uid);
-        const userID = cred.user.uid;
+      const usersRef = database.ref("Users");
+      var currentArray = [];
 
-        database.ref(`Users/${userID}`).set({
-          username: newUsername,
+      usersRef
+        .once("value", (snap) =>
+          snap.forEach((user) => {
+            console.log(user.val().username);
+            var newUser = user.val().username;
+
+            currentArray.push(newUser.toLowerCase());
+          })
+        )
+        .then(function onSuccess(res) {
+          console.log(currentArray);
+          console.log(newUsername);
+          if (currentArray.includes(newUsername.toLowerCase())) {
+            console.log("true");
+            alert("Username already used");
+            done = true;
+          } else {
+            console.log("false");
+            auth
+              .createUserWithEmailAndPassword(email, password)
+              .then((cred) => {
+                console.log(cred.user);
+                console.log(cred.user.uid);
+                const userID = cred.user.uid;
+
+                database.ref(`Users/${userID}`).set({
+                  username: newUsername,
+                });
+                signupForm.reset();
+                window.location.href = "/";
+              })
+              .catch(function (error) {
+                // Handle Errors here
+
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log("user did not sign up correctly");
+                console.log(errorCode);
+                console.log(errorMessage);
+                alert(errorMessage);
+              });
+          }
+        })
+        .catch(function onError(err) {
+          console.log(err);
+          // do sth
         });
-        signupForm.reset();
-        window.location.href = "/";
-      });
     });
   }
 
