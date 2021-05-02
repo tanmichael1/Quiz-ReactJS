@@ -305,10 +305,11 @@ export default function Create() {
                 id="upload-question"
                 placeholder="Enter question"
               />
+              <br />
             </div>
 
             <div>
-              <label>Answers</label>
+              <label>Answer Options</label>
               {numAnswers.map((answer, i) => (
                 <div className="answerOption">
                   <input
@@ -318,6 +319,7 @@ export default function Create() {
                     id="answer"
                     placeholder="Answer"
                   />
+                  {"  "}
                   <input
                     type="checkbox"
                     id="answerCheckbox"
@@ -331,19 +333,21 @@ export default function Create() {
               ))}
 
               {numAnswers.length < 4 ? (
-                <button
-                  id="addAnswerOption"
-                  onClick={(e) => addAnswerOption(e)}
-                  className="btn btn-secondary"
-                >
-                  Add Answer Option
-                </button>
+                <>
+                  <button
+                    id="addAnswerOption"
+                    onClick={(e) => addAnswerOption(e)}
+                    className="btn btn-secondary"
+                  >
+                    Add Answer Option
+                  </button>
+                  <br />
+
+                  <br />
+                </>
               ) : (
                 <div></div>
               )}
-              <br />
-
-              <br />
             </div>
             <button
               id="addQuestionID"

@@ -113,8 +113,8 @@ nav {
 
 /* Progress bar */
 
-/* #progressBar {
-  float: right;
+#progressBar {
+  float: center;
   width: 40%;
   height: 2rem;
   border: 0.2rem solid rgb(8, 145, 24);
@@ -122,20 +122,20 @@ nav {
   margin-right: 11%;
   border-radius: 50px;
   overflow: hidden;
-} */
+}
 
-/* #progressBarFull {
+#progressBarFull {
   height: 100%;
   background: rgb(8, 145, 24);
   width: 0%;
-} */
+}
 
-/* #progressText {
+#progressText {
   display: inline;
   float: left;
   width: 20%;
   color: rgb(185, 185, 185);
-} */
+}
 
 /* Header */
 
@@ -250,7 +250,7 @@ nav {
 
 #hud {
   justify-content: space-between;
-  /* padding-left: 10%; */
+  padding-left: 10%;
   float: left;
   width: 100%;
   padding-bottom: 3%;
@@ -260,8 +260,8 @@ nav {
 #footer {
   padding-bottom: 5%;
   padding-top: 3%;
-  justify-content: center;
-  text-align: center;
+  /* justify-content: center;
+  text-align: center; */
 }
 
 #question {

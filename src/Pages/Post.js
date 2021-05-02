@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { firebase } from "./../Config";
+import { noConflict } from "jquery";
 
 export default function Post() {
   const [done, setDone] = useState(false);
@@ -34,6 +35,10 @@ export default function Post() {
   const [savedDateCreated, setSavedDateCreated] = useState();
   const [savedTimeCreated, setSavedTimeCreated] = useState();
   const [savedCreatedSortDate, setSavedCreatedSortDate] = useState();
+
+  const [swapIndex, setSwapIndex] = useState();
+
+  const progressBarFull = document.getElementById("progressBarFull");
 
   /* Setup */
 
@@ -110,8 +115,15 @@ export default function Post() {
   /* Quiz Buttons */
 
   function handleStartButtonClick() {
+    console.log(currentQuestion);
+    //console.log(progressBarFull);
+
     setInitial(false);
+
     setQuiz(true);
+    // progressBarFull.style.width = `${
+    //   ((currentQuestion + 1) / numQuestions) * 100
+    // }%`;
   }
 
   function handleCheckButtonClick() {
@@ -167,7 +179,6 @@ export default function Post() {
   }
 
   function handleNextButtonClick() {
-    setSelected(false);
     document.getElementById("next-btn").hidden = true;
     document.getElementById("check-btn").hidden = false;
     refreshButtons();
@@ -177,8 +188,16 @@ export default function Post() {
       setCurrentQuestion(nextQuestion);
       setAnswered(false);
       console.log(currentQuestion);
+      progressBarFull.style.width = `${(nextQuestion / numQuestions) * 100}%`;
+      console.log("currentQuestion: " + currentQuestion);
+      console.log("numQuestions: " + numQuestions);
+      console.log(
+        "currentQuestion / numQuestions) * 100: " +
+          (nextQuestion / numQuestions) * 100
+      );
     } else {
       alert("You have reached the end of the quiz");
+
       handleNextButtonClick();
     }
   }
@@ -193,12 +212,15 @@ export default function Post() {
   }
 
   function handleFinishButtonClick() {
+    setSelected(false);
+    setAnswered(false);
     setQuiz(false);
     setEnd(true);
   }
 
   function handleHomeButtonClick() {
     setCurrentQuestion(0);
+
     setScore(0);
     refreshResults();
     setInitial(true);
@@ -214,6 +236,7 @@ export default function Post() {
     setCurrentQuestion(0);
     setScore(0);
     refreshResults();
+
     setEnd(false);
     setQuiz(true);
   }
@@ -382,6 +405,36 @@ export default function Post() {
     }
   }
 
+  function getAnswersArray() {
+    var editQuestions = document.getElementsByClassName("editQuestions");
+    var checkboxes = document.getElementsByClassName("checkboxes");
+    var answersEdit = document.getElementsByClassName("answer");
+    var deleteCheckboxes = document.getElementsByClassName("deleteCheckboxes");
+
+    var finalArray = [];
+    for (var i = 0; i < editQuestions.length; i++) {
+      var questionNumTest = i;
+      var answersArray = [];
+      for (var j = 0; j < answersEdit.length; j++) {
+        console.log(answersEdit[j]);
+        console.log(
+          "questionnum2: " + answersEdit[j].getAttribute("questionnum2")
+        );
+
+        if (answersEdit[j].getAttribute("questionnum2") == questionNumTest) {
+          answersArray.push({
+            answerText: answersEdit[j].value,
+            isCorrect: checkboxes[j].checked,
+          });
+        }
+      }
+
+      finalArray.push(answersArray);
+    }
+    console.log(finalArray);
+    return finalArray;
+  }
+
   /* Other */
 
   function refreshResults() {
@@ -394,13 +447,13 @@ export default function Post() {
       {editingMode ? (
         <div id="editingQuiz">
           <form id="editForm">
-            <h1>Quiz</h1>
+            <h1>{quizTitle}</h1>
 
             <div>
               <hr />
               {quizData.map((question, questionIndex) => (
                 <div key={questionIndex} className="questionWidget">
-                  <h3>Question</h3>
+                  <h3> {questionIndex + 1}. Question</h3>
                   <input
                     type="text"
                     questionnum={questionIndex}
@@ -410,32 +463,35 @@ export default function Post() {
                   />
                   <br /> <br />
                   <h3>Answer Options</h3>
-                  {question.answerOptions.map((answer, i) => (
-                    <div key={i}>
-                      <input
-                        answernum={i}
-                        questionnum2={questionIndex}
-                        className="answer"
-                        type="text"
-                        defaultValue={answer.answerText}
-                      ></input>
-                      <input
-                        onChange={() => updateTicked(i, questionIndex)}
-                        questionnum2={questionIndex}
-                        id="myCheck"
-                        answernum={i}
-                        className="checkboxes"
-                        type="checkbox"
-                        defaultChecked={answer.isCorrect === true}
-                      />
-                    </div>
-                  ))}
+                  <div className="answerWidget">
+                    {question.answerOptions.map((answer, i) => (
+                      <div key={i}>
+                        <input
+                          answernum={i}
+                          questionnum2={questionIndex}
+                          className="answer"
+                          type="text"
+                          defaultValue={answer.answerText}
+                        ></input>
+                        <input
+                          onChange={() => updateTicked(i, questionIndex)}
+                          questionnum2={questionIndex}
+                          id="myCheck"
+                          answernum={i}
+                          className="checkboxes"
+                          type="checkbox"
+                          defaultChecked={answer.isCorrect === true}
+                        />
+                      </div>
+                    ))}
+                  </div>
                   <label>Delete Question </label>{" "}
                   <input
                     onChange={() => updateDelete(questionIndex)}
                     type="checkbox"
                     className="deleteCheckboxes"
                   />
+                  <br /> <br />
                   <hr />
                 </div>
               ))}
@@ -509,10 +565,10 @@ export default function Post() {
                 </div>
               </div>
               <hr />
-              <div className="" id="footer">
+              <div id="footer">
                 <div id="hud">
-                  <div id="progressText" className="hud-prefix"></div>
-                  <div>
+                  {/* <div id="progressText" className="hud-prefix"></div> */}
+                  <div id="progressText" className="hud-prefix">
                     Question {currentQuestion + 1} of {quizData.length}{" "}
                   </div>
                   <div id="progressBar">
