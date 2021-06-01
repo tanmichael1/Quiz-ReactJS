@@ -70,32 +70,10 @@ function Header() {
                   </a>
                 </li>
 
-                <li className="nav-item dropdown ">
-                  <a
-                    className="nav-link dropdown-toggle"
-                    id="navbarDropdown"
-                    role="button"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    User
+                <li className="nav-item">
+                  <a className="nav-link" href="/profile">
+                    My Profile
                   </a>
-                  <div
-                    className="dropdown-menu"
-                    aria-labelledby="navbarDropdown"
-                  >
-                    <li>
-                      <a className="dropdown-item" href="/profile">
-                        Profile
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="/profile">
-                        My Quizzes
-                      </a>
-                    </li>
-                  </div>
                 </li>
               </>
             ) : (
