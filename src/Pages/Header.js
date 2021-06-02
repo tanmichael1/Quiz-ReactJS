@@ -32,7 +32,7 @@ function Header() {
 
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <nav className="navbar navbar-expand-md navbar-light bg-light">
         <a className="navbar-brand" href="/">
           Navbar
         </a>
