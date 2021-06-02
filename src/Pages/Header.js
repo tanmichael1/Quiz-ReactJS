@@ -5,20 +5,12 @@ import { firebase } from "../Config";
 function Header() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [setupDone, setSetupDone] = useState(false);
-  const [currentUser, setCurrentUser] = useState("");
 
   function setup() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         setLoggedIn(true);
         document.getElementById("logoutVisible").classList.remove("hidden");
-        const dbRefUsers = firebase
-          .database()
-          .ref("Users/" + user.uid + "/username");
-
-        dbRefUsers.on("value", function (snap) {
-          setCurrentUser(snap.val());
-        });
       } else {
         document.getElementById("logoutVisible").classList.add("hidden");
       }
@@ -36,7 +28,7 @@ function Header() {
         <a className="navbar-brand" href="/">
           Navbar
         </a>
-        <h1 id="user">{currentUser}</h1>
+
         <button
           className="navbar-toggler"
           type="button"
