@@ -24,11 +24,11 @@ function Header() {
 
   return (
     <div>
-      <nav className="navbar navbar-expand-md navbar-light bg-light">
-        <a className="navbar-brand" href="/">
-          Navbar
+      <nav className="navbar navbar-brand-center navbar-expand-md navbar-light bg-light ">
+        <a className="navbar-brand mx-auto" href="/">
+          The Ultimate Quiz
         </a>
-
+        <div class="vl "></div>
         <button
           className="navbar-toggler"
           type="button"
