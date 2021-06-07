@@ -443,7 +443,6 @@ export default function Post() {
 
   return (
     <div className="container box">
-      <h2 id="mobile">Mobile</h2>
       {editingMode ? (
         <div id="editingQuiz">
           <form id="editForm">
