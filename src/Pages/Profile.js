@@ -63,11 +63,6 @@ function Profile() {
       ) : (
         <div>Not created any quizzes</div>
       )}
-
-      <hr />
-
-      <h2>Recently taken quizzes</h2>
-      {takenQuizzes > 0 ? <div>Test</div> : <div>Taken no quizzes</div>}
     </div>
   );
 }

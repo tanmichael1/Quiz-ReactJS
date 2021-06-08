@@ -90,7 +90,7 @@ li {
   color: #9893d8;
 }
 
-h1,
+/* h1, */
 h3 {
   font-size: 1.2em;
 }
@@ -409,10 +409,17 @@ nav {
 
 /* SCREEN STYLES */
 
+.navbar-brand {
+  font-size: 5vw;
+}
+
 /* mobile styles */
 
 /* small tablet styles */
 @media screen and (min-width: 620px) {
+  .nav-item {
+    font-size: 2vw;
+  }
   #mobile {
     display: none;
   }
@@ -423,6 +430,9 @@ nav {
 }
 
 @media screen and (min-width: 768px) {
+  .nav-item {
+    font-size: 2vw;
+  }
   .vl {
     margin-left: 10px;
     border-right: 3px solid black;
@@ -441,6 +451,9 @@ nav {
   /* body {
     font-size: 18px;
   } */
+  .nav-item {
+    font-size: 2vw;
+  }
   .vl {
     margin-left: 10px;
     border-right: 3px solid black;
@@ -457,6 +470,9 @@ nav {
 
 /* desktop styles */
 @media screen and (min-width: 1200px) {
+  .nav-item {
+    font-size: 1.75vw;
+  }
   .vl {
     margin-left: 10px;
     border-right: 3px solid black;

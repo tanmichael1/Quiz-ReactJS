@@ -59,7 +59,9 @@ export default function Quizzes() {
     <div className="container box">
       <h1 id="quizzesTitle">Welcome to Quizzes</h1>
 
-      <Button id="refresh">Refresh Quizzes</Button>
+      <div className="hidden">
+        <Button id="refresh">Refresh Quizzes</Button>
+      </div>
 
       {loading ? <div id="loading">Loading</div> : <div id="notLoading"></div>}
 
