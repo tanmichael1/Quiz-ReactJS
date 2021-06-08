@@ -224,8 +224,8 @@ nav {
 }
 
 #quizzesTitle {
-  text-align: left;
-  margin-left: 20vw;
+  text-align: center;
+  /* margin-left: 20vw; */
 }
 
 /* Post */

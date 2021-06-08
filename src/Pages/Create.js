@@ -35,6 +35,9 @@ export default function Create() {
         return index !== id;
       });
     });
+    console.log(savedQuestions.length);
+
+    checkNumQuestions();
   }
   function setup() {
     firebase.auth().onAuthStateChanged((user) => {
@@ -237,6 +240,7 @@ export default function Create() {
         alert("Need to fill in at least 2 options");
       }
     }
+    document.getElementById("savedQuestionsTitle").classList.remove("hidden");
   }
 
   function addAnswerOption(e) {
@@ -263,6 +267,15 @@ export default function Create() {
     }
   }
 
+  function checkNumQuestions() {
+    if (notes.length <= 1) {
+      document.getElementById("savedQuestionsTitle").classList.add("hidden");
+    } else {
+      document.getElementById("savedQuestionsTitle").classList.remove("hidden");
+    }
+    console.log(notes.length);
+  }
+
   return (
     <div className="container box">
       <h1>Create Quiz</h1>
@@ -281,7 +294,9 @@ export default function Create() {
         <p id="demo"></p>
 
         <div>
-          <h1>Saved Questions</h1>
+          <h1 className="hidden" id="savedQuestionsTitle">
+            Saved Questions
+          </h1>
           {notes.map((noteItem, index) => {
             return (
               <Widget
@@ -296,6 +311,7 @@ export default function Create() {
         </div>
 
         <div>
+          <h1>Add Questions</h1>
           <form id="addQuestions">
             <div>
               <label>Question</label>

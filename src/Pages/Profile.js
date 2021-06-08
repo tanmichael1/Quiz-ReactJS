@@ -13,7 +13,6 @@ function Profile() {
       setId(user.uid);
       const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
       const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
-      console.log("here2");
 
       dbRefUsers.on("value", (user) => {
         console.log(user.val());

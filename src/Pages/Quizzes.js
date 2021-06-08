@@ -23,7 +23,7 @@ export default function Quizzes() {
     setTimeout(() => {
       setLoading(false);
       setFinished(true);
-    }, 2000);
+    }, 3000);
     setDone(true);
   }
 
