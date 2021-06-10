@@ -43,6 +43,7 @@ function Profile() {
   return (
     <div className="container box">
       <h1>{username}</h1>
+      <hr />
 
       <h2>Created quizzes</h2>
       {createdQuizzes.length > 0 ? (

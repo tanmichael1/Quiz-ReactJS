@@ -540,7 +540,7 @@ export default function Post() {
               <hr />
 
               <div id="question-container">
-                <p id="question">{quizData[currentQuestion].questionText}</p>
+                <h2 id="question">{quizData[currentQuestion].questionText}</h2>
 
                 <div id="answer-buttons" className="answer-section">
                   {quizData[currentQuestion].answerOptions.map(
@@ -614,7 +614,7 @@ export default function Post() {
 
           {end ? (
             <div id="end" className="">
-              <h1>You have completed the Quiz</h1>
+              <h2>You have completed the Quiz</h2>
               <span>
                 <span>
                   Your Score: You scored {score} out of {numQuestions}{" "}
