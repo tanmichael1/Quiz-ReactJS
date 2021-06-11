@@ -55,14 +55,15 @@ function Home() {
   return (
     <div className="container box">
       <h1>Welcome to the Website</h1>
+      <hr />
       <h2>Latest Quiz</h2>
       {latestQuiz !== "" ? (
         <div>
           <a href={`${latestCreator}/${latestQuiz}`}>
-            <p>
+            <h3>
               {" "}
               {latestQuiz} from {latestCreator}{" "}
-            </p>{" "}
+            </h3>{" "}
           </a>
         </div>
       ) : (

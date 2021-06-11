@@ -239,8 +239,8 @@ export default function Create() {
       } else {
         alert("Need to fill in at least 2 options");
       }
+      document.getElementById("savedQuestionsTitle").classList.remove("hidden");
     }
-    document.getElementById("savedQuestionsTitle").classList.remove("hidden");
   }
 
   function addAnswerOption(e) {
@@ -279,10 +279,11 @@ export default function Create() {
   return (
     <div className="container box">
       <h1>Create Quiz</h1>
+      <hr />
 
       <form id="createQuizForm">
         <div>
-          <label>Title</label>
+          <h3>Title</h3>
           <input
             required
             type="text"
@@ -294,9 +295,9 @@ export default function Create() {
         <p id="demo"></p>
 
         <div>
-          <h1 className="hidden" id="savedQuestionsTitle">
+          <h2 className="hidden" id="savedQuestionsTitle">
             Saved Questions
-          </h1>
+          </h2>
           {notes.map((noteItem, index) => {
             return (
               <Widget
@@ -310,11 +311,13 @@ export default function Create() {
           })}
         </div>
 
+        <hr />
+
         <div>
-          <h1>Add Questions</h1>
+          <h2>Add Questions</h2>
           <form id="addQuestions">
             <div>
-              <label>Question</label>
+              <h3>Question</h3>
               <input
                 type="text"
                 className="form-control"
@@ -322,10 +325,11 @@ export default function Create() {
                 placeholder="Enter question"
               />
               <br />
+              <br />
             </div>
 
             <div>
-              <label>Answer Options</label>
+              <h3>Answer Options</h3>
               {numAnswers.map((answer, i) => (
                 <div className="answerOption">
                   <input
@@ -376,6 +380,7 @@ export default function Create() {
         </div>
       </form>
       <br />
+      <hr />
       <button onClick={() => submitQuiz()} className="btn btn-success">
         Submit Quiz
       </button>

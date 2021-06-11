@@ -91,9 +91,9 @@ li {
 }
 
 /* h1, */
-h3 {
+/* h3 {
   font-size: 1.2em;
-}
+} */
 
 nav {
   width: 100%;
@@ -204,6 +204,16 @@ nav {
 }
 
 #answer {
+  width: 80%;
+  display: inline-block;
+}
+
+#upload-question {
+  width: 80%;
+  display: inline-block;
+}
+
+#upload-title {
   width: 80%;
   display: inline-block;
 }
@@ -414,11 +424,43 @@ nav {
 }
 
 /* mobile styles */
+@media screen and (min-width: 0px) {
+  /* Navbar */
+
+  .nav-item {
+    font-size: 5vw;
+  }
+  #siteTitle {
+    font-size: 6vw;
+  }
+
+  #mobile {
+    display: none;
+  }
+
+  footer {
+    grid-column: 1/3;
+  }
+
+  h1 {
+    font-size: 10vw !important;
+  }
+
+  h2 {
+    font-size: 8vw !important;
+  }
+}
 
 /* small tablet styles */
 @media screen and (min-width: 620px) {
+  /* Navbar */
+
   .nav-item {
-    font-size: 2vw;
+    font-size: 4vw;
+  }
+
+  #siteTitle {
+    font-size: 6vw;
   }
   #mobile {
     display: none;
@@ -427,18 +469,27 @@ nav {
   footer {
     grid-column: 1/3;
   }
-  #siteTitle {
-    font-size: 5vw;
-  }
+
   h1 {
     font-size: 8vw !important;
+  }
+
+  h2 {
+    font-size: 5vw !important;
   }
 }
 
 @media screen and (min-width: 768px) {
+  /* Navbar */
+
   .nav-item {
     font-size: 2vw;
   }
+
+  #siteTitle {
+    font-size: 5vw;
+  }
+
   .vl {
     margin-left: 10px;
     border-right: 3px solid black;
@@ -452,6 +503,9 @@ nav {
   }
   h1 {
     font-size: 8vw !important;
+  }
+  h2 {
+    font-size: 5vw !important;
   }
 }
 
@@ -467,6 +521,9 @@ nav {
     margin-left: 10px;
     border-right: 3px solid black;
     height: 25px;
+  }
+  h2 {
+    font-size: 5vw !important;
   }
 
   .navbar .navbar-nav .nav-item .nav-link {
@@ -487,6 +544,36 @@ nav {
   } */
   h1 {
     font-size: 6vw !important;
+  }
+  h2 {
+    font-size: 4vw !important;
+  }
+  p {
+    font-size: 3vw;
+  }
+  #siteTitle {
+    font-size: 3vw;
+  }
+  .nav-item {
+    font-size: 1.75vw;
+  }
+  .vl {
+    margin-left: 10px;
+    border-right: 3px solid black;
+    height: 90px;
+  }
+}
+
+/* Large desktop styles */
+@media screen and (min-width: 2000px) {
+  /* body {
+    font-size: 18px;
+  } */
+  /* h1 {
+    font-size: 1;
+  } */
+  h1 {
+    font-size: 5vw !important;
   }
   h2 {
     font-size: 4vw !important;
