@@ -67,18 +67,20 @@ export default function Quizzes() {
 
       {finished ? (
         <div id="finished">
-          {quizArray.map((quiz, i) => (
-            <h3 key={i}>
-              <Link
-                to={{
-                  pathname: `${quiz.user}/${quiz.title}`,
-                }}
-              >
-                {quiz.title}
-              </Link>{" "}
-              from {quiz.user}
-            </h3>
-          ))}
+          <div id="finished2">
+            {quizArray.map((quiz, i) => (
+              <h3 id="center" key={i}>
+                <Link
+                  to={{
+                    pathname: `${quiz.user}/${quiz.title}`,
+                  }}
+                >
+                  {quiz.title}
+                </Link>{" "}
+                from {quiz.user}
+              </h3>
+            ))}
+          </div>
         </div>
       ) : (
         <div id="notFinished"></div>

@@ -229,10 +229,26 @@ nav {
 /* Quizzes */
 
 #finished {
-  text-align: left;
-  margin-left: 20vw;
+  text-align: center;
+
+  /* margin-left: 20vw; */
+
+  /*style="display: inline-block; text-align: left;"*/
 }
 
+#finished2 {
+  /* text-align: center; */
+  display: inline-block;
+  max-width: 60%;
+
+  /* margin-left: 20vw; */
+  text-align: left;
+  /*style="display: inline-block; text-align: left;"*/
+}
+
+/* #center {
+  text-align: left;
+} */
 #quizzesTitle {
   text-align: center;
   /* margin-left: 20vw; */
@@ -562,6 +578,13 @@ nav {
     border-right: 3px solid black;
     height: 90px;
   }
+
+  .navbar .navbar-nav .nav-item .nav-link {
+    padding: 0 0.5em;
+  }
+  .navbar .navbar-nav .nav-item:not(:last-child) .nav-link {
+    border-right: 2px solid #000000;
+  }
 }
 
 /* Large desktop styles */
@@ -591,6 +614,13 @@ nav {
     margin-left: 10px;
     border-right: 3px solid black;
     height: 90px;
+  }
+
+  .navbar .navbar-nav .nav-item .nav-link {
+    padding: 0 0.5em;
+  }
+  .navbar .navbar-nav .nav-item:not(:last-child) .nav-link {
+    border-right: 2px solid #000000;
   }
 }
 
