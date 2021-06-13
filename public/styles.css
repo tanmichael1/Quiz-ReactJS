@@ -447,7 +447,34 @@ nav {
     font-size: 5vw;
   }
   #siteTitle {
-    font-size: 6vw;
+    font-size: 8vw;
+  }
+
+  #mobile {
+    display: none;
+  }
+
+  footer {
+    grid-column: 1/3;
+  }
+
+  h1 {
+    font-size: 10vw !important;
+  }
+
+  h2 {
+    font-size: 8vw !important;
+  }
+}
+
+@media screen and (min-width: 360px) {
+  /* Navbar */
+
+  .nav-item {
+    font-size: 5vw;
+  }
+  #siteTitle {
+    font-size: 8vw;
   }
 
   #mobile {
@@ -509,7 +536,7 @@ nav {
   .vl {
     margin-left: 10px;
     border-right: 3px solid black;
-    height: 25px;
+    height: 80px;
   }
   .navbar .navbar-nav .nav-item .nav-link {
     padding: 0 0.5em;
@@ -536,7 +563,7 @@ nav {
   .vl {
     margin-left: 10px;
     border-right: 3px solid black;
-    height: 25px;
+    height: 8vw;
   }
   h2 {
     font-size: 5vw !important;
@@ -576,7 +603,7 @@ nav {
   .vl {
     margin-left: 10px;
     border-right: 3px solid black;
-    height: 90px;
+    height: 5vw;
   }
 
   .navbar .navbar-nav .nav-item .nav-link {
@@ -613,7 +640,7 @@ nav {
   .vl {
     margin-left: 10px;
     border-right: 3px solid black;
-    height: 90px;
+    height: 5vw;
   }
 
   .navbar .navbar-nav .nav-item .nav-link {
