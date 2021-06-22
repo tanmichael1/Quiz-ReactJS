@@ -346,11 +346,9 @@ export default function Post() {
         createdSortDate: savedCreatedSortDate,
       });
 
-    var index = editQuestions.length;
-
-    for (var i = 1; i < numQuestions - numDeleteCheckboxes + 1; i++) {
-      var question = finalArray[i - 1];
-      firebase.database().ref(`Quizzes/${currentUser}/${quizTitle}/${i}`).set({
+    for (var k = 1; k < numQuestions - numDeleteCheckboxes + 1; k++) {
+      var question = finalArray[j - 1];
+      firebase.database().ref(`Quizzes/${currentUser}/${quizTitle}/${k}`).set({
         answerOptions: question.answerOptions,
         questionText: question.question,
       });

@@ -292,7 +292,6 @@ export default function Create() {
             placeholder="Enter quiz title"
           />
         </div>
-        <p id="demo"></p>
 
         <div>
           <h2 className="hidden" id="savedQuestionsTitle">

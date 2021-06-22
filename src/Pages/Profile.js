@@ -3,17 +3,14 @@ import { firebase } from "./../Config";
 import { Link } from "react-router-dom";
 function Profile() {
   const [done, setDone] = useState(false);
-  const [id, setId] = useState();
   const [username, setUsername] = useState("");
   const [createdQuizzes, setCreatedQuizzes] = useState([]);
   let takenQuizzes = [];
   function setup() {
     console.log("Here");
     firebase.auth().onAuthStateChanged((user) => {
-      setId(user.uid);
       const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
       const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
-
       dbRefUsers.on("value", (user) => {
         console.log(user.val());
         if (user.val().createdQuizzes == undefined) {
@@ -64,6 +61,17 @@ function Profile() {
       ) : (
         <div>Not created any quizzes</div>
       )}
+
+      <hr />
+      <div id="profileButtons">
+        <button id="change password" className="btn btn-primary">
+          Change Password
+        </button>{" "}
+        <br />
+        <button className="btn btn-danger" id="deleteAccount">
+          Delete Account
+        </button>
+      </div>
     </div>
   );
 }
