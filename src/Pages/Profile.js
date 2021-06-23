@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { firebase } from "./../Config";
 import { Link } from "react-router-dom";
+
 function Profile() {
   const [done, setDone] = useState(false);
   const [username, setUsername] = useState("");
@@ -34,6 +35,43 @@ function Profile() {
 
     setDone(true);
   }
+
+  function changePassword() {
+    // Ask signed in user for current password.
+    const currentPass = window.prompt("Please enter current password");
+    const emailCred = firebase.auth.EmailAuthProvider.credential(
+      firebase.auth().currentUser,
+      currentPass
+    );
+    firebase
+      .auth()
+      .currentUser.reauthenticateWithCredential(emailCred)
+      .then(() => {
+        // User successfully reauthenticated.
+        const newPass = window.prompt("Please enter new password");
+        return firebase.auth().currentUser.updatePassword(newPass);
+      })
+      .catch((error) => {
+        // Handle error.
+      });
+  }
+
+  function test() {
+    let user = firebase.auth().currentUser;
+    let newPassword = "Password";
+
+    user.updatePassword(newPassword).then(
+      () => {
+        // Update successful.
+      },
+      (error) => {
+        // An error happened.
+      }
+    );
+  }
+
+  function test2() {}
+
   if (!done) {
     setup();
   }
@@ -63,8 +101,12 @@ function Profile() {
       )}
 
       <hr />
-      <div id="profileButtons">
-        <button id="change password" className="btn btn-primary">
+      <div id="profileButtons hidden">
+        <button
+          onClick={() => test()}
+          id="changePassword"
+          className="btn btn-primary"
+        >
           Change Password
         </button>{" "}
         <br />

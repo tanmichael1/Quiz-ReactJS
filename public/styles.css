@@ -552,6 +552,16 @@ nav {
   h2 {
     font-size: 4vw !important;
   }
+
+  /* Super Large desktop styles */
+  @media screen and (min-width: 3000px) {
+    h1 {
+      font-size: 4vw !important;
+    }
+    h2 {
+      font-size: 2vw !important;
+    }
+  }
 }
 
 /* grid testing */
