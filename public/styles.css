@@ -541,6 +541,30 @@ nav {
   }
   .vl {
     height: 5vw;
+    margin-left: 60px;
+    margin-right: 40px;
+  }
+
+  .navbar .navbar-nav .nav-item .nav-link {
+    padding: 0 1.5em;
+  }
+  .navbar .navbar-nav .nav-item:not(:last-child) .nav-link {
+    border-right: 2px solid #000000;
+  }
+}
+
+/* desktop styles */
+@media screen and (min-width: 1600px) {
+  .vl {
+    margin-left: 40px;
+    margin-right: 20px;
+  }
+
+  .navbar .navbar-nav .nav-item .nav-link {
+    padding: 0 1.25em;
+  }
+  .navbar .navbar-nav .nav-item:not(:last-child) .nav-link {
+    border-right: 2px solid #000000;
   }
 }
 
