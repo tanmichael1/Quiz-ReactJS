@@ -11,6 +11,7 @@ export default function Create() {
   const [currentUser, setCurrentUser] = useState();
   const [currentUserID, setCurrentUserID] = useState();
   const [quizTitles, setQuizTitles] = useState([]);
+  const [admin, setAdmin] = useState(false);
 
   const [notes, setNotes] = useState([]);
 
@@ -42,13 +43,23 @@ export default function Create() {
   function setup() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        const dbRefUsers = firebase
+        const dbRefUsersName = firebase
           .database()
           .ref("Users/" + user.uid + "/username");
+        console.log(user);
+        const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
+        dbRefUsers.on("value", (user) => {
+          if (user.val().admin == undefined || user.val().admin == false) {
+            console.log("undefined or not admin");
+          } else {
+            setAdmin(true);
+          }
+        });
 
         setCurrentUserID(user.uid);
-        dbRefUsers.on("value", function (snap) {
+        dbRefUsersName.on("value", function (snap) {
           setCurrentUser(snap.val());
+          console.log(snap.val());
         });
       } else {
         alert("Must have be logged in to create a quiz");
@@ -385,8 +396,15 @@ export default function Create() {
               Test Quiz Button
             </button>
             <br />
-            <label>Test Quiz </label>
-            <input id="testQuiz" type="checkbox" />
+
+            {admin ? (
+              <div>
+                <label>Test Quiz </label>
+                <input id="testQuiz" type="checkbox" />{" "}
+              </div>
+            ) : (
+              <div></div>
+            )}
           </form>
         </div>
       </form>
