@@ -70,7 +70,25 @@ function Profile() {
     );
   }
 
-  function test2() {}
+  function toggleUsername() {
+    if (
+      document.getElementById("usernameChange").classList.contains("hidden")
+    ) {
+      document.getElementById("usernameChange").classList.remove("hidden");
+    } else {
+      document.getElementById("usernameChange").classList.add("hidden");
+    }
+  }
+
+  function changeUsername() {
+    document.getElementById("verifyPassword");
+    var newPassword = document.getElementById("newUsername");
+    var result = window.confirm(
+      "Are you sure you want to change your username to " + newPassword + "?"
+    );
+    if (result) {
+    }
+  }
 
   if (!done) {
     setup();
@@ -102,6 +120,23 @@ function Profile() {
 
       <hr />
       <div id="profileButtons hidden">
+        <button
+          onClick={() => toggleUsername()}
+          id="changeUsername"
+          className="btn btn-primary"
+        >
+          Change Username
+        </button>
+        <br />
+        <div id="usernameChange" className="hidden">
+          <label>Your new Username</label>
+          <input id="newUsername" type="text" />
+          <br />
+          <label>Your password</label>
+          <input id="verifyPassword" type="text" />
+          <br />
+          <button onClick={() => changeUsername()}>Change Username</button>
+        </div>
         <button
           onClick={() => test()}
           id="changePassword"
