@@ -118,6 +118,7 @@ export default function Create() {
           timeCreated: new Date().toLocaleTimeString("en-NZ"),
           createdSortDate: new Date().toISOString(),
           updatedSortDate: new Date().toISOString(),
+          testQuiz: document.getElementById("testQuiz").checked,
         });
 
       //Each question
@@ -276,6 +277,11 @@ export default function Create() {
     console.log(notes.length);
   }
 
+  function test(e) {
+    e.preventDefault();
+    console.log(document.getElementById("testQuiz").checked);
+  }
+
   return (
     <div className="container box">
       <h1>Create Quiz</h1>
@@ -375,6 +381,12 @@ export default function Create() {
             >
               Save Question
             </button>
+            <button className="hidden" onClick={(e) => test(e)}>
+              Test Quiz Button
+            </button>
+            <br />
+            <label>Test Quiz </label>
+            <input id="testQuiz" type="checkbox" />
           </form>
         </div>
       </form>
