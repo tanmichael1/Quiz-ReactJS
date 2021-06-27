@@ -323,6 +323,7 @@ export default function Post() {
       }
 
       if (deleteCheckboxes[i].checked == false) {
+        console.log(editQuestions[i].value);
         finalArray.push({
           question: editQuestions[i].value,
           answerOptions: answersArray,
@@ -347,11 +348,12 @@ export default function Post() {
       });
 
     for (var k = 1; k < numQuestions - numDeleteCheckboxes + 1; k++) {
-      var question = finalArray[j - 1];
+      var question = finalArray[k - 1];
       firebase.database().ref(`Quizzes/${currentUser}/${quizTitle}/${k}`).set({
         answerOptions: question.answerOptions,
         questionText: question.question,
       });
+
       console.log(question.question);
     }
 
