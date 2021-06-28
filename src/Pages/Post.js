@@ -14,6 +14,7 @@ export default function Post() {
   const [editingMode, setEditingMode] = useState(false);
   const [answered, setAnswered] = useState(false);
   const [testQuiz, setTestQuiz] = useState(false);
+  const [admin, setAdmin] = useState(false);
 
   const [initial, setInitial] = useState(true);
   const [quiz, setQuiz] = useState(false);
@@ -86,12 +87,14 @@ export default function Post() {
   function setup(currUser) {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        const dbRefUsers = firebase
+        const dbRefUsersName = firebase
           .database()
           .ref("Users/" + user.uid + "/username");
+        const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
         console.log(user.uid);
         setCurrentUserID(user.uid);
-        dbRefUsers.on("value", function (snapUser) {
+        dbRefUsersName.on("value", function (snapUser) {
+          console.log(snapUser.val());
           console.log("snap.val(): " + snapUser.val());
           console.log("quizUser: " + currUser);
           setCurrentUser(snapUser.val());
@@ -101,6 +104,17 @@ export default function Post() {
           } else {
             console.log("Not creator");
           }
+          dbRefUsers.on("value", (person) => {
+            console.log(person.val());
+            if (
+              person.val().admin == undefined ||
+              person.val().admin == false
+            ) {
+              console.log("undefined or not admin");
+            } else {
+              setAdmin(true);
+            }
+          });
         });
       } else {
         console.log("User is not logged in");
@@ -508,14 +522,21 @@ export default function Post() {
               ))}
             </div>
           </form>
-          <label>Test Quiz</label>
-          <input
-            id="changeTestQuiz"
-            type="checkbox"
-            defaultChecked={testQuiz === true}
-            onChange={() => toggleTestQuiz()}
-          />
-          <br />
+          {admin ? (
+            <>
+              <label>Test Quiz</label>
+              <input
+                id="changeTestQuiz"
+                type="checkbox"
+                defaultChecked={testQuiz === true}
+                onChange={() => toggleTestQuiz()}
+              />
+              <br />
+            </>
+          ) : (
+            <div></div>
+          )}
+
           <Button onClick={toggleEditQuiz}>Exit Editing Mode</Button>
 
           <Button onClick={updateQuiz}>Submit Quiz</Button>
