@@ -13,6 +13,7 @@ export default function Post() {
   const [isCreator, setIsCreator] = useState(false);
   const [editingMode, setEditingMode] = useState(false);
   const [answered, setAnswered] = useState(false);
+  const [testQuiz, setTestQuiz] = useState(false);
 
   const [initial, setInitial] = useState(true);
   const [quiz, setQuiz] = useState(false);
@@ -54,11 +55,11 @@ export default function Post() {
 
     var newQuizTitle = unescape(splittable[2]);
     dbRefObject.on("value", (snap) => console.log(snap.val()));
-
     const dbTestQuiz = ref.child("Quizzes/" + user + "/" + newQuizTitle);
 
     dbTestQuiz.on("value", function (quiz) {
       var count = quiz.child("NumQuestions").val();
+      setTestQuiz(quiz.child("testQuiz").val());
       console.log(quiz.val());
       setNumQuestions(count);
       setSavedDateCreated(quiz.child("dateCreated").val());
@@ -72,6 +73,14 @@ export default function Post() {
     });
 
     setDone(true);
+  }
+
+  function toggleTestQuiz() {
+    if (document.getElementById("changeTestQuiz").checked === false) {
+      document.getElementById("changeTestQuiz").checked = false;
+    } else {
+      document.getElementById("changeTestQuiz").checked = true;
+    }
   }
 
   function setup(currUser) {
@@ -278,6 +287,7 @@ export default function Post() {
   /* Editing Mode */
 
   function toggleEditQuiz() {
+    //toggleTestQuiz();
     setEditingMode(!editingMode);
   }
 
@@ -499,7 +509,12 @@ export default function Post() {
             </div>
           </form>
           <label>Test Quiz</label>
-          <input id="changeTestQuiz" type="checkbox" />
+          <input
+            id="changeTestQuiz"
+            type="checkbox"
+            defaultChecked={testQuiz === true}
+            onChange={() => toggleTestQuiz()}
+          />
           <br />
           <Button onClick={toggleEditQuiz}>Exit Editing Mode</Button>
 
