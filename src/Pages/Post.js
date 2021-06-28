@@ -303,6 +303,7 @@ export default function Post() {
     var answersEdit = document.getElementsByClassName("answer");
     var deleteCheckboxes = document.getElementsByClassName("deleteCheckboxes");
     var numDeleteCheckboxes = 0;
+    var changeTestQuiz = document.getElementById("changeTestQuiz").checked;
 
     var finalArray = [];
     for (var i = 0; i < editQuestions.length; i++) {
@@ -345,6 +346,7 @@ export default function Post() {
         dateCreated: savedDateCreated,
         timeCreated: savedTimeCreated,
         createdSortDate: savedCreatedSortDate,
+        testQuiz: changeTestQuiz,
       });
 
     for (var k = 1; k < numQuestions - numDeleteCheckboxes + 1; k++) {
@@ -496,6 +498,9 @@ export default function Post() {
               ))}
             </div>
           </form>
+          <label>Test Quiz</label>
+          <input id="changeTestQuiz" type="checkbox" />
+          <br />
           <Button onClick={toggleEditQuiz}>Exit Editing Mode</Button>
 
           <Button onClick={updateQuiz}>Submit Quiz</Button>
