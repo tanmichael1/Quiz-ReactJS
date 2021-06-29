@@ -33,6 +33,8 @@ export default function Post() {
   const [quizUser, setQuizUser] = useState();
   const [quizTitle, setQuizTitle] = useState(null);
 
+  const [numAnswers, setNumAnswers] = useState(["Answer 1", "Answer 2"]);
+
   //Other quiz details
   const [savedDateCreated, setSavedDateCreated] = useState();
   const [savedTimeCreated, setSavedTimeCreated] = useState();
@@ -318,6 +320,7 @@ export default function Post() {
 
       //Redirects
       window.location.href = "/";
+      console.log("");
     }
   }
 
@@ -431,6 +434,120 @@ export default function Post() {
     }
   }
 
+  function addQuestion(e) {
+    e.preventDefault();
+
+    var checkboxes = document.getElementsByClassName("newCheckboxes");
+
+    let newQuestion = document.getElementById("upload-NewQuestion").value;
+    if (newQuestion == null || newQuestion == "") {
+      alert("Needs a question");
+    } else if (!checkCheckboxes()) {
+      alert("Must specify which option is correct");
+    }
+    //Check that correct Index is valid value
+    else {
+      //Save answer options
+      var answerArray = [];
+      var displayArray = [];
+      var newSavedAnswers = [];
+      var x = document.getElementsByClassName("Answer");
+      var array = quizData;
+
+      var i;
+
+      //If less than 2 options are filled in
+      var min2Options = false;
+      var numOptionsCount = 0;
+
+      //If correct answer is blank
+      var validAnswer = false;
+
+      for (i = 0; i < x.length; i++) {
+        if (x[i].value != "" && x[i].value != null) {
+          numOptionsCount++;
+          console.log(numOptionsCount);
+          if (
+            document.getElementsByClassName("newCheckboxes")[i].checked == true
+          ) {
+            if (x[i].value != "") {
+              validAnswer = true;
+            }
+            answerArray.push({ answerText: x[i].value, isCorrect: true });
+            //displayArray.push({ answerText: x[i].value, color: "green" });
+          } else {
+            answerArray.push({ answerText: x[i].value, isCorrect: false });
+            //displayArray.push({ answerText: x[i].value, color: "red" });
+          }
+        }
+      }
+
+      if (numOptionsCount >= 2) {
+        min2Options = true;
+      }
+
+      if (min2Options) {
+        if (validAnswer) {
+          array.push({
+            questionText: newQuestion,
+            answerOptions: answerArray,
+          });
+
+          //console.log(displayArray);
+          newSavedAnswers.push(answerArray);
+
+          console.log(answerArray);
+          console.log(newSavedAnswers);
+          setQuizData(array);
+          //quizData.push(tempQuestions);
+          //setAnswerOptions(newSavedAnswers);
+
+          //Save question
+          // var currentQuestions = savedQuestions;
+          // currentQuestions.push(newQuestion);
+
+          //Display questions
+
+          // var tempQuestions = displayQuestions;
+          // tempQuestions.push({
+          //   question: newQuestion,
+          //   answerOptions: answerArray,
+          // });
+
+          // setNotes(tempQuestions);
+          // document.getElementById("addQuestions").reset();
+          // setNumAnswers(["Answer 1", "Answer 2"]);
+          //quizData.push(tempQuestions);
+        } else {
+          alert("Chosen correct answer is blank");
+        }
+      } else {
+        alert("Need to fill in at least 2 options");
+      }
+      //document.getElementById("savedQuestionsTitle").classList.remove("hidden");
+    }
+  }
+  function addAnswerOption(e) {
+    e.preventDefault();
+    var length = numAnswers.length;
+    if (length == 2) {
+      setNumAnswers(["Answer 1", "Answer 2", "Answer 3"]);
+    } else if (length == 3) {
+      setNumAnswers(["Answer 1", "Answer 2", "Answer 3", "Answer 4"]);
+    }
+  }
+  function checkCheckboxes() {
+    var checkboxes = document.getElementsByClassName("newCheckboxes");
+    var i;
+
+    for (i = 0; i < checkboxes.length; i++) {
+      if (document.getElementsByClassName("newCheckboxes")[i].checked == true) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   function getAnswersArray() {
     var editQuestions = document.getElementsByClassName("editQuestions");
     var checkboxes = document.getElementsByClassName("checkboxes");
@@ -520,6 +637,75 @@ export default function Post() {
                   <hr />
                 </div>
               ))}
+            </div>
+            <div>
+              <form id="addQuestions">
+                <div>
+                  <h3>Question</h3>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="upload-NewQuestion"
+                    placeholder="Enter question"
+                  />
+                  <br />
+                  <br />
+                </div>
+
+                <div>
+                  <h3>Answer Options</h3>
+                  {numAnswers.map((answer, i) => (
+                    <div className="answerOption">
+                      <input
+                        key={i}
+                        type="text"
+                        className="form-control Answer"
+                        id="answer"
+                        placeholder="Answer"
+                      />
+                      {"  "}
+                      <input
+                        type="checkbox"
+                        id="answerCheckbox"
+                        onChange={(e) => updateTicked(e, i)}
+                        answernum={i}
+                        className="newCheckboxes"
+                        type="checkbox"
+                      />
+                      <br /> <br />
+                    </div>
+                  ))}
+
+                  {numAnswers.length < 4 ? (
+                    <>
+                      <button
+                        id="addAnswerOption"
+                        onClick={(e) => addAnswerOption(e)}
+                        className="btn btn-secondary"
+                      >
+                        Add Answer Option
+                      </button>
+                      <br />
+
+                      <br />
+                    </>
+                  ) : (
+                    <div></div>
+                  )}
+                </div>
+                <button
+                  id="addQuestionID"
+                  onClick={(e) => addQuestion(e)}
+                  className=" btn btn-primary"
+                >
+                  Save Question
+                </button>
+
+                <button id="editAddQuestionID" onClick={(e) => addQuestion(e)}>
+                  Add New Question
+                </button>
+                <br />
+              </form>
             </div>
           </form>
           {admin ? (
