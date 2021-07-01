@@ -33,6 +33,10 @@ export default function Post() {
   const [quizUser, setQuizUser] = useState();
   const [quizTitle, setQuizTitle] = useState(null);
 
+  const [startTime, setStartTime] = useState();
+  const [endTime, setEndTime] = useState();
+  const [finalTime, setFinalTime] = useState();
+
   const [numAnswers, setNumAnswers] = useState(["Answer 1", "Answer 2"]);
 
   //Other quiz details
@@ -141,6 +145,7 @@ export default function Post() {
 
   function handleStartButtonClick() {
     console.log(currentQuestion);
+    startTimer();
     //console.log(progressBarFull);
 
     setInitial(false);
@@ -237,6 +242,7 @@ export default function Post() {
   }
 
   function handleFinishButtonClick() {
+    endTimer();
     setSelected(false);
     setAnswered(false);
     setQuiz(false);
@@ -258,6 +264,7 @@ export default function Post() {
   }
 
   function handleRestartButtonClick() {
+    startTimer();
     setCurrentQuestion(0);
     setScore(0);
     refreshResults();
@@ -320,7 +327,6 @@ export default function Post() {
 
       //Redirects
       window.location.href = "/";
-      console.log("");
     }
   }
 
@@ -498,7 +504,11 @@ export default function Post() {
 
           console.log(answerArray);
           console.log(newSavedAnswers);
+          console.log(array);
           setQuizData(array);
+          document.getElementById("editForm").location.reload();
+          //document.getElementById("data").reload(true);
+
           //quizData.push(tempQuestions);
           //setAnswerOptions(newSavedAnswers);
 
@@ -584,6 +594,25 @@ export default function Post() {
     setResponse([]);
   }
 
+  function startTimer() {
+    setStartTime(new Date());
+  }
+  function endTimer() {
+    setEndTime(new Date());
+    console.log(endTime);
+    console.log(startTime);
+
+    var timeDiff = new Date() - startTime; //in ms
+    // strip the ms
+    console.log(timeDiff);
+    timeDiff /= 1000;
+
+    // get seconds
+    var seconds = Math.round(timeDiff);
+    setFinalTime(seconds);
+    console.log(seconds + " seconds");
+  }
+
   return (
     <div className="container box">
       {editingMode ? (
@@ -591,7 +620,7 @@ export default function Post() {
           <form id="editForm">
             <h1>{quizTitle}</h1>
 
-            <div>
+            <div id="data">
               <hr />
               {quizData.map((question, questionIndex) => (
                 <div key={questionIndex} className="questionWidget">
@@ -639,7 +668,7 @@ export default function Post() {
               ))}
             </div>
             <div>
-              <form id="addQuestions">
+              <form id="addEditQuestions">
                 <div>
                   <h3>Question</h3>
                   <input
@@ -694,14 +723,14 @@ export default function Post() {
                   )}
                 </div>
                 <button
-                  id="addQuestionID"
+                  id="editAddQuestionID"
                   onClick={(e) => addQuestion(e)}
                   className=" btn btn-primary"
                 >
                   Save Question
                 </button>
 
-                <button id="editAddQuestionID" onClick={(e) => addQuestion(e)}>
+                <button onClick={(e) => addQuestion(e)}>
                   Add New Question
                 </button>
                 <br />
@@ -722,6 +751,8 @@ export default function Post() {
           ) : (
             <div></div>
           )}
+
+          <hr />
 
           <Button onClick={toggleEditQuiz}>Exit Editing Mode</Button>
 
@@ -846,6 +877,8 @@ export default function Post() {
                 <span>
                   Your Score: You scored {score} out of {numQuestions}{" "}
                 </span>
+                <br />
+                <span>This took you {finalTime} seconds.</span>
                 <span id="score"></span>
               </span>
 
