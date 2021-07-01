@@ -35,7 +35,8 @@ export default function Post() {
 
   const [startTime, setStartTime] = useState();
   const [endTime, setEndTime] = useState();
-  const [finalTime, setFinalTime] = useState();
+  const [finalTimeSeconds, setFinalTimeSeconds] = useState();
+  const [finalTimeMinutes, setFinalTimeMinutes] = useState();
 
   const [numAnswers, setNumAnswers] = useState(["Answer 1", "Answer 2"]);
 
@@ -609,8 +610,13 @@ export default function Post() {
 
     // get seconds
     var seconds = Math.round(timeDiff);
-    setFinalTime(seconds);
+    var minutes = Math.floor(seconds / 60);
+    seconds = seconds - minutes * 60;
+
+    setFinalTimeSeconds(seconds);
+    setFinalTimeMinutes(minutes);
     console.log(seconds + " seconds");
+    console.log(minutes + " minutes");
   }
 
   return (
@@ -878,7 +884,11 @@ export default function Post() {
                   Your Score: You scored {score} out of {numQuestions}{" "}
                 </span>
                 <br />
-                <span>This took you {finalTime} seconds.</span>
+
+                <span>
+                  This took you {finalTimeMinutes} minutes and{" "}
+                  {finalTimeSeconds} seconds.
+                </span>
                 <span id="score"></span>
               </span>
 
