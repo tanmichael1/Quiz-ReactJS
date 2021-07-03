@@ -82,11 +82,39 @@ function Profile() {
 
   function changeUsername() {
     document.getElementById("verifyPassword");
-    var newPassword = document.getElementById("newUsername");
+    var newUsername = document.getElementById("newUsername").value;
     var result = window.confirm(
-      "Are you sure you want to change your username to " + newPassword + "?"
+      "Are you sure you want to change your username to " + newUsername + "?"
     );
     if (result) {
+    }
+  }
+
+  function togglePassword() {
+    if (
+      document.getElementById("passwordChange").classList.contains("hidden")
+    ) {
+      document.getElementById("passwordChange").classList.remove("hidden");
+    } else {
+      document.getElementById("passwordChange").classList.add("hidden");
+    }
+  }
+
+  function changePassword() {
+    document.getElementById("currentPassword");
+    var newPassword = document.getElementById("newPassword").value;
+    var confirmNewPassword =
+      document.getElementById("confirmNewPassword").value;
+    console.log(newPassword);
+    console.log(confirmNewPassword);
+    if (newPassword == confirmNewPassword) {
+      var result = window.confirm(
+        "Are you sure you want to change your password to " + newPassword + "?"
+      );
+      if (result) {
+      }
+    } else {
+      alert("Passwords must be identical");
     }
   }
 
@@ -100,7 +128,7 @@ function Profile() {
 
       <h2>Created quizzes</h2>
       {createdQuizzes.length > 0 ? (
-        <div>
+        <>
           {createdQuizzes.map((quiz, i) => (
             <div key={i}>
               <Link
@@ -108,17 +136,18 @@ function Profile() {
                   pathname: `${username}/${quiz.title}`,
                 }}
               >
-                {quiz.title}
+                <h3>{quiz.title}</h3>
               </Link>{" "}
               <br />
             </div>
           ))}
-        </div>
+        </>
       ) : (
         <div>Not created any quizzes</div>
       )}
 
       <hr />
+      <h2>Settings</h2>
       <div id="profileButtons hidden">
         <button
           onClick={() => toggleUsername()}
@@ -130,20 +159,42 @@ function Profile() {
         <br />
         <div id="usernameChange" className="hidden">
           <label>Your new Username</label>
+          <br />
           <input id="newUsername" type="text" />
           <br />
           <label>Your password</label>
+          <br />
           <input id="verifyPassword" type="text" />
           <br />
           <button onClick={() => changeUsername()}>Change Username</button>
+          <hr />
         </div>
+
         <button
-          onClick={() => test()}
+          onClick={() => togglePassword()}
           id="changePassword"
           className="btn btn-primary"
         >
           Change Password
-        </button>{" "}
+        </button>
+
+        <div id="passwordChange" className="hidden">
+          <label>Your password</label>
+          <br />
+          <input id="currentPassword" type="text" />
+          <br />
+          <label>Your new password</label>
+          <br />
+          <input id="newPassword" type="text" />
+          <br />
+          <label>Confirm new password</label>
+          <br />
+          <input id="confirmNewPassword" type="text" />
+          <br />
+
+          <button onClick={() => changePassword()}>Change Password</button>
+          <hr />
+        </div>
         <br />
         <button className="btn btn-danger" id="deleteAccount">
           Delete Account
