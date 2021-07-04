@@ -11,6 +11,7 @@ import Create from "./Pages/Create";
 import Login from "./Pages/Login";
 import Profile from "./Pages/Profile";
 import Quizzes from "./Pages/Quizzes";
+import Reset from "./Pages/Reset";
 
 import Post from "./Pages/Post";
 
@@ -26,6 +27,7 @@ export default function App() {
           <Route exact path="/login" component={Login} />
           <Route exact path="/profile" component={Profile} />
           <Route exact path="/quizzes" component={Quizzes} />
+          <Route exact path="/reset" component={Reset} />
           <Route exact path="/:user/:quizId" component={Post} />
           <Route path="/" render={() => <h1>404</h1>} />
         </Switch>

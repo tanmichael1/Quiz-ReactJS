@@ -29,3 +29,7 @@ export { firebase };
 export { storage };
 
 export { database };
+
+// passwordReset: (email) => {
+//   return firebase.auth().sendPasswordResetEmail(email);
+// };

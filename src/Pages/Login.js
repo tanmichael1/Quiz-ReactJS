@@ -23,6 +23,7 @@ function Login() {
             id="login-password"
             placeholder="Password"
           />
+          <a href="/reset">Reset Password</a>
         </div>
         <button type="submit" className="btn btn-primary">
           Login
