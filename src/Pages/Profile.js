@@ -8,19 +8,18 @@ function Profile() {
   const [createdQuizzes, setCreatedQuizzes] = useState([]);
   let takenQuizzes = [];
   function setup() {
-    console.log("Here");
     firebase.auth().onAuthStateChanged((user) => {
       const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
       const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
       dbRefUsers.on("value", (user) => {
-        console.log(user.val());
+        //console.log(user.val());
         if (user.val().createdQuizzes == undefined) {
           console.log("undefined");
         } else {
           dbCreatedQuizzes.on("value", (userQuizzes) =>
             userQuizzes.forEach((quiz) => {
               var tempArray = createdQuizzes;
-              console.log(quiz.val());
+              //console.log(quiz.val());
               tempArray.push({
                 title: quiz.val().title,
               });
@@ -118,6 +117,34 @@ function Profile() {
     }
   }
 
+  function deleteAccount() {
+    const currentPass = window.prompt(
+      "Please enter anything to confirm you want to delete your account."
+    );
+
+    if (currentPass) {
+      const user = firebase.auth().currentUser;
+      const uid = firebase.auth().currentUser.uid;
+      var currentArray = [];
+
+      user
+        .delete()
+        .then(() => {
+          const usersRef = firebase.database().ref(`Users/${uid}`);
+
+          usersRef.remove();
+          window.location.href = "/";
+
+          // User deleted.
+        })
+        .catch((error) => {
+          console.log(error);
+          // An error ocurred
+          // ...
+        });
+    }
+  }
+
   if (!done) {
     setup();
   }
@@ -166,7 +193,12 @@ function Profile() {
           <br />
           <input id="verifyPassword" type="text" />
           <br />
-          <button onClick={() => changeUsername()}>Change Username</button>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => changeUsername()}
+          >
+            Change Username
+          </button>
           <hr />
         </div>
 
@@ -192,11 +224,20 @@ function Profile() {
           <input id="confirmNewPassword" type="text" />
           <br />
 
-          <button onClick={() => changePassword()}>Change Password</button>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => changePassword()}
+          >
+            Change Password
+          </button>
           <hr />
         </div>
         <br />
-        <button className="btn btn-danger" id="deleteAccount">
+        <button
+          className="btn btn-danger"
+          id="deleteAccount"
+          onClick={() => deleteAccount()}
+        >
           Delete Account
         </button>
       </div>

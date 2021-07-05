@@ -29,7 +29,11 @@ function reset() {
       <br />
       <input type="email" id="mail" name="mail" />
       <br />
-      <button onClick={() => resetPasswordFunction()} id="resetPasswordLogin">
+      <button
+        className="btn btn-primary"
+        onClick={() => resetPasswordFunction()}
+        id="resetPasswordLogin"
+      >
         Reset Password
       </button>
     </div>
