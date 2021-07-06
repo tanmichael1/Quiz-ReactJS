@@ -51,6 +51,7 @@ window.onload = function () {
 
                 database.ref(`Users/${userID}`).set({
                   username: newUsername,
+                  admin: false,
                 });
                 signupForm.reset();
                 window.location.href = "/";
