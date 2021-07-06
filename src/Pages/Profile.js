@@ -118,30 +118,36 @@ function Profile() {
   }
 
   function deleteAccount() {
+    var userPassword = firebase.auth().currentUser.email;
     const currentPass = window.prompt(
-      "Please enter anything to confirm you want to delete your account."
+      "Please enter your email address to confirm you want to delete your account."
     );
 
     if (currentPass) {
-      const user = firebase.auth().currentUser;
-      const uid = firebase.auth().currentUser.uid;
-      var currentArray = [];
+      if (currentPass == userPassword) {
+        const user = firebase.auth().currentUser;
+        const uid = firebase.auth().currentUser.uid;
+        var currentArray = [];
 
-      user
-        .delete()
-        .then(() => {
-          const usersRef = firebase.database().ref(`Users/${uid}`);
+        user
+          .delete()
+          .then(() => {
+            const usersRef = firebase.database().ref(`Users/${uid}`);
 
-          usersRef.remove();
-          window.location.href = "/";
+            usersRef.remove();
+            window.location.href = "/";
 
-          // User deleted.
-        })
-        .catch((error) => {
-          console.log(error);
-          // An error ocurred
-          // ...
-        });
+            // User deleted.
+          })
+          .catch((error) => {
+            console.log(error);
+            alert(error);
+            // An error ocurred
+            // ...
+          });
+      } else {
+        alert("Not your email address");
+      }
     }
   }
 
