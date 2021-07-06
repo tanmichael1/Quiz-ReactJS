@@ -103,6 +103,13 @@ export default function Create() {
 
   function submitQuiz() {
     var title = document.getElementById("upload-title").value;
+    var testQuizValueElement = document.getElementById("testQuiz");
+    var testQuizValue;
+    if (testQuizValueElement == null) {
+      testQuizValue = false;
+    } else {
+      testQuizValue = testQuizValueElement.checked;
+    }
 
     if (title == null || title == "") {
       alert("Requires a title");
@@ -129,7 +136,7 @@ export default function Create() {
           timeCreated: new Date().toLocaleTimeString("en-NZ"),
           createdSortDate: new Date().toISOString(),
           updatedSortDate: new Date().toISOString(),
-          testQuiz: document.getElementById("testQuiz").checked,
+          testQuiz: testQuizValue,
         });
 
       //Each question
