@@ -4,15 +4,20 @@ import { Link } from "react-router-dom";
 
 function Profile() {
   const [done, setDone] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [finished, setFinished] = useState(false);
   const [username, setUsername] = useState("");
   const [createdQuizzes, setCreatedQuizzes] = useState([]);
   let takenQuizzes = [];
   function setup() {
     firebase.auth().onAuthStateChanged((user) => {
+      console.log(user);
       const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
       const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
+
       dbRefUsers.on("value", (user) => {
         //console.log(user.val());
+
         if (user.val().createdQuizzes == undefined) {
           console.log("undefined");
         } else {
@@ -28,7 +33,11 @@ function Profile() {
             })
           );
         }
-        setUsername(user.val().username);
+        //console.log(user.val());
+      });
+      dbRefUsers.on("value", (test) => {
+        console.log("set");
+        setUsername(test.val().username);
       });
     });
 
@@ -152,101 +161,113 @@ function Profile() {
   }
 
   if (!done) {
-    setup();
+    setTimeout(() => {
+      setup();
+      setLoading(false);
+      setFinished(true);
+    }, 3000);
   }
+
   return (
     <div className="container box">
-      <h1>{username}</h1>
-      <hr />
+      {loading ? <div id="loading">Loading</div> : <div id="notLoading"></div>}
+      {finished ? (
+        <div>
+          <h1>{username}</h1>
+          <hr />
 
-      <h2>Created quizzes</h2>
-      {createdQuizzes.length > 0 ? (
-        <>
-          {createdQuizzes.map((quiz, i) => (
-            <div key={i}>
-              <Link
-                to={{
-                  pathname: `${username}/${quiz.title}`,
-                }}
-              >
-                <h3>{quiz.title}</h3>
-              </Link>{" "}
+          <h2>Created quizzes</h2>
+          {createdQuizzes.length > 0 ? (
+            <>
+              {createdQuizzes.map((quiz, i) => (
+                <div key={i}>
+                  <Link
+                    to={{
+                      pathname: `${username}/${quiz.title}`,
+                    }}
+                  >
+                    <h3>{quiz.title}</h3>
+                  </Link>{" "}
+                  <br />
+                </div>
+              ))}
+            </>
+          ) : (
+            <div>Not created any quizzes</div>
+          )}
+
+          <hr />
+          <h2>Settings</h2>
+          <div id="profileButtons hidden">
+            <button
+              onClick={() => toggleUsername()}
+              id="changeUsername"
+              className="btn btn-primary"
+            >
+              Change Username
+            </button>
+            <br />
+            <div id="usernameChange" className="hidden">
+              <label>Your new Username</label>
               <br />
+              <input id="newUsername" type="text" />
+              <br />
+              <label>Your password</label>
+              <br />
+              <input id="verifyPassword" type="text" />
+              <br />
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => changeUsername()}
+              >
+                Change Username
+              </button>
+              <hr />
             </div>
-          ))}
-        </>
+
+            <button
+              onClick={() => togglePassword()}
+              id="changePassword"
+              className="btn btn-primary"
+            >
+              Change Password
+            </button>
+
+            <div id="passwordChange" className="hidden">
+              <label>Your password</label>
+              <br />
+              <input id="currentPassword" type="text" />
+              <br />
+              <label>Your new password</label>
+              <br />
+              <input id="newPassword" type="text" />
+              <br />
+              <label>Confirm new password</label>
+              <br />
+              <input id="confirmNewPassword" type="text" />
+              <br />
+
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => changePassword()}
+              >
+                Change Password
+              </button>
+              <hr />
+            </div>
+            <br />
+            <button
+              className="btn btn-danger"
+              id="deleteAccount"
+              onClick={() => deleteAccount()}
+            >
+              Delete Account
+            </button>
+          </div>
+        </div>
       ) : (
-        <div>Not created any quizzes</div>
+        <div></div>
       )}
-
-      <hr />
-      <h2>Settings</h2>
-      <div id="profileButtons hidden">
-        <button
-          onClick={() => toggleUsername()}
-          id="changeUsername"
-          className="btn btn-primary"
-        >
-          Change Username
-        </button>
-        <br />
-        <div id="usernameChange" className="hidden">
-          <label>Your new Username</label>
-          <br />
-          <input id="newUsername" type="text" />
-          <br />
-          <label>Your password</label>
-          <br />
-          <input id="verifyPassword" type="text" />
-          <br />
-          <button
-            className="btn btn-secondary btn-sm"
-            onClick={() => changeUsername()}
-          >
-            Change Username
-          </button>
-          <hr />
-        </div>
-
-        <button
-          onClick={() => togglePassword()}
-          id="changePassword"
-          className="btn btn-primary"
-        >
-          Change Password
-        </button>
-
-        <div id="passwordChange" className="hidden">
-          <label>Your password</label>
-          <br />
-          <input id="currentPassword" type="text" />
-          <br />
-          <label>Your new password</label>
-          <br />
-          <input id="newPassword" type="text" />
-          <br />
-          <label>Confirm new password</label>
-          <br />
-          <input id="confirmNewPassword" type="text" />
-          <br />
-
-          <button
-            className="btn btn-secondary btn-sm"
-            onClick={() => changePassword()}
-          >
-            Change Password
-          </button>
-          <hr />
-        </div>
-        <br />
-        <button
-          className="btn btn-danger"
-          id="deleteAccount"
-          onClick={() => deleteAccount()}
-        >
-          Delete Account
-        </button>
-      </div>
     </div>
   );
 }
