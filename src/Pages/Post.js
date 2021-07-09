@@ -49,6 +49,8 @@ export default function Post() {
 
   const progressBarFull = document.getElementById("progressBarFull");
 
+  const [notes, setNotes] = useState([]);
+
   /* Setup */
 
   if (!done) {
@@ -75,6 +77,7 @@ export default function Post() {
       setSavedCreatedSortDate(quiz.child("createdSortDate").val());
 
       for (var i = 0; i < count; i++) {
+        console.log(quiz);
         loadQuestions(quiz.child(i + 1).val());
       }
       setQuizTitle(newQuizTitle);
@@ -339,6 +342,8 @@ export default function Post() {
     var numDeleteCheckboxes = 0;
     var changeTestQuiz = document.getElementById("changeTestQuiz").checked;
 
+    console.log("here");
+
     var finalArray = [];
     for (var i = 0; i < editQuestions.length; i++) {
       var questionNumTest = i;
@@ -367,6 +372,8 @@ export default function Post() {
         numDeleteCheckboxes++;
       }
     }
+
+    console.log(numQuestions - numDeleteCheckboxes + 1);
 
     firebase
       .database()
@@ -505,9 +512,14 @@ export default function Post() {
 
           console.log(answerArray);
           console.log(newSavedAnswers);
-          console.log(array);
-          setQuizData(array);
-          document.getElementById("editForm").location.reload();
+          console.log(...array);
+          setQuizData([...array]);
+          setNumQuestions(numQuestions + 1);
+          document.getElementById("addEditQuestions").reset();
+          // useEffect(() => {
+          //   setQuizData(quizData);
+          // }, [data]);
+          //document.getElementById("editForm").location.reload();
           //document.getElementById("data").reload(true);
 
           //quizData.push(tempQuestions);
@@ -628,50 +640,52 @@ export default function Post() {
 
             <div id="data">
               <hr />
-              {quizData.map((question, questionIndex) => (
-                <div key={questionIndex} className="questionWidget">
-                  <h3> {questionIndex + 1}. Question</h3>
-                  <input
-                    type="text"
-                    questionnum={questionIndex}
-                    id="editQuestion"
-                    className="editQuestions"
-                    defaultValue={question.questionText}
-                  />
-                  <br /> <br />
-                  <h3>Answer Options</h3>
-                  <div className="answerWidget">
-                    {question.answerOptions.map((answer, i) => (
-                      <div key={i}>
-                        <input
-                          answernum={i}
-                          questionnum2={questionIndex}
-                          className="answer"
-                          type="text"
-                          defaultValue={answer.answerText}
-                        ></input>
-                        <input
-                          onChange={() => updateTicked(i, questionIndex)}
-                          questionnum2={questionIndex}
-                          id="myCheck"
-                          answernum={i}
-                          className="checkboxes"
-                          type="checkbox"
-                          defaultChecked={answer.isCorrect === true}
-                        />
-                      </div>
-                    ))}
+              {quizData.map((question, questionIndex) => {
+                return (
+                  <div key={questionIndex} className="questionWidget">
+                    <h3> {questionIndex + 1}. Question</h3>
+                    <input
+                      type="text"
+                      questionnum={questionIndex}
+                      id="editQuestion"
+                      className="editQuestions"
+                      defaultValue={question.questionText}
+                    />
+                    <br /> <br />
+                    <h3>Answer Options</h3>
+                    <div className="answerWidget">
+                      {question.answerOptions.map((answer, i) => (
+                        <div key={i}>
+                          <input
+                            answernum={i}
+                            questionnum2={questionIndex}
+                            className="answer"
+                            type="text"
+                            defaultValue={answer.answerText}
+                          ></input>
+                          <input
+                            onChange={() => updateTicked(i, questionIndex)}
+                            questionnum2={questionIndex}
+                            id="myCheck"
+                            answernum={i}
+                            className="checkboxes"
+                            type="checkbox"
+                            defaultChecked={answer.isCorrect === true}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    <label>Delete Question </label>{" "}
+                    <input
+                      onChange={() => updateDelete(questionIndex)}
+                      type="checkbox"
+                      className="deleteCheckboxes"
+                    />
+                    <br /> <br />
+                    <hr />
                   </div>
-                  <label>Delete Question </label>{" "}
-                  <input
-                    onChange={() => updateDelete(questionIndex)}
-                    type="checkbox"
-                    className="deleteCheckboxes"
-                  />
-                  <br /> <br />
-                  <hr />
-                </div>
-              ))}
+                );
+              })}
             </div>
             <div>
               <form id="addEditQuestions">
@@ -729,7 +743,7 @@ export default function Post() {
                   )}
                 </div>
                 <button
-                  id="editAddQuestionID"
+                  id="editAddQuestion"
                   onClick={(e) => addQuestion(e)}
                   className=" btn btn-primary"
                 >
