@@ -341,6 +341,7 @@ export default function Post() {
     var deleteCheckboxes = document.getElementsByClassName("deleteCheckboxes");
     var numDeleteCheckboxes = 0;
     var changeTestQuiz = document.getElementById("changeTestQuiz").checked;
+    var newTitle = document.getElementById("editTitle").value;
 
     console.log("here");
 
@@ -375,32 +376,79 @@ export default function Post() {
 
     console.log(numQuestions - numDeleteCheckboxes + 1);
 
-    firebase
-      .database()
-      .ref(`Quizzes/${currentUser}/${quizTitle}`)
-      .set({
-        updatedSortDate: new Date().toISOString(),
+    var changedTitle = false;
+    if (newTitle != quizTitle) {
+      //Remove old quizzes
+      firebase.database().ref(`Quizzes/${currentUser}/${quizTitle}`).remove();
 
-        NumQuestions: numQuestions - numDeleteCheckboxes,
-        Title: quizTitle,
-        creator: currentUser,
-        dateCreated: savedDateCreated,
-        timeCreated: savedTimeCreated,
-        createdSortDate: savedCreatedSortDate,
-        testQuiz: changeTestQuiz,
-      });
+      firebase
+        .database()
+        .ref("Users/" + currentUserID + "/createdQuizzes/" + quizTitle)
+        .remove();
 
-    for (var k = 1; k < numQuestions - numDeleteCheckboxes + 1; k++) {
-      var question = finalArray[k - 1];
-      firebase.database().ref(`Quizzes/${currentUser}/${quizTitle}/${k}`).set({
-        answerOptions: question.answerOptions,
-        questionText: question.question,
-      });
+      const dbQuizForUser = firebase
+        .database()
+        .ref("Users/" + currentUserID + "/createdQuizzes/" + newTitle);
 
-      console.log(question.question);
+      dbQuizForUser.set({ title: newTitle });
+
+      //New title
+
+      // Quizzes/User/Quiz
+
+      firebase
+        .database()
+        .ref(`Quizzes/${currentUser}/${newTitle}`)
+        .set({
+          updatedSortDate: new Date().toISOString(),
+
+          NumQuestions: numQuestions - numDeleteCheckboxes,
+          Title: newTitle,
+          creator: currentUser,
+          dateCreated: savedDateCreated,
+          timeCreated: savedTimeCreated,
+          createdSortDate: savedCreatedSortDate,
+          testQuiz: changeTestQuiz,
+        });
+
+      for (var k = 1; k < numQuestions - numDeleteCheckboxes + 1; k++) {
+        var question = finalArray[k - 1];
+        firebase.database().ref(`Quizzes/${currentUser}/${newTitle}/${k}`).set({
+          answerOptions: question.answerOptions,
+          questionText: question.question,
+        });
+
+        console.log(question.question);
+      }
+
+      window.location.href = `${currentUser}/${newTitle}`;
+    } else {
+      firebase
+        .database()
+        .ref(`Quizzes/${currentUser}/${newTitle}`)
+        .set({
+          updatedSortDate: new Date().toISOString(),
+
+          NumQuestions: numQuestions - numDeleteCheckboxes,
+          Title: newTitle,
+          creator: currentUser,
+          dateCreated: savedDateCreated,
+          timeCreated: savedTimeCreated,
+          createdSortDate: savedCreatedSortDate,
+          testQuiz: changeTestQuiz,
+        });
+
+      for (var k = 1; k < numQuestions - numDeleteCheckboxes + 1; k++) {
+        var question = finalArray[k - 1];
+        firebase.database().ref(`Quizzes/${currentUser}/${newTitle}/${k}`).set({
+          answerOptions: question.answerOptions,
+          questionText: question.question,
+        });
+
+        console.log(question.question);
+      }
+      window.location.reload();
     }
-
-    window.location.reload();
   }
 
   function updateTicked(answerIndex, questionIndex) {
@@ -507,7 +555,6 @@ export default function Post() {
             answerOptions: answerArray,
           });
 
-          //console.log(displayArray);
           newSavedAnswers.push(answerArray);
 
           console.log(answerArray);
@@ -516,38 +563,12 @@ export default function Post() {
           setQuizData([...array]);
           setNumQuestions(numQuestions + 1);
           document.getElementById("addEditQuestions").reset();
-          // useEffect(() => {
-          //   setQuizData(quizData);
-          // }, [data]);
-          //document.getElementById("editForm").location.reload();
-          //document.getElementById("data").reload(true);
-
-          //quizData.push(tempQuestions);
-          //setAnswerOptions(newSavedAnswers);
-
-          //Save question
-          // var currentQuestions = savedQuestions;
-          // currentQuestions.push(newQuestion);
-
-          //Display questions
-
-          // var tempQuestions = displayQuestions;
-          // tempQuestions.push({
-          //   question: newQuestion,
-          //   answerOptions: answerArray,
-          // });
-
-          // setNotes(tempQuestions);
-          // document.getElementById("addQuestions").reset();
-          // setNumAnswers(["Answer 1", "Answer 2"]);
-          //quizData.push(tempQuestions);
         } else {
           alert("Chosen correct answer is blank");
         }
       } else {
         alert("Need to fill in at least 2 options");
       }
-      //document.getElementById("savedQuestionsTitle").classList.remove("hidden");
     }
   }
   function addAnswerOption(e) {
@@ -636,7 +657,8 @@ export default function Post() {
       {editingMode ? (
         <div id="editingQuiz">
           <form id="editForm">
-            <h1>{quizTitle}</h1>
+            <h2>Title</h2>
+            <input type="text" id="editTitle" defaultValue={quizTitle} />
 
             <div id="data">
               <hr />
