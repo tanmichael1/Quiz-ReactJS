@@ -433,6 +433,33 @@ nav {
   border: 1px solid #cccccc;
 }
 
+/* Scoreboard */
+
+.scoreboard-box {
+  text-align: center;
+  padding-bottom: 2%;
+}
+
+.scoreboard-box table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 30px 0;
+}
+
+.scoreboard-box table td {
+  border: 1px solid #cccccc;
+  padding: 8px 15px;
+  font-weight: 500;
+  color: white;
+  width: 50%;
+  text-align: left;
+  font-size: 18px;
+}
+
+.scoreboard-box .btn {
+  margin-right: 20px;
+}
+
 /* SCREEN STYLES */
 
 #siteTitle {

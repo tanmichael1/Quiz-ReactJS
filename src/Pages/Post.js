@@ -38,6 +38,8 @@ export default function Post() {
   const [finalTimeSeconds, setFinalTimeSeconds] = useState();
   const [finalTimeMinutes, setFinalTimeMinutes] = useState();
 
+  const [scoreboardUsed, setScoreboardUsed] = useState(false);
+
   const [numAnswers, setNumAnswers] = useState(["Answer 1", "Answer 2"]);
 
   //Other quiz details
@@ -927,6 +929,37 @@ export default function Post() {
                 </span>
                 <span id="score"></span>
               </span>
+
+              {scoreboardUsed ? (
+                <div className="scoreboard-box">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Username</th>
+                        <th>Score</th>
+                        <th>Time</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr>
+                        <td>User 1</td>
+                        <td>
+                          <span>1/1</span>
+                        </td>
+                        <td>
+                          <span>10 seconds</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div>
+                  {" "}
+                  <h3>No one has used the scoreboard yet.</h3>{" "}
+                </div>
+              )}
 
               <div className="controls">
                 <Button
