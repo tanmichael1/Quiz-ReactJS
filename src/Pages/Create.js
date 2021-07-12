@@ -139,6 +139,13 @@ export default function Create() {
           testQuiz: testQuizValue,
         });
 
+      firebase
+        .database()
+        .ref(`Quizzes/${currentUser}/${title}/Scoreboard`)
+        .set({
+          numScoreboardUsers: 0,
+        });
+
       //Each question
 
       var index = savedQuestions.length;

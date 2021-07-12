@@ -38,6 +38,7 @@ export default function Post() {
   const [finalTimeSeconds, setFinalTimeSeconds] = useState();
   const [finalTimeMinutes, setFinalTimeMinutes] = useState();
 
+  const [numScoreboardUsers, setNumScoreboardUsers] = useState(0);
   const [scoreboardUsed, setScoreboardUsed] = useState(false);
 
   const [numAnswers, setNumAnswers] = useState(["Answer 1", "Answer 2"]);
@@ -77,6 +78,12 @@ export default function Post() {
       setSavedDateCreated(quiz.child("dateCreated").val());
       setSavedTimeCreated(quiz.child("timeCreated").val());
       setSavedCreatedSortDate(quiz.child("createdSortDate").val());
+      setNumScoreboardUsers(quiz.child("Scoreboard/numScoreboardUsers").val());
+      if (quiz.child("Scoreboard/numScoreboardUsers").val() > 0) {
+        setScoreboardUsed(true);
+      } else {
+        setScoreboardUsed(false);
+      }
 
       for (var i = 0; i < count; i++) {
         console.log(quiz);
@@ -413,6 +420,28 @@ export default function Post() {
           testQuiz: changeTestQuiz,
         });
 
+      firebase
+        .database()
+        .ref(`Quizzes/${currentUser}/${newTitle}`)
+        .set({
+          updatedSortDate: new Date().toISOString(),
+
+          NumQuestions: numQuestions - numDeleteCheckboxes,
+          Title: newTitle,
+          creator: currentUser,
+          dateCreated: savedDateCreated,
+          timeCreated: savedTimeCreated,
+          createdSortDate: savedCreatedSortDate,
+          testQuiz: changeTestQuiz,
+        });
+
+      firebase
+        .database()
+        .ref(`Quizzes/${currentUser}/${newTitle}/Scoreboard`)
+        .set({
+          numScoreboardUsers: numScoreboardUsers,
+        });
+
       for (var k = 1; k < numQuestions - numDeleteCheckboxes + 1; k++) {
         var question = finalArray[k - 1];
         firebase.database().ref(`Quizzes/${currentUser}/${newTitle}/${k}`).set({
@@ -438,6 +467,13 @@ export default function Post() {
           timeCreated: savedTimeCreated,
           createdSortDate: savedCreatedSortDate,
           testQuiz: changeTestQuiz,
+        });
+
+      firebase
+        .database()
+        .ref(`Quizzes/${currentUser}/${newTitle}/Scoreboard`)
+        .set({
+          numScoreboardUsers: numScoreboardUsers,
         });
 
       for (var k = 1; k < numQuestions - numDeleteCheckboxes + 1; k++) {
