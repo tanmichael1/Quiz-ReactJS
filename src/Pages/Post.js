@@ -66,6 +66,7 @@ export default function Post() {
     var currentURL = window.location.pathname;
     var splittable = currentURL.split("/");
     var user = splittable[1];
+    var newUser = splittable[1];
     setQuizUser(user);
     setup(user);
 
@@ -84,6 +85,7 @@ export default function Post() {
       setNumScoreboardUsers(quiz.child("scoreboard/numScoreboardUsers").val());
       if (quiz.child("scoreboard/numScoreboardUsers").val() > 0) {
         setScoreboardUsed(true);
+
         var userArray = [];
         var scoreboardLength = quiz
           .child("scoreboard/numScoreboardUsers")
@@ -98,8 +100,13 @@ export default function Post() {
               score: 1,
               time: 10,
             });
+
+            if (user.val().user == newUser) {
+              setUserOnScoreboard(true);
+            }
           });
         });
+
         setScoreboardUsers(userArray);
         // for (var entry; entry < scoreboardLength; entry++) {
         //   loadQuestions(quiz.child(i + 1).val());
@@ -1047,8 +1054,14 @@ export default function Post() {
                     </tbody>
                   </table>
 
-                  <h3>Would you like to be added to the scoreboard?</h3>
-                  <button>Yes</button>
+                  {userOnScoreboard ? (
+                    <div></div>
+                  ) : (
+                    <div>
+                      <h3>Would you like to be added to the scoreboard?</h3>
+                      <button>Yes</button>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div>
