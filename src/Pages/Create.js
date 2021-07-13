@@ -141,7 +141,7 @@ export default function Create() {
 
       firebase
         .database()
-        .ref(`Quizzes/${currentUser}/${title}/Scoreboard`)
+        .ref(`Quizzes/${currentUser}/${title}/scoreboard`)
         .set({
           numScoreboardUsers: 0,
         });

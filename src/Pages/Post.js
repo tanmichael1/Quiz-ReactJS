@@ -38,8 +38,11 @@ export default function Post() {
   const [finalTimeSeconds, setFinalTimeSeconds] = useState();
   const [finalTimeMinutes, setFinalTimeMinutes] = useState();
 
+  //Scoreboard
   const [numScoreboardUsers, setNumScoreboardUsers] = useState(0);
   const [scoreboardUsed, setScoreboardUsed] = useState(false);
+  const [userOnScoreboard, setUserOnScoreboard] = useState(false);
+  const [scoreboardUsers, setScoreboardUsers] = useState([]);
 
   const [numAnswers, setNumAnswers] = useState(["Answer 1", "Answer 2"]);
 
@@ -78,11 +81,34 @@ export default function Post() {
       setSavedDateCreated(quiz.child("dateCreated").val());
       setSavedTimeCreated(quiz.child("timeCreated").val());
       setSavedCreatedSortDate(quiz.child("createdSortDate").val());
-      setNumScoreboardUsers(quiz.child("Scoreboard/numScoreboardUsers").val());
-      if (quiz.child("Scoreboard/numScoreboardUsers").val() > 0) {
+      setNumScoreboardUsers(quiz.child("scoreboard/numScoreboardUsers").val());
+      if (quiz.child("scoreboard/numScoreboardUsers").val() > 0) {
         setScoreboardUsed(true);
+        var userArray = [];
+        var scoreboardLength = quiz
+          .child("scoreboard/numScoreboardUsers")
+          .val();
+        const scoreboardUsersRef = firebase
+          .database()
+          .ref("Quizzes/" + user + "/" + newQuizTitle + "/scoreboard/users");
+        scoreboardUsersRef.on("value", (snap) => {
+          snap.forEach((user) => {
+            userArray.push({
+              name: user.val().user,
+              score: 1,
+              time: 10,
+            });
+          });
+        });
+        setScoreboardUsers(userArray);
+        // for (var entry; entry < scoreboardLength; entry++) {
+        //   loadQuestions(quiz.child(i + 1).val());
+        // }
+        //setScorebardUsers
       } else {
         setScoreboardUsed(false);
+        setUserOnScoreboard(false);
+        setScoreboardUsers([]);
       }
 
       for (var i = 0; i < count; i++) {
@@ -471,7 +497,7 @@ export default function Post() {
 
       firebase
         .database()
-        .ref(`Quizzes/${currentUser}/${newTitle}/Scoreboard`)
+        .ref(`Quizzes/${currentUser}/${newTitle}/scoreboard`)
         .set({
           numScoreboardUsers: numScoreboardUsers,
         });
@@ -658,6 +684,26 @@ export default function Post() {
     }
     console.log(finalArray);
     return finalArray;
+  }
+
+  /* Scoreboard */
+
+  function addUserToScoreboard() {
+    var newNumScoreboardUsers = numScoreboardUsers + 1;
+    setUserOnScoreboard(true);
+    setNumScoreboardUsers(newNumScoreboardUsers);
+    firebase
+      .database()
+      .ref(`Quizzes/${currentUser}/${quizTitle}/scoreboard`)
+      .set({
+        numScoreboardUsers: newNumScoreboardUsers,
+      });
+    firebase
+      .database()
+      .ref(`Quizzes/${currentUser}/${quizTitle}/scoreboard/users`)
+      .push({
+        user: currentUser,
+      });
   }
 
   /* Other */
@@ -978,7 +1024,18 @@ export default function Post() {
                     </thead>
 
                     <tbody>
-                      <tr>
+                      {scoreboardUsers.map((user, index) => {
+                        return (
+                          <tr>
+                            <td>{user.name} </td>
+                            <td>
+                              <span>{user.score}</span>
+                            </td>
+                            <td>{user.time}</td>
+                          </tr>
+                        );
+                      })}
+                      {/* <tr>
                         <td>User 1</td>
                         <td>
                           <span>1/1</span>
@@ -986,14 +1043,19 @@ export default function Post() {
                         <td>
                           <span>10 seconds</span>
                         </td>
-                      </tr>
+                      </tr> */}
                     </tbody>
                   </table>
+
+                  <h3>Would you like to be added to the scoreboard?</h3>
+                  <button>Yes</button>
                 </div>
               ) : (
                 <div>
                   {" "}
                   <h3>No one has used the scoreboard yet.</h3>{" "}
+                  <h3>Would you like to be added to the scoreboard?</h3>
+                  <button onClick={() => addUserToScoreboard()}>Yes</button>
                 </div>
               )}
 
