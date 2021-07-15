@@ -60,15 +60,16 @@ export default function Post() {
   /* Setup */
 
   if (!done) {
+    console.log("hi");
     const ref = firebase.database().ref();
     const dbRefObject = firebase.database().ref().child("object");
 
     var currentURL = window.location.pathname;
     var splittable = currentURL.split("/");
     var user = splittable[1];
-    var newUser = splittable[1];
+
     setQuizUser(user);
-    setup(user);
+    console.log("here");
 
     var newQuizTitle = unescape(splittable[2]);
     dbRefObject.on("value", (snap) => console.log(snap.val()));
@@ -83,40 +84,9 @@ export default function Post() {
       setSavedTimeCreated(quiz.child("timeCreated").val());
       setSavedCreatedSortDate(quiz.child("createdSortDate").val());
       setNumScoreboardUsers(quiz.child("scoreboard/numScoreboardUsers").val());
-      if (quiz.child("scoreboard/numScoreboardUsers").val() > 0) {
-        setScoreboardUsed(true);
-
-        var userArray = [];
-        var scoreboardLength = quiz
-          .child("scoreboard/numScoreboardUsers")
-          .val();
-        const scoreboardUsersRef = firebase
-          .database()
-          .ref("Quizzes/" + user + "/" + newQuizTitle + "/scoreboard/users");
-        scoreboardUsersRef.on("value", (snap) => {
-          snap.forEach((user) => {
-            userArray.push({
-              name: user.val().user,
-              score: 1,
-              time: 10,
-            });
-
-            if (user.val().user == newUser) {
-              setUserOnScoreboard(true);
-            }
-          });
-        });
-
-        setScoreboardUsers(userArray);
-        // for (var entry; entry < scoreboardLength; entry++) {
-        //   loadQuestions(quiz.child(i + 1).val());
-        // }
-        //setScorebardUsers
-      } else {
-        setScoreboardUsed(false);
-        setUserOnScoreboard(false);
-        setScoreboardUsers([]);
-      }
+      var num = quiz.child("scoreboard/numScoreboardUsers").val();
+      console.log(num);
+      setup(user, num, quiz);
 
       for (var i = 0; i < count; i++) {
         console.log(quiz);
@@ -136,7 +106,9 @@ export default function Post() {
     }
   }
 
-  function setup(currUser) {
+  function setup(currUser, num, quiz) {
+    var newUser = "";
+    console.log("here");
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         const dbRefUsersName = firebase
@@ -145,17 +117,21 @@ export default function Post() {
         const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
         console.log(user.uid);
         setCurrentUserID(user.uid);
+
         dbRefUsersName.on("value", function (snapUser) {
           console.log(snapUser.val());
           console.log("snap.val(): " + snapUser.val());
           console.log("quizUser: " + currUser);
           setCurrentUser(snapUser.val());
+          newUser = snapUser.val();
+
           if (snapUser.val() === currUser) {
             setIsCreator(true);
             console.log("User's Quiz");
           } else {
             console.log("Not creator");
           }
+
           dbRefUsers.on("value", (person) => {
             console.log(person.val());
             if (
@@ -167,10 +143,54 @@ export default function Post() {
               setAdmin(true);
             }
           });
+
+          if (num > 0) {
+            console.log(true);
+            setScoreboardUsed(true);
+
+            var userArray = [];
+            var scoreboardLength = quiz
+              .child("scoreboard/numScoreboardUsers")
+              .val();
+            const scoreboardUsersRef = firebase
+              .database()
+              .ref(
+                "Quizzes/" + currUser + "/" + newQuizTitle + "/scoreboard/users"
+              );
+            scoreboardUsersRef.on("value", (snap) => {
+              snap.forEach((addUser) => {
+                userArray.push({
+                  name: addUser.val().user,
+                  score: 1,
+                  time: 10,
+                });
+
+                if (addUser.val().user == newUser) {
+                  setUserOnScoreboard(true);
+                }
+              });
+            });
+
+            setScoreboardUsers(userArray);
+            // for (var entry; entry < scoreboardLength; entry++) {
+            //   loadQuestions(quiz.child(i + 1).val());
+            // }
+            //setScorebardUsers
+          } else {
+            setScoreboardUsed(false);
+            setUserOnScoreboard(false);
+            setScoreboardUsers([]);
+          }
+          newUser = snapUser.val();
+          console.log(newUser);
+          return newUser;
         });
       } else {
         console.log("User is not logged in");
         setCurrentUser("guest");
+
+        setUserOnScoreboard(false);
+        return "guest";
       }
     });
   }
