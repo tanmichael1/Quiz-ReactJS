@@ -37,6 +37,7 @@ export default function Post() {
   const [endTime, setEndTime] = useState();
   const [finalTimeSeconds, setFinalTimeSeconds] = useState();
   const [finalTimeMinutes, setFinalTimeMinutes] = useState();
+  const [totalTimeInSeconds, setTotalTimeInSeconds] = useState();
 
   //Scoreboard
   const [numScoreboardUsers, setNumScoreboardUsers] = useState(0);
@@ -161,8 +162,8 @@ export default function Post() {
               snap.forEach((addUser) => {
                 userArray.push({
                   name: addUser.val().user,
-                  score: 1,
-                  time: 10,
+                  score: addUser.val().score,
+                  time: addUser.val().time,
                 });
 
                 if (addUser.val().user == newUser) {
@@ -441,7 +442,7 @@ export default function Post() {
     var changedTitle = false;
     if (newTitle != quizTitle) {
       //Remove old quizzes
-      firebase.database().ref(`Quizzes/${currentUser}/${quizTitle}`).remove();
+      firebase.database().ref(`Quizzes/${quizUser}/${quizTitle}`).remove();
 
       firebase
         .database()
@@ -460,13 +461,13 @@ export default function Post() {
 
       firebase
         .database()
-        .ref(`Quizzes/${currentUser}/${newTitle}`)
+        .ref(`Quizzes/${quizUser}/${newTitle}`)
         .set({
           updatedSortDate: new Date().toISOString(),
 
           NumQuestions: numQuestions - numDeleteCheckboxes,
           Title: newTitle,
-          creator: currentUser,
+          creator: quizUser,
           dateCreated: savedDateCreated,
           timeCreated: savedTimeCreated,
           createdSortDate: savedCreatedSortDate,
@@ -475,13 +476,13 @@ export default function Post() {
 
       firebase
         .database()
-        .ref(`Quizzes/${currentUser}/${newTitle}`)
+        .ref(`Quizzes/${quizUser}/${newTitle}`)
         .set({
           updatedSortDate: new Date().toISOString(),
 
           NumQuestions: numQuestions - numDeleteCheckboxes,
           Title: newTitle,
-          creator: currentUser,
+          creator: quizUser,
           dateCreated: savedDateCreated,
           timeCreated: savedTimeCreated,
           createdSortDate: savedCreatedSortDate,
@@ -490,14 +491,14 @@ export default function Post() {
 
       firebase
         .database()
-        .ref(`Quizzes/${currentUser}/${newTitle}/Scoreboard`)
+        .ref(`Quizzes/${quizUser}/${newTitle}/Scoreboard`)
         .set({
           numScoreboardUsers: numScoreboardUsers,
         });
 
       for (var k = 1; k < numQuestions - numDeleteCheckboxes + 1; k++) {
         var question = finalArray[k - 1];
-        firebase.database().ref(`Quizzes/${currentUser}/${newTitle}/${k}`).set({
+        firebase.database().ref(`Quizzes/${quizUser}/${newTitle}/${k}`).set({
           answerOptions: question.answerOptions,
           questionText: question.question,
         });
@@ -505,17 +506,17 @@ export default function Post() {
         console.log(question.question);
       }
 
-      window.location.href = `${currentUser}/${newTitle}`;
+      window.location.href = `${quizUser}/${newTitle}`;
     } else {
       firebase
         .database()
-        .ref(`Quizzes/${currentUser}/${newTitle}`)
+        .ref(`Quizzes/${quizUser}/${newTitle}`)
         .set({
           updatedSortDate: new Date().toISOString(),
 
           NumQuestions: numQuestions - numDeleteCheckboxes,
           Title: newTitle,
-          creator: currentUser,
+          creator: quizUser,
           dateCreated: savedDateCreated,
           timeCreated: savedTimeCreated,
           createdSortDate: savedCreatedSortDate,
@@ -524,14 +525,14 @@ export default function Post() {
 
       firebase
         .database()
-        .ref(`Quizzes/${currentUser}/${newTitle}/scoreboard`)
+        .ref(`Quizzes/${quizUser}/${newTitle}/scoreboard`)
         .set({
           numScoreboardUsers: numScoreboardUsers,
         });
 
       for (var k = 1; k < numQuestions - numDeleteCheckboxes + 1; k++) {
         var question = finalArray[k - 1];
-        firebase.database().ref(`Quizzes/${currentUser}/${newTitle}/${k}`).set({
+        firebase.database().ref(`Quizzes/${quizUser}/${newTitle}/${k}`).set({
           answerOptions: question.answerOptions,
           questionText: question.question,
         });
@@ -719,17 +720,16 @@ export default function Post() {
     var newNumScoreboardUsers = numScoreboardUsers + 1;
     setUserOnScoreboard(true);
     setNumScoreboardUsers(newNumScoreboardUsers);
+    firebase.database().ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`).set({
+      numScoreboardUsers: newNumScoreboardUsers,
+    });
     firebase
       .database()
-      .ref(`Quizzes/${currentUser}/${quizTitle}/scoreboard`)
-      .set({
-        numScoreboardUsers: newNumScoreboardUsers,
-      });
-    firebase
-      .database()
-      .ref(`Quizzes/${currentUser}/${quizTitle}/scoreboard/users`)
+      .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`)
       .push({
         user: currentUser,
+        score: score,
+        time: totalTimeInSeconds,
       });
   }
 
@@ -754,6 +754,7 @@ export default function Post() {
 
     // get seconds
     var seconds = Math.round(timeDiff);
+    setTotalTimeInSeconds(seconds);
     var minutes = Math.floor(seconds / 60);
     seconds = seconds - minutes * 60;
 
@@ -1046,7 +1047,7 @@ export default function Post() {
                       <tr>
                         <th>Username</th>
                         <th>Score</th>
-                        <th>Time</th>
+                        <th>Time (seconds)</th>
                       </tr>
                     </thead>
 
