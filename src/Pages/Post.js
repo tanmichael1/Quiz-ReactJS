@@ -733,6 +733,90 @@ export default function Post() {
       });
   }
 
+  function removeScoreboardUser(nameTest) {
+    var currentArray = [];
+    console.log(scoreboardUsers);
+    console.log(scoreboardUsers.length);
+
+    for (var i = 0; i < scoreboardUsers.length; i++) {
+      console.log(scoreboardUsers[i].name);
+      if (scoreboardUsers[i].name == nameTest) {
+      } else {
+        currentArray.push(scoreboardUsers[i]);
+      }
+    }
+
+    console.log(nameTest);
+
+    console.log(currentArray);
+    setScoreboardUsers(currentArray);
+    setUserOnScoreboard(false);
+
+    var newNumScoreboardUsers = numScoreboardUsers - 1;
+    setNumScoreboardUsers(newNumScoreboardUsers);
+    if (currentArray.length == 0) {
+      console.log("Empty");
+      setScoreboardUsed(false);
+    }
+
+    firebase.database().ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`).set({
+      numScoreboardUsers: newNumScoreboardUsers,
+    });
+
+    const scoreboardUsersFirebase = firebase
+      .database()
+      .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`);
+
+    scoreboardUsersFirebase.on("value", function (currScoreboardUser) {
+      if (currScoreboardUser == nameTest) {
+        currScoreboardUser.remove();
+      }
+      // console.log(currScoreboardUser);
+    });
+    // firebase
+    //   .database()
+    //   .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`)
+    //   .push({
+    //     user: currentUser,
+    //     score: score,
+    //     time: totalTimeInSeconds,
+    //   });
+  }
+
+  function updateScoreboardUser(nameTest) {
+    var currentArray = [];
+
+    for (var i = 0; i < scoreboardUsers.length; i++) {
+      console.log(scoreboardUsers[i].name);
+      if (scoreboardUsers[i].name == nameTest) {
+        currentArray.push({
+          name: nameTest,
+          score: score,
+          time: finalTimeSeconds,
+        });
+      } else {
+        currentArray.push(scoreboardUsers[i]);
+      }
+    }
+
+    setScoreboardUsers(currentArray);
+
+    // firebase.database().ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`).set({
+    //   numScoreboardUsers: newNumScoreboardUsers,
+    // });
+
+    // const scoreboardUsersFirebase = firebase
+    //   .database()
+    //   .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`);
+
+    // scoreboardUsersFirebase.on("value", function (currScoreboardUser) {
+    //   if (currScoreboardUser == nameTest) {
+    //     currScoreboardUser.remove();
+    //   }
+    //   // console.log(currScoreboardUser);
+    // });
+  }
+
   /* Other */
 
   function refreshResults() {
@@ -1059,7 +1143,27 @@ export default function Post() {
                             <td>
                               <span>{user.score}</span>
                             </td>
-                            <td>{user.time}</td>
+                            <td>{user.time}</td>{" "}
+                            {user.name == currentUser ? (
+                              <td>
+                                <button
+                                  onClick={() =>
+                                    removeScoreboardUser(user.name)
+                                  }
+                                >
+                                  Delete
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    updateScoreboardUser(user.name)
+                                  }
+                                >
+                                  Update
+                                </button>
+                              </td>
+                            ) : (
+                              <div></div>
+                            )}
                           </tr>
                         );
                       })}
