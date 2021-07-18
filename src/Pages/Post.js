@@ -333,6 +333,7 @@ export default function Post() {
   function handleRestartButtonClick() {
     startTimer();
     setCurrentQuestion(0);
+
     setScore(0);
     refreshResults();
 
@@ -720,17 +721,38 @@ export default function Post() {
     var newNumScoreboardUsers = numScoreboardUsers + 1;
     setUserOnScoreboard(true);
     setNumScoreboardUsers(newNumScoreboardUsers);
-    firebase.database().ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`).set({
-      numScoreboardUsers: newNumScoreboardUsers,
-    });
+    var theUser = currentUser;
     firebase
       .database()
-      .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`)
-      .push({
-        user: currentUser,
-        score: score,
-        time: totalTimeInSeconds,
+      .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`)
+      .update({
+        numScoreboardUsers: newNumScoreboardUsers,
       });
+    var ref = firebase
+      .database()
+      .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`);
+    console.log(currentUser);
+
+    ref.push({
+      user: currentUser,
+      score: score,
+      time: totalTimeInSeconds,
+    });
+    // setScoreboardUsed(true);
+    // firebase
+    //   .database()
+    //   .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`)
+    //   .push({
+    //     user: currentUser,
+    //     score: score,
+    //     time: totalTimeInSeconds,
+    //   });
+    // testRef.push({
+    //   user: currentUser,
+    //   score: score,
+    //   time: totalTimeInSeconds,
+    // });
+    // set
   }
 
   function removeScoreboardUser(nameTest) {
@@ -759,19 +781,48 @@ export default function Post() {
       setScoreboardUsed(false);
     }
 
-    firebase.database().ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`).set({
-      numScoreboardUsers: newNumScoreboardUsers,
-    });
+    firebase
+      .database()
+      .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`)
+      .update({
+        numScoreboardUsers: newNumScoreboardUsers,
+      });
 
     const scoreboardUsersFirebase = firebase
       .database()
+      .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`);
+
+    scoreboardUsersFirebase.on(
+      "value",
+      (currScoreboardUser) =>
+        currScoreboardUser.forEach((scoreUser) => {
+          console.log(scoreUser.key);
+          console.log(scoreUser.val());
+          if (scoreUser.val().user == nameTest) {
+            firebase
+              .database()
+              .ref(
+                `Quizzes/${quizUser}/${quizTitle}/scoreboard/users/${scoreUser.key}`
+              )
+              .remove();
+            //scoreUser.set({})
+            // scoreUser.remove();
+            //currScoreboardUser.remove();
+          }
+        })
+
+      // console.log(currScoreboardUser);
+    );
+
+    var ref = firebase
+      .database()
       .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`);
 
-    scoreboardUsersFirebase.on("value", function (currScoreboardUser) {
-      if (currScoreboardUser == nameTest) {
-        currScoreboardUser.remove();
-      }
-      // console.log(currScoreboardUser);
+    var testRef = ref.child("users");
+    testRef.push({
+      user: currentUser,
+      score: score,
+      time: totalTimeInSeconds,
     });
     // firebase
     //   .database()
@@ -801,6 +852,16 @@ export default function Post() {
 
     setScoreboardUsers(currentArray);
 
+    // updatedSortDate: new Date().toISOString(),
+
+    // NumQuestions: numQuestions - numDeleteCheckboxes,
+    // Title: newTitle,
+    // creator: quizUser,
+    // dateCreated: savedDateCreated,
+    // timeCreated: savedTimeCreated,
+    // createdSortDate: savedCreatedSortDate,
+    // testQuiz: changeTestQuiz,
+
     // firebase.database().ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`).set({
     //   numScoreboardUsers: newNumScoreboardUsers,
     // });
@@ -809,12 +870,55 @@ export default function Post() {
     //   .database()
     //   .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`);
 
-    // scoreboardUsersFirebase.on("value", function (currScoreboardUser) {
+    // scoreboardUsersFirebase.on("value", (currScoreboardUser) => {
+    //   console.log(currScoreboardUser);
+    //   currScoreboardUser.forEach((scoreUser) => {
+    //     console.log(scoreUser);
+    //   });
     //   if (currScoreboardUser == nameTest) {
-    //     currScoreboardUser.remove();
+    //     // currScoreboardUser.remove();
+    //     // currScoreboardUser.set({ user: "test" });
+    //     //   firebase
+    //     // .database()
+    //     // .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`)
+    //     // .push({
+    //     //   user: currentUser,
+    //     //   score: score,
+    //     //   time: totalTimeInSeconds,
+    //     // });
+    //     //     user: currentUser,
+    //     //     score: score,
+    //     //     time: totalTimeInSeconds,
     //   }
-    //   // console.log(currScoreboardUser);
+    //   //   // console.log(currScoreboardUser);
     // });
+
+    const scoreboardUsersFirebase = firebase
+      .database()
+      .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`);
+
+    scoreboardUsersFirebase.on(
+      "value",
+      (currScoreboardUser) =>
+        currScoreboardUser.forEach((scoreUser) => {
+          console.log(scoreUser.val());
+          if (scoreUser.val().user == nameTest) {
+            firebase
+              .database()
+              .ref(
+                `Quizzes/${quizUser}/${quizTitle}/scoreboard/users/${scoreUser.key}`
+              )
+              .update({
+                user: currentUser,
+                score: score,
+                time: totalTimeInSeconds,
+              });
+            //currScoreboardUser.remove();
+          }
+        })
+
+      // console.log(currScoreboardUser);
+    );
   }
 
   /* Other */
@@ -1184,7 +1288,9 @@ export default function Post() {
                   ) : (
                     <div>
                       <h3>Would you like to be added to the scoreboard?</h3>
-                      <button>Yes</button>
+                      <button onClick={() => addUserToScoreboard(currentUser)}>
+                        Yes
+                      </button>
                     </div>
                   )}
                 </div>
