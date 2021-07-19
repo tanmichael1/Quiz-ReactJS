@@ -161,12 +161,12 @@ export default function Post() {
             scoreboardUsersRef.on("value", (snap) => {
               snap.forEach((addUser) => {
                 userArray.push({
-                  name: addUser.val().user,
+                  test: addUser.val().test,
                   score: addUser.val().score,
                   time: addUser.val().time,
                 });
 
-                if (addUser.val().user == newUser) {
+                if (addUser.val().test == newUser) {
                   setUserOnScoreboard(true);
                 }
               });
@@ -717,11 +717,20 @@ export default function Post() {
 
   /* Scoreboard */
 
-  function addUserToScoreboard() {
+  function addUserToScoreboard(nameTest) {
+    console.log(numScoreboardUsers);
     var newNumScoreboardUsers = numScoreboardUsers + 1;
     setUserOnScoreboard(true);
     setNumScoreboardUsers(newNumScoreboardUsers);
+    var arrayUsersScoreboard = scoreboardUsers;
     var theUser = currentUser;
+    arrayUsersScoreboard.push({
+      test: currentUser,
+      score: score,
+      time: totalTimeInSeconds,
+    });
+    console.log(arrayUsersScoreboard);
+    setScoreboardUsers(arrayUsersScoreboard);
     firebase
       .database()
       .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`)
@@ -733,11 +742,28 @@ export default function Post() {
       .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`);
     console.log(currentUser);
 
-    ref.push({
-      user: currentUser,
-      score: score,
-      time: totalTimeInSeconds,
-    });
+    for (var i = 0; i < scoreboardUsers.length; i++) {
+      console.log(scoreboardUsers[i].test);
+
+      ref.push({
+        test: currentUser,
+        score: score,
+        time: finalTimeSeconds,
+      });
+
+      // else {
+      //   currentArray.push(scoreboardUsers[i]);
+      // }
+    }
+
+    //ref.push({ users: arrayUsersScoreboard });
+
+    // ref.push({
+    //   user: currentUser,
+    //   score: score,
+    //   time: totalTimeInSeconds,
+    // });
+
     // setScoreboardUsed(true);
     // firebase
     //   .database()
@@ -761,8 +787,8 @@ export default function Post() {
     console.log(scoreboardUsers.length);
 
     for (var i = 0; i < scoreboardUsers.length; i++) {
-      console.log(scoreboardUsers[i].name);
-      if (scoreboardUsers[i].name == nameTest) {
+      console.log(scoreboardUsers[i].test);
+      if (scoreboardUsers[i].test == nameTest) {
       } else {
         currentArray.push(scoreboardUsers[i]);
       }
@@ -798,16 +824,13 @@ export default function Post() {
         currScoreboardUser.forEach((scoreUser) => {
           console.log(scoreUser.key);
           console.log(scoreUser.val());
-          if (scoreUser.val().user == nameTest) {
+          if (scoreUser.val().test == nameTest) {
             firebase
               .database()
               .ref(
                 `Quizzes/${quizUser}/${quizTitle}/scoreboard/users/${scoreUser.key}`
               )
               .remove();
-            //scoreUser.set({})
-            // scoreUser.remove();
-            //currScoreboardUser.remove();
           }
         })
 
@@ -818,12 +841,12 @@ export default function Post() {
       .database()
       .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`);
 
-    var testRef = ref.child("users");
-    testRef.push({
-      user: currentUser,
-      score: score,
-      time: totalTimeInSeconds,
-    });
+    // var testRef = ref.child("users");
+    // testRef.push({
+    //   user: currentUser,
+    //   score: score,
+    //   time: totalTimeInSeconds,
+    // });
     // firebase
     //   .database()
     //   .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`)
@@ -838,10 +861,10 @@ export default function Post() {
     var currentArray = [];
 
     for (var i = 0; i < scoreboardUsers.length; i++) {
-      console.log(scoreboardUsers[i].name);
-      if (scoreboardUsers[i].name == nameTest) {
+      console.log(scoreboardUsers[i].test);
+      if (scoreboardUsers[i].test == nameTest) {
         currentArray.push({
-          name: nameTest,
+          test: nameTest,
           score: score,
           time: finalTimeSeconds,
         });
@@ -909,7 +932,7 @@ export default function Post() {
                 `Quizzes/${quizUser}/${quizTitle}/scoreboard/users/${scoreUser.key}`
               )
               .update({
-                user: currentUser,
+                test: currentUser,
                 score: score,
                 time: totalTimeInSeconds,
               });
@@ -1243,23 +1266,25 @@ export default function Post() {
                       {scoreboardUsers.map((user, index) => {
                         return (
                           <tr>
-                            <td>{user.name} </td>
+                            <td>
+                              <span>{user.test} </span>
+                            </td>
                             <td>
                               <span>{user.score}</span>
                             </td>
                             <td>{user.time}</td>{" "}
-                            {user.name == currentUser ? (
+                            {user.test == currentUser ? (
                               <td>
                                 <button
                                   onClick={() =>
-                                    removeScoreboardUser(user.name)
+                                    removeScoreboardUser(user.test)
                                   }
                                 >
                                   Delete
                                 </button>
                                 <button
                                   onClick={() =>
-                                    updateScoreboardUser(user.name)
+                                    updateScoreboardUser(user.test)
                                   }
                                 >
                                   Update
@@ -1288,7 +1313,11 @@ export default function Post() {
                   ) : (
                     <div>
                       <h3>Would you like to be added to the scoreboard?</h3>
-                      <button onClick={() => addUserToScoreboard(currentUser)}>
+                      <button
+                        onClick={(currentUser) =>
+                          addUserToScoreboard(currentUser)
+                        }
+                      >
                         Yes
                       </button>
                     </div>
@@ -1299,7 +1328,11 @@ export default function Post() {
                   {" "}
                   <h3>No one has used the scoreboard yet.</h3>{" "}
                   <h3>Would you like to be added to the scoreboard?</h3>
-                  <button onClick={() => addUserToScoreboard()}>Yes</button>
+                  <button
+                    onClick={(currentUser) => addUserToScoreboard(currentUser)}
+                  >
+                    Yes
+                  </button>
                 </div>
               )}
 
