@@ -267,7 +267,7 @@ export default function Post() {
 
       const nextQuestion = currentQuestion + 1;
       document.getElementById("check-btn").hidden = true;
-      if (nextQuestion < quizData.length) {
+      if (nextQuestion < numQuestions) {
         document.getElementById("next-btn").hidden = false;
       } else {
         document.getElementById("finish-btn").hidden = false;
@@ -281,7 +281,7 @@ export default function Post() {
     refreshButtons();
 
     const nextQuestion = currentQuestion + 1;
-    if (nextQuestion < quizData.length) {
+    if (nextQuestion < numQuestions) {
       setCurrentQuestion(nextQuestion);
       setAnswered(false);
       console.log(currentQuestion);
@@ -782,6 +782,7 @@ export default function Post() {
   }
 
   function removeScoreboardUser(nameTest) {
+    console.log(numQuestions);
     var currentArray = [];
     console.log(scoreboardUsers);
     console.log(scoreboardUsers.length);
@@ -855,6 +856,7 @@ export default function Post() {
     //     score: score,
     //     time: totalTimeInSeconds,
     //   });
+    console.log(numQuestions);
   }
 
   function updateScoreboardUser(nameTest) {
@@ -1191,7 +1193,7 @@ export default function Post() {
                 <div id="hud">
                   {/* <div id="progressText" className="hud-prefix"></div> */}
                   <div id="progressText" className="hud-prefix">
-                    Question {currentQuestion + 1} of {quizData.length}{" "}
+                    Question {currentQuestion + 1} of {numQuestions}{" "}
                   </div>
                   <div id="progressBar">
                     <div id="progressBarFull"></div>
@@ -1372,7 +1374,7 @@ export default function Post() {
                   <tr>
                     <td>Total Questions</td>
                     <td>
-                      <span id="total-question">{quizData.length}</span>
+                      <span id="total-question">{numQuestions}</span>
                     </td>
                   </tr>
                 </thead>
@@ -1387,9 +1389,7 @@ export default function Post() {
                   <tr>
                     <td>Incorrect</td>
                     <td>
-                      <span id="total-incorrect">
-                        {quizData.length - score}
-                      </span>
+                      <span id="total-incorrect">{numQuestions - score}</span>
                     </td>
                   </tr>
                   <tr>
@@ -1398,7 +1398,7 @@ export default function Post() {
                       <span id="percentage">
                         {Number(
                           Number(score).toFixed(2) /
-                            Number(quizData.length).toFixed(2)
+                            Number(numQuestions).toFixed(2)
                         ).toFixed(2) * 100}
                         %
                       </span>
@@ -1408,7 +1408,7 @@ export default function Post() {
                     <td>Total Score</td>
                     <td>
                       <span id="total-score">
-                        {score} / {quizData.length}
+                        {score} / {numQuestions}
                       </span>
                     </td>
                   </tr>
