@@ -726,7 +726,7 @@ export default function Post() {
     var theUser = currentUser;
     arrayUsersScoreboard.push({
       test: currentUser,
-      score: score,
+      score: score + "/" + numQuestions,
       time: totalTimeInSeconds,
     });
     console.log(arrayUsersScoreboard);
@@ -747,7 +747,7 @@ export default function Post() {
 
       ref.push({
         test: currentUser,
-        score: score,
+        score: score + "/" + numQuestions,
         time: finalTimeSeconds,
       });
 
@@ -860,6 +860,7 @@ export default function Post() {
   }
 
   function updateScoreboardUser(nameTest) {
+    var customScore = score + "/" + numQuestions;
     var currentArray = [];
 
     for (var i = 0; i < scoreboardUsers.length; i++) {
@@ -867,7 +868,7 @@ export default function Post() {
       if (scoreboardUsers[i].test == nameTest) {
         currentArray.push({
           test: nameTest,
-          score: score,
+          score: customScore,
           time: finalTimeSeconds,
         });
       } else {
@@ -927,7 +928,9 @@ export default function Post() {
       (currScoreboardUser) =>
         currScoreboardUser.forEach((scoreUser) => {
           console.log(scoreUser.val());
-          if (scoreUser.val().user == nameTest) {
+          console.log(scoreUser.key);
+
+          if (scoreUser.val().test == nameTest) {
             firebase
               .database()
               .ref(
@@ -935,7 +938,7 @@ export default function Post() {
               )
               .update({
                 test: currentUser,
-                score: score,
+                score: customScore,
                 time: totalTimeInSeconds,
               });
             //currScoreboardUser.remove();
