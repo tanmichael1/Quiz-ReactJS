@@ -213,14 +213,10 @@ export default function Post() {
   function handleStartButtonClick() {
     console.log(currentQuestion);
     startTimer();
-    //console.log(progressBarFull);
 
     setInitial(false);
 
     setQuiz(true);
-    // progressBarFull.style.width = `${
-    //   ((currentQuestion + 1) / numQuestions) * 100
-    // }%`;
   }
 
   function handleCheckButtonClick() {
@@ -378,7 +374,6 @@ export default function Post() {
   /* Editing Mode */
 
   function toggleEditQuiz() {
-    //toggleTestQuiz();
     setEditingMode(!editingMode);
   }
 
@@ -438,8 +433,6 @@ export default function Post() {
       }
     }
 
-    console.log(numQuestions - numDeleteCheckboxes + 1);
-
     var changedTitle = false;
     if (newTitle != quizTitle) {
       //Remove old quizzes
@@ -457,8 +450,6 @@ export default function Post() {
       dbQuizForUser.set({ title: newTitle });
 
       //New title
-
-      // Quizzes/User/Quiz
 
       firebase
         .database()
@@ -819,44 +810,24 @@ export default function Post() {
       .database()
       .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`);
 
-    scoreboardUsersFirebase.on(
-      "value",
-      (currScoreboardUser) =>
-        currScoreboardUser.forEach((scoreUser) => {
-          console.log(scoreUser.key);
-          console.log(scoreUser.val());
-          if (scoreUser.val().test == nameTest) {
-            firebase
-              .database()
-              .ref(
-                `Quizzes/${quizUser}/${quizTitle}/scoreboard/users/${scoreUser.key}`
-              )
-              .remove();
-          }
-        })
-
-      // console.log(currScoreboardUser);
+    scoreboardUsersFirebase.on("value", (currScoreboardUser) =>
+      currScoreboardUser.forEach((scoreUser) => {
+        console.log(scoreUser.key);
+        console.log(scoreUser.val());
+        if (scoreUser.val().test == nameTest) {
+          firebase
+            .database()
+            .ref(
+              `Quizzes/${quizUser}/${quizTitle}/scoreboard/users/${scoreUser.key}`
+            )
+            .remove();
+        }
+      })
     );
 
     var ref = firebase
       .database()
       .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`);
-
-    // var testRef = ref.child("users");
-    // testRef.push({
-    //   user: currentUser,
-    //   score: score,
-    //   time: totalTimeInSeconds,
-    // });
-    // firebase
-    //   .database()
-    //   .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`)
-    //   .push({
-    //     user: currentUser,
-    //     score: score,
-    //     time: totalTimeInSeconds,
-    //   });
-    console.log(numQuestions);
   }
 
   function updateScoreboardUser(nameTest) {
@@ -923,29 +894,24 @@ export default function Post() {
       .database()
       .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`);
 
-    scoreboardUsersFirebase.on(
-      "value",
-      (currScoreboardUser) =>
-        currScoreboardUser.forEach((scoreUser) => {
-          console.log(scoreUser.val());
-          console.log(scoreUser.key);
+    scoreboardUsersFirebase.on("value", (currScoreboardUser) =>
+      currScoreboardUser.forEach((scoreUser) => {
+        console.log(scoreUser.val());
+        console.log(scoreUser.key);
 
-          if (scoreUser.val().test == nameTest) {
-            firebase
-              .database()
-              .ref(
-                `Quizzes/${quizUser}/${quizTitle}/scoreboard/users/${scoreUser.key}`
-              )
-              .update({
-                test: currentUser,
-                score: customScore,
-                time: totalTimeInSeconds,
-              });
-            //currScoreboardUser.remove();
-          }
-        })
-
-      // console.log(currScoreboardUser);
+        if (scoreUser.val().test == nameTest) {
+          firebase
+            .database()
+            .ref(
+              `Quizzes/${quizUser}/${quizTitle}/scoreboard/users/${scoreUser.key}`
+            )
+            .update({
+              test: currentUser,
+              score: customScore,
+              time: totalTimeInSeconds,
+            });
+        }
+      })
     );
   }
 
