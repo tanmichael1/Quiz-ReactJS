@@ -6,33 +6,44 @@ import { firebase } from "./../Config";
 import { noConflict } from "jquery";
 
 export default function Post() {
+  /* HOOKS */
+
+  /* Quiz Setup */
   const [done, setDone] = useState(false);
   const [numQuestions, setNumQuestions] = useState(0);
   const [currentUser, setCurrentUser] = useState();
   const [currentUserID, setCurrentUserID] = useState();
-  const [isCreator, setIsCreator] = useState(false);
-  const [editingMode, setEditingMode] = useState(false);
-  const [answered, setAnswered] = useState(false);
+  const [userIsCreator, setUserIsCreator] = useState(false);
   const [testQuiz, setTestQuiz] = useState(false);
   const [admin, setAdmin] = useState(false);
-
-  const [initial, setInitial] = useState(true);
-  const [quiz, setQuiz] = useState(false);
-  const [end, setEnd] = useState(false);
-  const [results, setResults] = useState(false);
-  const [score, setScore] = useState(0);
-  const [response, setResponse] = useState([]);
-  const [selected, setSelected] = useState(false);
-  const [correct, setCorrect] = useState(0);
-
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [currentAnswer, setCurrentAnswer] = useState(0);
-  const [trueAnswer, setTrueAnswer] = useState(0);
-
   const [quizData, setQuizData] = useState([]);
   const [quizUser, setQuizUser] = useState();
   const [quizTitle, setQuizTitle] = useState(null);
 
+  /* Editing */
+  const [editingMode, setEditingMode] = useState(false);
+  const [swapIndex, setSwapIndex] = useState();
+
+  /* Pages */
+  const [initial, setInitial] = useState(true);
+  const [quiz, setQuiz] = useState(false);
+  const [end, setEnd] = useState(false);
+  const [results, setResults] = useState(false);
+
+  /* Question Status */
+  const [answered, setAnswered] = useState(false);
+  const [numAnswers, setNumAnswers] = useState(["Answer 1", "Answer 2"]);
+
+  /* Results */
+  const [score, setScore] = useState(0);
+  const [response, setResponse] = useState([]);
+  const [selected, setSelected] = useState(false);
+  const [correct, setCorrect] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [currentAnswer, setCurrentAnswer] = useState(0);
+  const [trueAnswer, setTrueAnswer] = useState(0);
+
+  /* Timer */
   const [startTime, setStartTime] = useState();
   const [endTime, setEndTime] = useState();
   const [finalTimeSeconds, setFinalTimeSeconds] = useState();
@@ -45,35 +56,25 @@ export default function Post() {
   const [userOnScoreboard, setUserOnScoreboard] = useState(false);
   const [scoreboardUsers, setScoreboardUsers] = useState([]);
 
-  const [numAnswers, setNumAnswers] = useState(["Answer 1", "Answer 2"]);
-
   //Other quiz details
   const [savedDateCreated, setSavedDateCreated] = useState();
   const [savedTimeCreated, setSavedTimeCreated] = useState();
   const [savedCreatedSortDate, setSavedCreatedSortDate] = useState();
 
-  const [swapIndex, setSwapIndex] = useState();
-
+  /* Progress bar */
   const progressBarFull = document.getElementById("progressBarFull");
-
-  const [notes, setNotes] = useState([]);
 
   /* Setup */
 
   if (!done) {
-    console.log("hi");
     const ref = firebase.database().ref();
-    const dbRefObject = firebase.database().ref().child("object");
-
     var currentURL = window.location.pathname;
     var splittable = currentURL.split("/");
     var user = splittable[1];
-
     setQuizUser(user);
-    console.log("here");
 
     var newQuizTitle = unescape(splittable[2]);
-    dbRefObject.on("value", (snap) => console.log(snap.val()));
+
     const dbTestQuiz = ref.child("Quizzes/" + user + "/" + newQuizTitle);
 
     dbTestQuiz.on("value", function (quiz) {
@@ -109,7 +110,6 @@ export default function Post() {
 
   function setup(currUser, num, quiz) {
     var newUser = "";
-    console.log("here");
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         const dbRefUsersName = firebase
@@ -127,7 +127,7 @@ export default function Post() {
           newUser = snapUser.val();
 
           if (snapUser.val() === currUser) {
-            setIsCreator(true);
+            setUserIsCreator(true);
             console.log("User's Quiz");
           } else {
             console.log("Not creator");
@@ -173,10 +173,6 @@ export default function Post() {
             });
 
             setScoreboardUsers(userArray);
-            // for (var entry; entry < scoreboardLength; entry++) {
-            //   loadQuestions(quiz.child(i + 1).val());
-            // }
-            //setScorebardUsers
           } else {
             setScoreboardUsed(false);
             setUserOnScoreboard(false);
@@ -198,24 +194,20 @@ export default function Post() {
 
   function loadQuestions(quiz: object) {
     var answerOptionsData = quiz.answerOptions;
-    console.log(answerOptionsData);
-    var array = quizData;
+    var questionSections = quizData;
 
-    array.push({
+    questionSections.push({
       questionText: quiz.questionText,
       answerOptions: answerOptionsData,
     });
-    setQuizData(array);
+    setQuizData(questionSections);
   }
 
   /* Quiz Buttons */
 
   function handleStartButtonClick() {
-    console.log(currentQuestion);
     startTimer();
-
     setInitial(false);
-
     setQuiz(true);
   }
 
@@ -280,14 +272,8 @@ export default function Post() {
     if (nextQuestion < numQuestions) {
       setCurrentQuestion(nextQuestion);
       setAnswered(false);
-      console.log(currentQuestion);
+
       progressBarFull.style.width = `${(nextQuestion / numQuestions) * 100}%`;
-      console.log("currentQuestion: " + currentQuestion);
-      console.log("numQuestions: " + numQuestions);
-      console.log(
-        "currentQuestion / numQuestions) * 100: " +
-          (nextQuestion / numQuestions) * 100
-      );
     } else {
       alert("You have reached the end of the quiz");
 
@@ -402,18 +388,11 @@ export default function Post() {
     var changeTestQuiz = document.getElementById("changeTestQuiz").checked;
     var newTitle = document.getElementById("editTitle").value;
 
-    console.log("here");
-
     var finalArray = [];
     for (var i = 0; i < editQuestions.length; i++) {
       var questionNumTest = i;
       var answersArray = [];
       for (var j = 0; j < answersEdit.length; j++) {
-        console.log(answersEdit[j]);
-        console.log(
-          "questionnum2: " + answersEdit[j].getAttribute("questionnum2")
-        );
-
         if (answersEdit[j].getAttribute("questionnum2") == questionNumTest) {
           answersArray.push({
             answerText: answersEdit[j].value,
@@ -620,10 +599,8 @@ export default function Post() {
               validAnswer = true;
             }
             answerArray.push({ answerText: x[i].value, isCorrect: true });
-            //displayArray.push({ answerText: x[i].value, color: "green" });
           } else {
             answerArray.push({ answerText: x[i].value, isCorrect: false });
-            //displayArray.push({ answerText: x[i].value, color: "red" });
           }
         }
       }
@@ -641,9 +618,6 @@ export default function Post() {
 
           newSavedAnswers.push(answerArray);
 
-          console.log(answerArray);
-          console.log(newSavedAnswers);
-          console.log(...array);
           setQuizData([...array]);
           setNumQuestions(numQuestions + 1);
           document.getElementById("addEditQuestions").reset();
@@ -720,7 +694,7 @@ export default function Post() {
       score: score + "/" + numQuestions,
       time: totalTimeInSeconds,
     });
-    console.log(arrayUsersScoreboard);
+
     setScoreboardUsers(arrayUsersScoreboard);
     firebase
       .database()
@@ -920,6 +894,8 @@ export default function Post() {
   function refreshResults() {
     setResponse([]);
   }
+
+  /* Timer */
 
   function startTimer() {
     setStartTime(new Date());
@@ -1160,7 +1136,6 @@ export default function Post() {
               <hr />
               <div id="footer">
                 <div id="hud">
-                  {/* <div id="progressText" className="hud-prefix"></div> */}
                   <div id="progressText" className="hud-prefix">
                     Question {currentQuestion + 1} of {numQuestions}{" "}
                   </div>
@@ -1267,15 +1242,6 @@ export default function Post() {
                           </tr>
                         );
                       })}
-                      {/* <tr>
-                        <td>User 1</td>
-                        <td>
-                          <span>1/1</span>
-                        </td>
-                        <td>
-                          <span>10 seconds</span>
-                        </td>
-                      </tr> */}
                     </tbody>
                   </table>
 
@@ -1417,7 +1383,7 @@ export default function Post() {
             <div></div>
           )}
 
-          {isCreator ? (
+          {userIsCreator ? (
             <div className="" id="creatorButtons">
               <Button id="editQuizButton" onClick={toggleEditQuiz}>
                 Edit
