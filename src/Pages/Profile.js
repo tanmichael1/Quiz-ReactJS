@@ -8,7 +8,6 @@ function Profile() {
   const [finished, setFinished] = useState(false);
   const [username, setUsername] = useState("");
   const [createdQuizzes, setCreatedQuizzes] = useState([]);
-  let takenQuizzes = [];
   function setup() {
     firebase.auth().onAuthStateChanged((user) => {
       console.log(user);
@@ -33,7 +32,6 @@ function Profile() {
             })
           );
         }
-        //console.log(user.val());
       });
       dbRefUsers.on("value", (test) => {
         console.log("set");

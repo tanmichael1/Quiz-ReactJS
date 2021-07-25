@@ -86,13 +86,18 @@ export default function Post() {
       setSavedTimeCreated(quiz.child("timeCreated").val());
       setSavedCreatedSortDate(quiz.child("createdSortDate").val());
       setNumScoreboardUsers(quiz.child("scoreboard/numScoreboardUsers").val());
-      var num = quiz.child("scoreboard/numScoreboardUsers").val();
-      console.log(num);
-      setup(user, num, quiz);
+      var scoreboardNumUsers = quiz
+        .child("scoreboard/numScoreboardUsers")
+        .val();
+      setup(user, scoreboardNumUsers, quiz);
 
-      for (var i = 0; i < count; i++) {
+      for (
+        var questionLoadIndex = 0;
+        questionLoadIndex < count;
+        questionLoadIndex++
+      ) {
         console.log(quiz);
-        loadQuestions(quiz.child(i + 1).val());
+        loadQuestions(quiz.child(questionLoadIndex + 1).val());
       }
       setQuizTitle(newQuizTitle);
     });
@@ -108,7 +113,7 @@ export default function Post() {
     }
   }
 
-  function setup(currUser, num, quiz) {
+  function setup(currUser, scoreboardNumUsers, quiz) {
     var newUser = "";
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -116,13 +121,9 @@ export default function Post() {
           .database()
           .ref("Users/" + user.uid + "/username");
         const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
-        console.log(user.uid);
         setCurrentUserID(user.uid);
 
         dbRefUsersName.on("value", function (snapUser) {
-          console.log(snapUser.val());
-          console.log("snap.val(): " + snapUser.val());
-          console.log("quizUser: " + currUser);
           setCurrentUser(snapUser.val());
           newUser = snapUser.val();
 
@@ -130,11 +131,11 @@ export default function Post() {
             setUserIsCreator(true);
             console.log("User's Quiz");
           } else {
+            setUserIsCreator(false);
             console.log("Not creator");
           }
 
           dbRefUsers.on("value", (person) => {
-            console.log(person.val());
             if (
               person.val().admin == undefined ||
               person.val().admin == false
@@ -145,7 +146,7 @@ export default function Post() {
             }
           });
 
-          if (num > 0) {
+          if (scoreboardNumUsers > 0) {
             console.log(true);
             setScoreboardUsed(true);
 
@@ -412,7 +413,6 @@ export default function Post() {
       }
     }
 
-    var changedTitle = false;
     if (newTitle != quizTitle) {
       //Remove old quizzes
       firebase.database().ref(`Quizzes/${quizUser}/${quizTitle}`).remove();
@@ -501,14 +501,12 @@ export default function Post() {
           numScoreboardUsers: numScoreboardUsers,
         });
 
-      for (var k = 1; k < numQuestions - numDeleteCheckboxes + 1; k++) {
-        var question = finalArray[k - 1];
-        firebase.database().ref(`Quizzes/${quizUser}/${newTitle}/${k}`).set({
+      for (var m = 1; m < numQuestions - numDeleteCheckboxes + 1; m++) {
+        var question = finalArray[m - 1];
+        firebase.database().ref(`Quizzes/${quizUser}/${newTitle}/${m}`).set({
           answerOptions: question.answerOptions,
           questionText: question.question,
         });
-
-        console.log(question.question);
       }
       window.location.reload();
     }

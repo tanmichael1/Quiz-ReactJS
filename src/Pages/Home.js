@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { firebase } from "./../Config";
 
 function Home() {
-  const [currentDate, setCurrentDate] = useState(null);
   const [done, setDone] = useState(false);
   const [latestQuiz, setLatestQuiz] = useState("");
   const [latestCreator, setLatestCreator] = useState("");
@@ -10,12 +9,14 @@ function Home() {
   const latestQuizRef = firebase.database().ref("Quizzes");
 
   if (!done) {
+    setup();
     var date = null;
 
     latestQuizRef.on("value", (quizzes) =>
       quizzes.forEach((user) => {
         user.forEach((quiz) => {
           var tempVal = setValues(quiz, date);
+
           if (tempVal != date) {
             date = tempVal;
           }
@@ -30,7 +31,6 @@ function Home() {
     if (latestDate === null || object.createdSortDate > latestDate) {
       setLatestQuiz(object.Title);
       let newDate = object.createdSortDate;
-      setCurrentDate(newDate);
 
       setLatestCreator(object.creator);
       return newDate;
@@ -47,9 +47,6 @@ function Home() {
       }
     });
     setDone(true);
-  }
-  if (!done) {
-    setup();
   }
 
   return (

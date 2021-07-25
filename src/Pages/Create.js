@@ -376,7 +376,6 @@ export default function Create() {
                     onChange={(e) => updateTicked(e, i)}
                     answernum={i}
                     className="checkboxes"
-                    type="checkbox"
                   />
                   <br /> <br />
                 </div>

@@ -34,7 +34,7 @@ export default function Quizzes() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
-        const admin = dbRefUsers.child("admin");
+
         dbRefUsers.on("value", (user) => {
           console.log(user.val());
           if (user.val().admin == undefined || user.val().admin == false) {
