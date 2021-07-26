@@ -17,7 +17,7 @@ export default function Post() {
   const [testQuiz, setTestQuiz] = useState(false);
   const [admin, setAdmin] = useState(false);
   const [quizData, setQuizData] = useState([]);
-  const [quizUser, setQuizUser] = useState();
+  const [quizCreator, setQuizCreator] = useState();
   const [quizTitle, setQuizTitle] = useState(null);
 
   /* Editing */
@@ -71,7 +71,7 @@ export default function Post() {
     var currentURL = window.location.pathname;
     var splittable = currentURL.split("/");
     var user = splittable[1];
-    setQuizUser(user);
+    setQuizCreator(user);
 
     var newQuizTitle = unescape(splittable[2]);
 
@@ -96,7 +96,6 @@ export default function Post() {
         questionLoadIndex < count;
         questionLoadIndex++
       ) {
-        console.log(quiz);
         loadQuestions(quiz.child(questionLoadIndex + 1).val());
       }
       setQuizTitle(newQuizTitle);
@@ -368,7 +367,7 @@ export default function Post() {
     if (window.confirm("Are you sure you wish to delete this Quiz?")) {
       //this.deleteItem(e);
       const ref = firebase.database().ref();
-      const dbTestQuiz = ref.child("Quizzes/" + quizUser + "/" + quizTitle);
+      const dbTestQuiz = ref.child("Quizzes/" + quizCreator + "/" + quizTitle);
       dbTestQuiz.remove();
       const dbQuizForUser = firebase
         .database()
@@ -415,7 +414,7 @@ export default function Post() {
 
     if (newTitle != quizTitle) {
       //Remove old quizzes
-      firebase.database().ref(`Quizzes/${quizUser}/${quizTitle}`).remove();
+      firebase.database().ref(`Quizzes/${quizCreator}/${quizTitle}`).remove();
 
       firebase
         .database()
@@ -426,19 +425,19 @@ export default function Post() {
         .database()
         .ref("Users/" + currentUserID + "/createdQuizzes/" + newTitle);
 
-      dbQuizForUser.set({ title: newTitle });
+      dbQuizForUser.update({ title: newTitle });
 
       //New title
 
       firebase
         .database()
-        .ref(`Quizzes/${quizUser}/${newTitle}`)
-        .set({
+        .ref(`Quizzes/${quizCreator}/${newTitle}`)
+        .update({
           updatedSortDate: new Date().toISOString(),
 
           NumQuestions: numQuestions - numDeleteCheckboxes,
           Title: newTitle,
-          creator: quizUser,
+          creator: quizCreator,
           dateCreated: savedDateCreated,
           timeCreated: savedTimeCreated,
           createdSortDate: savedCreatedSortDate,
@@ -447,13 +446,13 @@ export default function Post() {
 
       firebase
         .database()
-        .ref(`Quizzes/${quizUser}/${newTitle}`)
-        .set({
+        .ref(`Quizzes/${quizCreator}/${newTitle}`)
+        .update({
           updatedSortDate: new Date().toISOString(),
 
           NumQuestions: numQuestions - numDeleteCheckboxes,
           Title: newTitle,
-          creator: quizUser,
+          creator: quizCreator,
           dateCreated: savedDateCreated,
           timeCreated: savedTimeCreated,
           createdSortDate: savedCreatedSortDate,
@@ -462,32 +461,35 @@ export default function Post() {
 
       firebase
         .database()
-        .ref(`Quizzes/${quizUser}/${newTitle}/Scoreboard`)
-        .set({
+        .ref(`Quizzes/${quizCreator}/${newTitle}/Scoreboard`)
+        .update({
           numScoreboardUsers: numScoreboardUsers,
         });
 
       for (var k = 1; k < numQuestions - numDeleteCheckboxes + 1; k++) {
         var question = finalArray[k - 1];
-        firebase.database().ref(`Quizzes/${quizUser}/${newTitle}/${k}`).set({
-          answerOptions: question.answerOptions,
-          questionText: question.question,
-        });
+        firebase
+          .database()
+          .ref(`Quizzes/${quizCreator}/${newTitle}/${k}`)
+          .update({
+            answerOptions: question.answerOptions,
+            questionText: question.question,
+          });
 
         console.log(question.question);
       }
 
-      window.location.href = `${quizUser}/${newTitle}`;
+      window.location.href = `${quizCreator}/${newTitle}`;
     } else {
       firebase
         .database()
-        .ref(`Quizzes/${quizUser}/${newTitle}`)
-        .set({
+        .ref(`Quizzes/${quizCreator}/${newTitle}`)
+        .update({
           updatedSortDate: new Date().toISOString(),
 
           NumQuestions: numQuestions - numDeleteCheckboxes,
           Title: newTitle,
-          creator: quizUser,
+          creator: quizCreator,
           dateCreated: savedDateCreated,
           timeCreated: savedTimeCreated,
           createdSortDate: savedCreatedSortDate,
@@ -496,14 +498,15 @@ export default function Post() {
 
       firebase
         .database()
-        .ref(`Quizzes/${quizUser}/${newTitle}/scoreboard`)
-        .set({
+        .ref(`Quizzes/${quizCreator}/${newTitle}/scoreboard`)
+        .update({
           numScoreboardUsers: numScoreboardUsers,
         });
 
       for (var m = 1; m < numQuestions - numDeleteCheckboxes + 1; m++) {
         var question = finalArray[m - 1];
-        firebase.database().ref(`Quizzes/${quizUser}/${newTitle}/${m}`).set({
+        console.log(question);
+        firebase.database().ref(`Quizzes/${quizCreator}/${newTitle}/${m}`).set({
           answerOptions: question.answerOptions,
           questionText: question.question,
         });
@@ -696,13 +699,13 @@ export default function Post() {
     setScoreboardUsers(arrayUsersScoreboard);
     firebase
       .database()
-      .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`)
+      .ref(`Quizzes/${quizCreator}/${quizTitle}/scoreboard`)
       .update({
         numScoreboardUsers: newNumScoreboardUsers,
       });
     var ref = firebase
       .database()
-      .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`);
+      .ref(`Quizzes/${quizCreator}/${quizTitle}/scoreboard/users`);
     console.log(currentUser);
 
     for (var i = 0; i < scoreboardUsers.length; i++) {
@@ -773,14 +776,14 @@ export default function Post() {
 
     firebase
       .database()
-      .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`)
+      .ref(`Quizzes/${quizCreator}/${quizTitle}/scoreboard`)
       .update({
         numScoreboardUsers: newNumScoreboardUsers,
       });
 
     const scoreboardUsersFirebase = firebase
       .database()
-      .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`);
+      .ref(`Quizzes/${quizCreator}/${quizTitle}/scoreboard/users`);
 
     scoreboardUsersFirebase.on("value", (currScoreboardUser) =>
       currScoreboardUser.forEach((scoreUser) => {
@@ -790,7 +793,7 @@ export default function Post() {
           firebase
             .database()
             .ref(
-              `Quizzes/${quizUser}/${quizTitle}/scoreboard/users/${scoreUser.key}`
+              `Quizzes/${quizCreator}/${quizTitle}/scoreboard/users/${scoreUser.key}`
             )
             .remove();
         }
@@ -799,7 +802,7 @@ export default function Post() {
 
     var ref = firebase
       .database()
-      .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`);
+      .ref(`Quizzes/${quizCreator}/${quizTitle}/scoreboard`);
   }
 
   function updateScoreboardUser(nameTest) {
@@ -864,7 +867,7 @@ export default function Post() {
 
     const scoreboardUsersFirebase = firebase
       .database()
-      .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`);
+      .ref(`Quizzes/${quizCreator}/${quizTitle}/scoreboard/users`);
 
     scoreboardUsersFirebase.on("value", (currScoreboardUser) =>
       currScoreboardUser.forEach((scoreUser) => {
@@ -875,7 +878,7 @@ export default function Post() {
           firebase
             .database()
             .ref(
-              `Quizzes/${quizUser}/${quizTitle}/scoreboard/users/${scoreUser.key}`
+              `Quizzes/${quizCreator}/${quizTitle}/scoreboard/users/${scoreUser.key}`
             )
             .update({
               test: currentUser,
@@ -1078,7 +1081,7 @@ export default function Post() {
                     <h1 id="quiz-title">{quizTitle}</h1>
                   </div>
                   <div>
-                    <h2>From {quizUser}</h2>
+                    <h2>From {quizCreator}</h2>
                   </div>
                   <div className="initial-button">
                     <Button
