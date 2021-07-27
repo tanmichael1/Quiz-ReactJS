@@ -42,26 +42,6 @@ function Profile() {
     setDone(true);
   }
 
-  function changePassword() {
-    // Ask signed in user for current password.
-    const currentPass = window.prompt("Please enter current password");
-    const emailCred = firebase.auth.EmailAuthProvider.credential(
-      firebase.auth().currentUser,
-      currentPass
-    );
-    firebase
-      .auth()
-      .currentUser.reauthenticateWithCredential(emailCred)
-      .then(() => {
-        // User successfully reauthenticated.
-        const newPass = window.prompt("Please enter new password");
-        return firebase.auth().currentUser.updatePassword(newPass);
-      })
-      .catch((error) => {
-        // Handle error.
-      });
-  }
-
   function test() {
     let user = firebase.auth().currentUser;
     let newPassword = "Password";
@@ -106,22 +86,78 @@ function Profile() {
     }
   }
 
-  function changePassword() {
-    document.getElementById("currentPassword");
-    var newPassword = document.getElementById("newPassword").value;
-    var confirmNewPassword =
-      document.getElementById("confirmNewPassword").value;
-    console.log(newPassword);
-    console.log(confirmNewPassword);
-    if (newPassword == confirmNewPassword) {
-      var result = window.confirm(
-        "Are you sure you want to change your password to " + newPassword + "?"
-      );
-      if (result) {
-      }
+  function toggleEmail() {
+    if (document.getElementById("emailChange").classList.contains("hidden")) {
+      document.getElementById("emailChange").classList.remove("hidden");
     } else {
-      alert("Passwords must be identical");
+      document.getElementById("emailChange").classList.add("hidden");
     }
+  }
+
+  // function changePassword() {
+  //   document.getElementById("currentPassword");
+  //   var newPassword = document.getElementById("newPassword").value;
+  //   var confirmNewPassword =
+  //     document.getElementById("confirmNewPassword").value;
+  //   console.log(newPassword);
+  //   console.log(confirmNewPassword);
+  //   if (newPassword == confirmNewPassword) {
+  //     var result = window.confirm(
+  //       "Are you sure you want to change your password to " + newPassword + "?"
+  //     );
+  //     if (result) {
+  //     }
+  //   } else {
+  //     alert("Passwords must be identical");
+  //   }
+  // }
+
+  function changePassword() {
+    // Ask signed in user for current password.
+    const currentPass = window.prompt("Please enter current password");
+    const emailCred = firebase.auth.EmailAuthProvider.credential(
+      firebase.auth().currentUser,
+      currentPass
+    );
+    console.log(emailCred);
+    firebase
+      .auth()
+      .currentUser.reauthenticateWithCredential(emailCred)
+      .then(() => {
+        // User successfully reauthenticated.
+        const newPass = window.prompt("Please enter new password");
+        return firebase.auth().currentUser.updatePassword(newPass);
+      })
+      .catch((error) => {
+        console.log(error);
+        // Handle error.
+      });
+  }
+
+  function changeEmail() {
+    const currentPass = window.prompt("Please enter current password");
+    var currEmail = document.getElementById("currentEmail").value;
+    var newEmail = document.getElementById("newEmail").value;
+    console.log(currentPass);
+    console.log(newEmail);
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(currEmail, currentPass)
+      .then(function (userCredential) {
+        userCredential.user.updateEmail(newEmail);
+      })
+      .then(
+        alert(
+          "Email address change successful. Your email address is now " +
+            newEmail
+        ),
+        (document.getElementById("newEmail").value = ""),
+        (document.getElementById("currentEmail").value = "")
+      )
+      .catch((error) => {
+        console.log(error);
+        // Handle error.
+      });
   }
 
   function deleteAccount() {
@@ -254,6 +290,32 @@ function Profile() {
               <hr />
             </div>
             <br />
+
+            <button
+              onClick={() => toggleEmail()}
+              id="changeEmail"
+              className="btn btn-primary"
+            >
+              Change Email
+            </button>
+
+            <div id="emailChange" className="hidden">
+              <label>Your email</label>
+              <br />
+              <input id="currentEmail" type="text" />
+              <br />
+              <label>Your new email</label>
+              <br />
+              <input id="newEmail" type="text" />
+              <br />
+
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => changeEmail()}
+              >
+                Change Email
+              </button>
+            </div>
             <button
               className="btn btn-danger"
               id="deleteAccount"
