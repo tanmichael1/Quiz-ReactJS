@@ -18,6 +18,7 @@ export default function Post() {
   const [admin, setAdmin] = useState(false);
   const [quizData, setQuizData] = useState([]);
   const [quizCreator, setQuizCreator] = useState();
+  const [quizCreatorID, setQuizCreatorID] = useState();
   const [quizTitle, setQuizTitle] = useState(null);
 
   /* Editing */
@@ -85,6 +86,7 @@ export default function Post() {
       setSavedDateCreated(quiz.child("dateCreated").val());
       setSavedTimeCreated(quiz.child("timeCreated").val());
       setSavedCreatedSortDate(quiz.child("createdSortDate").val());
+      setQuizCreatorID(quiz.child("creatorID").val());
       setNumScoreboardUsers(quiz.child("scoreboard/numScoreboardUsers").val());
       var scoreboardNumUsers = quiz
         .child("scoreboard/numScoreboardUsers")
@@ -209,6 +211,7 @@ export default function Post() {
     startTimer();
     setInitial(false);
     setQuiz(true);
+    console.log(quizCreatorID);
   }
 
   function handleCheckButtonClick() {

@@ -316,6 +316,8 @@ function Profile() {
                 Change Email
               </button>
             </div>
+
+            <br />
             <button
               className="btn btn-danger"
               id="deleteAccount"

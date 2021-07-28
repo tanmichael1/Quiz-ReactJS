@@ -137,6 +137,7 @@ export default function Create() {
           createdSortDate: new Date().toISOString(),
           updatedSortDate: new Date().toISOString(),
           testQuiz: testQuizValue,
+          creatorID: currentUserID,
         });
 
       firebase
