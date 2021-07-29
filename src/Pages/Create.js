@@ -127,7 +127,7 @@ export default function Create() {
 
       firebase
         .database()
-        .ref(`Quizzes/${currentUser}/${title}`)
+        .ref(`Quizzes/${currentUserID}/${title}`)
         .set({
           NumQuestions: savedQuestions.length,
           Title: title,
@@ -142,7 +142,7 @@ export default function Create() {
 
       firebase
         .database()
-        .ref(`Quizzes/${currentUser}/${title}/scoreboard`)
+        .ref(`Quizzes/${currentUserID}/${title}/scoreboard`)
         .set({
           numScoreboardUsers: 0,
         });
@@ -158,7 +158,7 @@ export default function Create() {
         console.log(answerOptions);
         firebase
           .database()
-          .ref(`Quizzes/${currentUser}/${title}/${i}`)
+          .ref(`Quizzes/${currentUserID}/${title}/${i}`)
           .set({
             answerOptions: answerOptions[i - 1],
             questionText: question,
