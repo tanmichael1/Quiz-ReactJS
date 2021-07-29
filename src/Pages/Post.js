@@ -72,7 +72,6 @@ export default function Post() {
     var currentURL = window.location.pathname;
     var splittable = currentURL.split("/");
     var user = splittable[1];
-    setQuizCreator(user);
 
     var newQuizTitle = unescape(splittable[2]);
 
@@ -86,12 +85,13 @@ export default function Post() {
       setSavedDateCreated(quiz.child("dateCreated").val());
       setSavedTimeCreated(quiz.child("timeCreated").val());
       setSavedCreatedSortDate(quiz.child("createdSortDate").val());
+      setQuizCreator(quiz.child("creator").val());
       setQuizCreatorID(quiz.child("creatorID").val());
       setNumScoreboardUsers(quiz.child("scoreboard/numScoreboardUsers").val());
       var scoreboardNumUsers = quiz
         .child("scoreboard/numScoreboardUsers")
         .val();
-      setup(user, scoreboardNumUsers, quiz);
+      setup(quiz.child("creator").val(), scoreboardNumUsers, quiz);
 
       for (
         var questionLoadIndex = 0;
@@ -127,6 +127,8 @@ export default function Post() {
         dbRefUsersName.on("value", function (snapUser) {
           setCurrentUser(snapUser.val());
           newUser = snapUser.val();
+          console.log(currUser);
+          console.log(snapUser.val());
 
           if (snapUser.val() === currUser) {
             setUserIsCreator(true);
@@ -370,7 +372,9 @@ export default function Post() {
     if (window.confirm("Are you sure you wish to delete this Quiz?")) {
       //this.deleteItem(e);
       const ref = firebase.database().ref();
-      const dbTestQuiz = ref.child("Quizzes/" + quizCreator + "/" + quizTitle);
+      const dbTestQuiz = ref.child(
+        "Quizzes/" + quizCreatorID + "/" + quizTitle
+      );
       dbTestQuiz.remove();
       const dbQuizForUser = firebase
         .database()
@@ -417,7 +421,7 @@ export default function Post() {
 
     if (newTitle != quizTitle) {
       //Remove old quizzes
-      firebase.database().ref(`Quizzes/${quizCreator}/${quizTitle}`).remove();
+      firebase.database().ref(`Quizzes/${quizCreatorID}/${quizTitle}`).remove();
 
       firebase
         .database()
@@ -434,13 +438,14 @@ export default function Post() {
 
       firebase
         .database()
-        .ref(`Quizzes/${quizCreator}/${newTitle}`)
+        .ref(`Quizzes/${quizCreatorID}/${newTitle}`)
         .update({
           updatedSortDate: new Date().toISOString(),
 
           NumQuestions: numQuestions - numDeleteCheckboxes,
           Title: newTitle,
           creator: quizCreator,
+          creatorID: quizCreatorID,
           dateCreated: savedDateCreated,
           timeCreated: savedTimeCreated,
           createdSortDate: savedCreatedSortDate,
@@ -449,13 +454,14 @@ export default function Post() {
 
       firebase
         .database()
-        .ref(`Quizzes/${quizCreator}/${newTitle}`)
+        .ref(`Quizzes/${quizCreatorID}/${newTitle}`)
         .update({
           updatedSortDate: new Date().toISOString(),
 
           NumQuestions: numQuestions - numDeleteCheckboxes,
           Title: newTitle,
           creator: quizCreator,
+          creatorID: quizCreatorID,
           dateCreated: savedDateCreated,
           timeCreated: savedTimeCreated,
           createdSortDate: savedCreatedSortDate,
@@ -464,7 +470,7 @@ export default function Post() {
 
       firebase
         .database()
-        .ref(`Quizzes/${quizCreator}/${newTitle}/Scoreboard`)
+        .ref(`Quizzes/${quizCreatorID}/${newTitle}/Scoreboard`)
         .update({
           numScoreboardUsers: numScoreboardUsers,
         });
@@ -473,7 +479,7 @@ export default function Post() {
         var question = finalArray[k - 1];
         firebase
           .database()
-          .ref(`Quizzes/${quizCreator}/${newTitle}/${k}`)
+          .ref(`Quizzes/${quizCreatorID}/${newTitle}/${k}`)
           .update({
             answerOptions: question.answerOptions,
             questionText: question.question,
@@ -482,17 +488,18 @@ export default function Post() {
         console.log(question.question);
       }
 
-      window.location.href = `${quizCreator}/${newTitle}`;
+      window.location.href = `${quizCreatorID}/${newTitle}`;
     } else {
       firebase
         .database()
-        .ref(`Quizzes/${quizCreator}/${newTitle}`)
+        .ref(`Quizzes/${quizCreatorID}/${newTitle}`)
         .update({
           updatedSortDate: new Date().toISOString(),
 
           NumQuestions: numQuestions - numDeleteCheckboxes,
           Title: newTitle,
           creator: quizCreator,
+          creatorID: quizCreatorID,
           dateCreated: savedDateCreated,
           timeCreated: savedTimeCreated,
           createdSortDate: savedCreatedSortDate,
@@ -501,7 +508,7 @@ export default function Post() {
 
       firebase
         .database()
-        .ref(`Quizzes/${quizCreator}/${newTitle}/scoreboard`)
+        .ref(`Quizzes/${quizCreatorID}/${newTitle}/scoreboard`)
         .update({
           numScoreboardUsers: numScoreboardUsers,
         });
@@ -509,10 +516,13 @@ export default function Post() {
       for (var m = 1; m < numQuestions - numDeleteCheckboxes + 1; m++) {
         var question = finalArray[m - 1];
         console.log(question);
-        firebase.database().ref(`Quizzes/${quizCreator}/${newTitle}/${m}`).set({
-          answerOptions: question.answerOptions,
-          questionText: question.question,
-        });
+        firebase
+          .database()
+          .ref(`Quizzes/${quizCreatorID}/${newTitle}/${m}`)
+          .set({
+            answerOptions: question.answerOptions,
+            questionText: question.question,
+          });
       }
       window.location.reload();
     }
@@ -702,13 +712,13 @@ export default function Post() {
     setScoreboardUsers(arrayUsersScoreboard);
     firebase
       .database()
-      .ref(`Quizzes/${quizCreator}/${quizTitle}/scoreboard`)
+      .ref(`Quizzes/${quizCreatorID}/${quizTitle}/scoreboard`)
       .update({
         numScoreboardUsers: newNumScoreboardUsers,
       });
     var ref = firebase
       .database()
-      .ref(`Quizzes/${quizCreator}/${quizTitle}/scoreboard/users`);
+      .ref(`Quizzes/${quizCreatorID}/${quizTitle}/scoreboard/users`);
     console.log(currentUser);
 
     for (var i = 0; i < scoreboardUsers.length; i++) {
@@ -779,14 +789,14 @@ export default function Post() {
 
     firebase
       .database()
-      .ref(`Quizzes/${quizCreator}/${quizTitle}/scoreboard`)
+      .ref(`Quizzes/${quizCreatorID}/${quizTitle}/scoreboard`)
       .update({
         numScoreboardUsers: newNumScoreboardUsers,
       });
 
     const scoreboardUsersFirebase = firebase
       .database()
-      .ref(`Quizzes/${quizCreator}/${quizTitle}/scoreboard/users`);
+      .ref(`Quizzes/${quizCreatorID}/${quizTitle}/scoreboard/users`);
 
     scoreboardUsersFirebase.on("value", (currScoreboardUser) =>
       currScoreboardUser.forEach((scoreUser) => {
@@ -796,7 +806,7 @@ export default function Post() {
           firebase
             .database()
             .ref(
-              `Quizzes/${quizCreator}/${quizTitle}/scoreboard/users/${scoreUser.key}`
+              `Quizzes/${quizCreatorID}/${quizTitle}/scoreboard/users/${scoreUser.key}`
             )
             .remove();
         }
@@ -805,7 +815,7 @@ export default function Post() {
 
     var ref = firebase
       .database()
-      .ref(`Quizzes/${quizCreator}/${quizTitle}/scoreboard`);
+      .ref(`Quizzes/${quizCreatorID}/${quizTitle}/scoreboard`);
   }
 
   function updateScoreboardUser(nameTest) {
@@ -870,7 +880,7 @@ export default function Post() {
 
     const scoreboardUsersFirebase = firebase
       .database()
-      .ref(`Quizzes/${quizCreator}/${quizTitle}/scoreboard/users`);
+      .ref(`Quizzes/${quizCreatorID}/${quizTitle}/scoreboard/users`);
 
     scoreboardUsersFirebase.on("value", (currScoreboardUser) =>
       currScoreboardUser.forEach((scoreUser) => {
@@ -881,7 +891,7 @@ export default function Post() {
           firebase
             .database()
             .ref(
-              `Quizzes/${quizCreator}/${quizTitle}/scoreboard/users/${scoreUser.key}`
+              `Quizzes/${quizCreatorID}/${quizTitle}/scoreboard/users/${scoreUser.key}`
             )
             .update({
               test: currentUser,

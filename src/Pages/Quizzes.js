@@ -57,12 +57,14 @@ export default function Quizzes() {
 
         user.forEach((quiz) => {
           var newTitle = quiz.val().Title;
-          var newUser = quiz.val().creator;
+          var creator = quiz.val().creator;
+          var creatorID = quiz.val().creatorID;
 
           if (quiz.val().testQuiz) {
             currentTestArray.push({
               title: newTitle,
-              user: newUser,
+              creator: creator,
+              creatorID: creatorID,
             });
             currentTestArray.sort(function (a, b) {
               if (a.title < b.title) {
@@ -77,7 +79,8 @@ export default function Quizzes() {
           } else {
             currentArray.push({
               title: newTitle,
-              user: newUser,
+              creator: creator,
+              creatorID: creatorID,
             });
             currentArray.sort(function (a, b) {
               if (a.title < b.title) {
@@ -112,12 +115,12 @@ export default function Quizzes() {
               <h3 id="center" key={i}>
                 <Link
                   to={{
-                    pathname: `${quiz.user}/${quiz.title}`,
+                    pathname: `${quiz.creatorID}/${quiz.title}`,
                   }}
                 >
                   {quiz.title}
                 </Link>{" "}
-                from {quiz.user}
+                from {quiz.creator}
               </h3>
             ))}
 
@@ -130,12 +133,12 @@ export default function Quizzes() {
                   <h3 id="center" key={i}>
                     <Link
                       to={{
-                        pathname: `${quiz.user}/${quiz.title}`,
+                        pathname: `${quiz.creatorID}/${quiz.title}`,
                       }}
                     >
                       {quiz.title}
                     </Link>{" "}
-                    from {quiz.user}
+                    from {quiz.creator}
                   </h3>
                 ))}
               </div>

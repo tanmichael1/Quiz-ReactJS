@@ -8,10 +8,12 @@ function Profile() {
   const [finished, setFinished] = useState(false);
   const [username, setUsername] = useState("");
   const [createdQuizzes, setCreatedQuizzes] = useState([]);
+  const [userID, setUserID] = useState();
   function setup() {
     firebase.auth().onAuthStateChanged((user) => {
       console.log(user);
       const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
+      setUserID(user.uid);
       const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
 
       dbRefUsers.on("value", (user) => {
@@ -217,7 +219,7 @@ function Profile() {
                 <div key={i}>
                   <Link
                     to={{
-                      pathname: `${username}/${quiz.title}`,
+                      pathname: `${userID}/${quiz.title}`,
                     }}
                   >
                     <h3>{quiz.title}</h3>
