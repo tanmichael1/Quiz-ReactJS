@@ -69,12 +69,51 @@ function Profile() {
   }
 
   function changeUsername() {
-    document.getElementById("verifyPassword");
+    // document.getElementById("verifyPassword");
     var newUsername = document.getElementById("newUsername").value;
     var result = window.confirm(
       "Are you sure you want to change your username to " + newUsername + "?"
     );
     if (result) {
+      const dbRefUsers = firebase.database().ref(`Users/${userID}`);
+      dbRefUsers.on("value", (user) => {
+        console.log(user.val().username);
+      });
+      firebase.database().ref(`Users/${userID}`).update({
+        username: newUsername,
+      });
+      const dbRefQuizTitles = firebase.database().ref(`Quizzes/${userID}`);
+      dbRefQuizTitles.on("value", (quiz) => {
+        quiz.forEach((test) => {
+          var title = test.val().Title;
+          console.log(title);
+          // test.update({ creator: newUsername });
+          console.log(test.val().creator);
+          firebase.database().ref(`Quizzes/${userID}/${title}`).update({
+            creator: newUsername,
+          });
+        });
+        console.log(quiz.val());
+        // var test = quiz.val();
+        // console.log(test.creator);
+      });
+      // firebase.database().ref(`Quizzes/${userID}/creator`).update({
+      //   creator:newUsername
+      // });
+      // firebase
+      //   .database()
+      //   .ref(`Quizzes/${userID}`)
+      //   .set({
+      //     NumQuestions: savedQuestions.length,
+      //     Title: title,
+      //     creator: currentUser,
+      //     dateCreated: new Date().toLocaleDateString("en-NZ"),
+      //     timeCreated: new Date().toLocaleTimeString("en-NZ"),
+      //     createdSortDate: new Date().toISOString(),
+      //     updatedSortDate: new Date().toISOString(),
+      //     testQuiz: testQuizValue,
+      //     creatorID: currentUserID,
+      //   });
     }
   }
 
