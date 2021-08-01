@@ -11,6 +11,7 @@ function Profile() {
   const [userID, setUserID] = useState();
   function setup() {
     firebase.auth().onAuthStateChanged((user) => {
+      console.log("setup");
       console.log(user);
       const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
       setUserID(user.uid);
@@ -22,7 +23,7 @@ function Profile() {
         if (user.val().createdQuizzes == undefined) {
           console.log("undefined");
         } else {
-          dbCreatedQuizzes.on("value", (userQuizzes) =>
+          dbCreatedQuizzes.once("value", (userQuizzes) =>
             userQuizzes.forEach((quiz) => {
               var tempArray = createdQuizzes;
               //console.log(quiz.val());
@@ -35,7 +36,7 @@ function Profile() {
           );
         }
       });
-      dbRefUsers.on("value", (test) => {
+      dbRefUsers.once("value", (test) => {
         console.log("set");
         setUsername(test.val().username);
       });
@@ -74,14 +75,11 @@ function Profile() {
     var result = window.confirm(
       "Are you sure you want to change your username to " + newUsername + "?"
     );
+
     if (result) {
       const dbRefUsers = firebase.database().ref(`Users/${userID}`);
-      dbRefUsers.on("value", (user) => {
-        console.log(user.val().username);
-      });
-      firebase.database().ref(`Users/${userID}`).update({
-        username: newUsername,
-      });
+      const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
+
       const dbRefQuizTitles = firebase.database().ref(`Quizzes/${userID}`);
       dbRefQuizTitles.on("value", (quiz) => {
         quiz.forEach((test) => {
@@ -94,26 +92,16 @@ function Profile() {
           });
         });
         console.log(quiz.val());
-        // var test = quiz.val();
-        // console.log(test.creator);
+        console.log(createdQuizzes);
       });
-      // firebase.database().ref(`Quizzes/${userID}/creator`).update({
-      //   creator:newUsername
-      // });
-      // firebase
-      //   .database()
-      //   .ref(`Quizzes/${userID}`)
-      //   .set({
-      //     NumQuestions: savedQuestions.length,
-      //     Title: title,
-      //     creator: currentUser,
-      //     dateCreated: new Date().toLocaleDateString("en-NZ"),
-      //     timeCreated: new Date().toLocaleTimeString("en-NZ"),
-      //     createdSortDate: new Date().toISOString(),
-      //     updatedSortDate: new Date().toISOString(),
-      //     testQuiz: testQuizValue,
-      //     creatorID: currentUserID,
-      //   });
+
+      firebase.database().ref(`Users/${userID}`).update({
+        username: newUsername,
+      });
+
+      setTimeout(() => {
+        window.location.href = "/profile";
+      }, 1000);
     }
   }
 
