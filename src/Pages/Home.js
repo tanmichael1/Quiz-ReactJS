@@ -5,7 +5,7 @@ function Home() {
   const [done, setDone] = useState(false);
   const [latestQuiz, setLatestQuiz] = useState("");
   const [latestCreator, setLatestCreator] = useState("");
-
+  const [latestCreatorID, setLatestCreatorID] = useState("");
   const latestQuizRef = firebase.database().ref("Quizzes");
 
   if (!done) {
@@ -33,6 +33,7 @@ function Home() {
       let newDate = object.createdSortDate;
 
       setLatestCreator(object.creator);
+      setLatestCreatorID(object.creatorID);
       return newDate;
     } else {
       return latestDate;
@@ -56,7 +57,7 @@ function Home() {
       <h2>Latest Quiz</h2>
       {latestQuiz !== "" ? (
         <div>
-          <a href={`${latestCreator}/${latestQuiz}`}>
+          <a href={`${latestCreatorID}/${latestQuiz}`}>
             <h3>
               {" "}
               {latestQuiz} from {latestCreator}{" "}
