@@ -77,7 +77,7 @@ export default function Post() {
 
     const dbTestQuiz = ref.child("Quizzes/" + user + "/" + newQuizTitle);
 
-    dbTestQuiz.on("value", function (quiz) {
+    dbTestQuiz.once("value", function (quiz) {
       var count = quiz.child("NumQuestions").val();
       setTestQuiz(quiz.child("testQuiz").val());
       console.log(quiz.val());
@@ -124,7 +124,7 @@ export default function Post() {
         const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
         setCurrentUserID(user.uid);
 
-        dbRefUsersName.on("value", function (snapUser) {
+        dbRefUsersName.once("value", function (snapUser) {
           setCurrentUser(snapUser.val());
           newUser = snapUser.val();
           console.log(currUser);
@@ -138,7 +138,7 @@ export default function Post() {
             console.log("Not creator");
           }
 
-          dbRefUsers.on("value", (person) => {
+          dbRefUsers.once("value", (person) => {
             if (
               person.val().admin == undefined ||
               person.val().admin == false
@@ -162,7 +162,7 @@ export default function Post() {
               .ref(
                 "Quizzes/" + currUser + "/" + newQuizTitle + "/scoreboard/users"
               );
-            scoreboardUsersRef.on("value", (snap) => {
+            scoreboardUsersRef.once("value", (snap) => {
               snap.forEach((addUser) => {
                 userArray.push({
                   test: addUser.val().test,
@@ -392,7 +392,11 @@ export default function Post() {
     var answersEdit = document.getElementsByClassName("answer");
     var deleteCheckboxes = document.getElementsByClassName("deleteCheckboxes");
     var numDeleteCheckboxes = 0;
-    var changeTestQuiz = document.getElementById("changeTestQuiz").checked;
+    var changeTestQuiz = false;
+    if (document.getElementById("changeTestQuiz") != null) {
+      changeTestQuiz = document.getElementById("changeTestQuiz").checked;
+    }
+
     var newTitle = document.getElementById("editTitle").value;
 
     var finalArray = [];
@@ -798,7 +802,7 @@ export default function Post() {
       .database()
       .ref(`Quizzes/${quizCreatorID}/${quizTitle}/scoreboard/users`);
 
-    scoreboardUsersFirebase.on("value", (currScoreboardUser) =>
+    scoreboardUsersFirebase.once("value", (currScoreboardUser) =>
       currScoreboardUser.forEach((scoreUser) => {
         console.log(scoreUser.key);
         console.log(scoreUser.val());
@@ -882,7 +886,7 @@ export default function Post() {
       .database()
       .ref(`Quizzes/${quizCreatorID}/${quizTitle}/scoreboard/users`);
 
-    scoreboardUsersFirebase.on("value", (currScoreboardUser) =>
+    scoreboardUsersFirebase.once("value", (currScoreboardUser) =>
       currScoreboardUser.forEach((scoreUser) => {
         console.log(scoreUser.val());
         console.log(scoreUser.key);
