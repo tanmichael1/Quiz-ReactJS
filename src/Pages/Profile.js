@@ -189,8 +189,17 @@ function Profile() {
       });
   }
 
-  function deleteAccount() {
+  function toggleDelete() {
+    if (document.getElementById("deleteChange").classList.contains("hidden")) {
+      document.getElementById("deleteChange").classList.remove("hidden");
+    } else {
+      document.getElementById("deleteChange").classList.add("hidden");
+    }
+  }
+
+  function deleteAccount(removeQuizzes) {
     var userPassword = firebase.auth().currentUser.email;
+
     const currentPass = window.prompt(
       "Please enter your email address to confirm you want to delete your account."
     );
@@ -200,6 +209,16 @@ function Profile() {
         const user = firebase.auth().currentUser;
         const uid = firebase.auth().currentUser.uid;
         var currentArray = [];
+
+        // window.prompt(
+        //   "Please enter your email address to confirm you want to delete your account."
+        // );
+
+        if (removeQuizzes) {
+          const ref = firebase.database().ref();
+          const dbTestQuiz = ref.child("Quizzes/" + uid);
+          dbTestQuiz.remove();
+        }
 
         user
           .delete()
@@ -350,10 +369,27 @@ function Profile() {
             <button
               className="btn btn-danger"
               id="deleteAccount"
-              onClick={() => deleteAccount()}
+              onClick={() => toggleDelete()}
             >
               Delete Account
             </button>
+
+            <div id="deleteChange" className="hidden">
+              <button
+                className="btn btn-danger"
+                id="deleteAccount"
+                onClick={() => deleteAccount(false)}
+              >
+                Delete Account without Quizzes
+              </button>
+              <button
+                className="btn btn-danger"
+                id="deleteAccount"
+                onClick={() => deleteAccount(true)}
+              >
+                Delete Account with Quizzes
+              </button>
+            </div>
           </div>
         </div>
       ) : (
