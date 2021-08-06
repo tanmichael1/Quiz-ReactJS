@@ -52,6 +52,8 @@ window.onload = function () {
                 database.ref(`Users/${userID}`).set({
                   username: newUsername,
                   admin: false,
+
+                  id: userID,
                 });
                 signupForm.reset();
                 window.location.href = "/";
@@ -107,7 +109,7 @@ window.onload = function () {
 
           var errorCode = error.code;
           var errorMessage = error.message;
-          console.log("user did not sign up correctly");
+          console.log("user did not sign in correctly");
           console.log(errorCode);
           console.log(errorMessage);
           alert(errorMessage);
