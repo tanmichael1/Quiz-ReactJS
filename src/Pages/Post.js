@@ -91,7 +91,12 @@ export default function Post() {
       var scoreboardNumUsers = quiz
         .child("scoreboard/numScoreboardUsers")
         .val();
-      setup(quiz.child("creator").val(), scoreboardNumUsers, quiz);
+      setup(
+        quiz.child("creator").val(),
+        quiz.child("creatorID").val(),
+        scoreboardNumUsers,
+        quiz
+      );
 
       for (
         var questionLoadIndex = 0;
@@ -114,7 +119,7 @@ export default function Post() {
     }
   }
 
-  function setup(currUser, scoreboardNumUsers, quiz) {
+  function setup(currUser, currUserID, scoreboardNumUsers, quiz) {
     var newUser = "";
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -157,18 +162,26 @@ export default function Post() {
             var scoreboardLength = quiz
               .child("scoreboard/numScoreboardUsers")
               .val();
+            console.log(quiz.val().Title);
+            console.log(quizCreatorID);
             const scoreboardUsersRef = firebase
               .database()
               .ref(
-                "Quizzes/" + currUser + "/" + newQuizTitle + "/scoreboard/users"
+                "Quizzes/" +
+                  currUserID +
+                  "/" +
+                  quiz.val().Title +
+                  "/scoreboard/users"
               );
             scoreboardUsersRef.once("value", (snap) => {
+              console.log(snap.val());
               snap.forEach((addUser) => {
                 userArray.push({
                   test: addUser.val().test,
                   score: addUser.val().score,
                   time: addUser.val().time,
                 });
+                console.log(userArray);
 
                 if (addUser.val().test == newUser) {
                   setUserOnScoreboard(true);
@@ -704,6 +717,7 @@ export default function Post() {
     console.log(numScoreboardUsers);
     var newNumScoreboardUsers = numScoreboardUsers + 1;
     setUserOnScoreboard(true);
+    setScoreboardUsed(true);
     setNumScoreboardUsers(newNumScoreboardUsers);
     var arrayUsersScoreboard = scoreboardUsers;
     var theUser = currentUser;
@@ -722,13 +736,15 @@ export default function Post() {
       });
     var ref = firebase
       .database()
-      .ref(`Quizzes/${quizCreatorID}/${quizTitle}/scoreboard/users`);
+      .ref(
+        `Quizzes/${quizCreatorID}/${quizTitle}/scoreboard/users/${currentUser}`
+      );
     console.log(currentUser);
 
     for (var i = 0; i < scoreboardUsers.length; i++) {
       console.log(scoreboardUsers[i].test);
 
-      ref.push({
+      ref.set({
         test: currentUser,
         score: score + "/" + numQuestions,
         time: finalTimeSeconds,
@@ -937,7 +953,7 @@ export default function Post() {
     setFinalTimeSeconds(seconds);
     setFinalTimeMinutes(minutes);
     console.log(seconds + " seconds");
-    console.log(minutes + " minutes");
+    console.log(minutes + " minustes");
   }
 
   return (
@@ -1229,7 +1245,7 @@ export default function Post() {
                     <tbody>
                       {scoreboardUsers.map((user, index) => {
                         return (
-                          <tr>
+                          <tr key={index}>
                             <td>
                               <span>{user.test} </span>
                             </td>
