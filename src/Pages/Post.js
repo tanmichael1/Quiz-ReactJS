@@ -177,13 +177,13 @@ export default function Post() {
               console.log(snap.val());
               snap.forEach((addUser) => {
                 userArray.push({
-                  test: addUser.val().test,
+                  scoreboardUsername: addUser.val().scoreboardUsername,
                   score: addUser.val().score,
                   time: addUser.val().time,
                 });
                 console.log(userArray);
 
-                if (addUser.val().test == newUser) {
+                if (addUser.val().scoreboardUsername == newUser) {
                   setUserOnScoreboard(true);
                 }
               });
@@ -722,7 +722,7 @@ export default function Post() {
     var arrayUsersScoreboard = scoreboardUsers;
     var theUser = currentUser;
     arrayUsersScoreboard.push({
-      test: currentUser,
+      scoreboardUsername: currentUser,
       score: score + "/" + numQuestions,
       time: totalTimeInSeconds,
     });
@@ -742,10 +742,10 @@ export default function Post() {
     console.log(currentUser);
 
     for (var i = 0; i < scoreboardUsers.length; i++) {
-      console.log(scoreboardUsers[i].test);
+      console.log(scoreboardUsers[i].scoreboardUsername);
 
       ref.set({
-        test: currentUser,
+        scoreboardUsername: currentUser,
         score: score + "/" + numQuestions,
         time: finalTimeSeconds,
       });
@@ -787,8 +787,8 @@ export default function Post() {
     console.log(scoreboardUsers.length);
 
     for (var i = 0; i < scoreboardUsers.length; i++) {
-      console.log(scoreboardUsers[i].test);
-      if (scoreboardUsers[i].test == nameTest) {
+      console.log(scoreboardUsers[i].scoreboardUsername);
+      if (scoreboardUsers[i].scoreboardUsername == nameTest) {
       } else {
         currentArray.push(scoreboardUsers[i]);
       }
@@ -822,7 +822,7 @@ export default function Post() {
       currScoreboardUser.forEach((scoreUser) => {
         console.log(scoreUser.key);
         console.log(scoreUser.val());
-        if (scoreUser.val().test == nameTest) {
+        if (scoreUser.val().scoreboardUsername == nameTest) {
           firebase
             .database()
             .ref(
@@ -843,10 +843,10 @@ export default function Post() {
     var currentArray = [];
 
     for (var i = 0; i < scoreboardUsers.length; i++) {
-      console.log(scoreboardUsers[i].test);
-      if (scoreboardUsers[i].test == nameTest) {
+      console.log(scoreboardUsers[i].scoreboardUsername);
+      if (scoreboardUsers[i].scoreboardUsername == nameTest) {
         currentArray.push({
-          test: nameTest,
+          scoreboardUsername: nameTest,
           score: customScore,
           time: finalTimeSeconds,
         });
@@ -907,14 +907,14 @@ export default function Post() {
         console.log(scoreUser.val());
         console.log(scoreUser.key);
 
-        if (scoreUser.val().test == nameTest) {
+        if (scoreUser.val().scoreboardUsername == nameTest) {
           firebase
             .database()
             .ref(
               `Quizzes/${quizCreatorID}/${quizTitle}/scoreboard/users/${scoreUser.key}`
             )
             .update({
-              test: currentUser,
+              scoreboardUsername: currentUser,
               score: customScore,
               time: totalTimeInSeconds,
             });
@@ -1247,24 +1247,28 @@ export default function Post() {
                         return (
                           <tr key={index}>
                             <td>
-                              <span>{user.test} </span>
+                              <span>{user.scoreboardUsername} </span>
                             </td>
                             <td>
                               <span>{user.score}</span>
                             </td>
                             <td>{user.time}</td>{" "}
-                            {user.test == currentUser ? (
+                            {user.scoreboardUsername == currentUser ? (
                               <td>
                                 <button
                                   onClick={() =>
-                                    removeScoreboardUser(user.test)
+                                    removeScoreboardUser(
+                                      user.scoreboardUsername
+                                    )
                                   }
                                 >
                                   Delete
                                 </button>
                                 <button
                                   onClick={() =>
-                                    updateScoreboardUser(user.test)
+                                    updateScoreboardUser(
+                                      user.scoreboardUsername
+                                    )
                                   }
                                 >
                                   Update
