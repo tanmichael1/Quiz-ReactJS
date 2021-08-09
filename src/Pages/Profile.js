@@ -175,15 +175,16 @@ function Profile() {
       .then(function (userCredential) {
         userCredential.user.updateEmail(newEmail);
       })
-      .then(
+      .then(function (e) {
         alert(
           "Email address change successful. Your email address is now " +
             newEmail
-        ),
-        (document.getElementById("newEmail").value = ""),
-        (document.getElementById("currentEmail").value = "")
-      )
+        );
+        document.getElementById("newEmail").value = "";
+        document.getElementById("currentEmail").value = "";
+      })
       .catch((error) => {
+        alert(error);
         console.log(error);
         // Handle error.
       });
