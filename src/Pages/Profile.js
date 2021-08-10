@@ -141,23 +141,54 @@ function Profile() {
   //   }
   // }
 
+  // function changePassword() {
+  //   // Ask signed in user for current password.
+  //   const currentPass = window.prompt("Please enter current password");
+  //   const emailCred = firebase.auth.EmailAuthProvider.credential(
+  //     firebase.auth().currentUser,
+  //     currentPass
+  //   );
+  //   console.log(emailCred);
+  //   firebase
+  //     .auth()
+  //     .currentUser.reauthenticateWithCredential(emailCred)
+  //     .then(() => {
+  //       // User successfully reauthenticated.
+  //       const newPass = window.prompt("Please enter new password");
+  //       return firebase.auth().currentUser.updatePassword(newPass);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       // Handle error.
+  //     });
+  // }
+
   function changePassword() {
     // Ask signed in user for current password.
-    const currentPass = window.prompt("Please enter current password");
-    const emailCred = firebase.auth.EmailAuthProvider.credential(
-      firebase.auth().currentUser,
-      currentPass
-    );
-    console.log(emailCred);
+    const currEmail = window.prompt("Please enter current email");
+    // const emailCred = firebase.auth.EmailAuthProvider.credential(
+    //   firebase.auth().currentUser,
+    //   currentPass
+    // );
+    // console.log(emailCred);
+    const currentPassword = document.getElementById("currentPassword").value;
+    const newPassword = document.getElementById("newPassword").value;
+
     firebase
       .auth()
-      .currentUser.reauthenticateWithCredential(emailCred)
-      .then(() => {
-        // User successfully reauthenticated.
-        const newPass = window.prompt("Please enter new password");
-        return firebase.auth().currentUser.updatePassword(newPass);
+      .signInWithEmailAndPassword(currEmail, currentPassword)
+      .then(function (userCredential) {
+        userCredential.user.updatePassword(newPassword);
+      })
+      .then(function (e) {
+        alert(
+          "Password change successful. Your password is now " + newPassword
+        );
+        // document.getElementById("newEmail").value = "";
+        // document.getElementById("currentEmail").value = "";
       })
       .catch((error) => {
+        alert(error);
         console.log(error);
         // Handle error.
       });
