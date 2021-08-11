@@ -184,6 +184,8 @@ function Profile() {
         alert(
           "Password change successful. Your password is now " + newPassword
         );
+        document.getElementById("newEmail").value = "";
+        document.getElementById("currentEmail").value = "";
         // document.getElementById("newEmail").value = "";
         // document.getElementById("currentEmail").value = "";
       })
