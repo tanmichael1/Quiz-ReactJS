@@ -165,7 +165,6 @@ function Profile() {
 
   function changePassword() {
     // Ask signed in user for current password.
-    const currEmail = window.prompt("Please enter current email");
     // const emailCred = firebase.auth.EmailAuthProvider.credential(
     //   firebase.auth().currentUser,
     //   currentPass
@@ -174,26 +173,30 @@ function Profile() {
     const currentPassword = document.getElementById("currentPassword").value;
     const newPassword = document.getElementById("newPassword").value;
 
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(currEmail, currentPassword)
-      .then(function (userCredential) {
-        userCredential.user.updatePassword(newPassword);
-      })
-      .then(function (e) {
-        alert(
-          "Password change successful. Your password is now " + newPassword
-        );
-        document.getElementById("newEmail").value = "";
-        document.getElementById("currentEmail").value = "";
-        // document.getElementById("newEmail").value = "";
-        // document.getElementById("currentEmail").value = "";
-      })
-      .catch((error) => {
-        alert(error);
-        console.log(error);
-        // Handle error.
-      });
+    const currEmail = window.prompt("Please enter current email");
+
+    if (currentPassword == newPassword) {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(currEmail, currentPassword)
+        .then(function (userCredential) {
+          userCredential.user.updatePassword(newPassword);
+        })
+        .then(function (e) {
+          alert(
+            "Password change successful. Your password is now " + newPassword
+          );
+          document.getElementById("currentPassword").value = "";
+          document.getElementById("newPassword").value = "";
+        })
+        .catch((error) => {
+          alert(error);
+          console.log(error);
+          // Handle error.
+        });
+    } else {
+      alert("Password and Confirm Password must be the same");
+    }
   }
 
   function changeEmail() {
