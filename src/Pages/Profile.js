@@ -7,12 +7,15 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const [finished, setFinished] = useState(false);
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [createdQuizzes, setCreatedQuizzes] = useState([]);
   const [userID, setUserID] = useState();
   function setup() {
     firebase.auth().onAuthStateChanged((user) => {
       console.log("setup");
       console.log(user);
+      console.log(user.email);
+      setEmail(user.email);
       const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
       setUserID(user.uid);
       const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
@@ -172,13 +175,13 @@ function Profile() {
     // console.log(emailCred);
     const currentPassword = document.getElementById("currentPassword").value;
     const newPassword = document.getElementById("newPassword").value;
+    const confirmNewPassword =
+      document.getElementById("confirmNewPassword").value;
 
-    const currEmail = window.prompt("Please enter current email");
-
-    if (currentPassword == newPassword) {
+    if (confirmNewPassword == newPassword) {
       firebase
         .auth()
-        .signInWithEmailAndPassword(currEmail, currentPassword)
+        .signInWithEmailAndPassword(email, currentPassword)
         .then(function (userCredential) {
           userCredential.user.updatePassword(newPassword);
         })
@@ -188,6 +191,7 @@ function Profile() {
           );
           document.getElementById("currentPassword").value = "";
           document.getElementById("newPassword").value = "";
+          document.getElementById("confirmNewPassword").value = "";
         })
         .catch((error) => {
           alert(error);
