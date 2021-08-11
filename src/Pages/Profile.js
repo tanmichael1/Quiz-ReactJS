@@ -204,7 +204,8 @@ function Profile() {
   }
 
   function changeEmail() {
-    const currentPass = window.prompt("Please enter current password");
+    const currentPass = document.getElementById("emailPasswordVerify").value;
+
     var currEmail = document.getElementById("currentEmail").value;
     var newEmail = document.getElementById("newEmail").value;
     console.log(currentPass);
@@ -222,6 +223,7 @@ function Profile() {
         );
         document.getElementById("newEmail").value = "";
         document.getElementById("currentEmail").value = "";
+        document.getElementById("emailPasswordVerify").value = "";
       })
       .catch((error) => {
         alert(error);
@@ -367,6 +369,7 @@ function Profile() {
               <br />
               <label>Confirm new password</label>
               <br />
+
               <input id="confirmNewPassword" type="text" />
               <br />
 
@@ -396,6 +399,10 @@ function Profile() {
               <label>Your new email</label>
               <br />
               <input id="newEmail" type="text" />
+              <br />
+              <label>Your password</label>
+              <br />
+              <input id="emailPasswordVerify" type="text" />
               <br />
 
               <button
