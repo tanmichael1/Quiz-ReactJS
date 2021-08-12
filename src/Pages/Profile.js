@@ -241,47 +241,47 @@ function Profile() {
   }
 
   function deleteAccount(removeQuizzes) {
-    var userPassword = firebase.auth().currentUser.email;
-
     const currentPass = window.prompt(
-      "Please enter your email address to confirm you want to delete your account."
+      "Please enter your password to confirm you want to delete your account."
     );
 
     if (currentPass) {
-      if (currentPass == userPassword) {
-        const user = firebase.auth().currentUser;
-        const uid = firebase.auth().currentUser.uid;
-        var currentArray = [];
+      var userPassword = firebase.auth().currentUser.email;
 
-        // window.prompt(
-        //   "Please enter your email address to confirm you want to delete your account."
-        // );
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, currentPass)
+        .then(function (userCredential) {
+          const user = firebase.auth().currentUser;
+          const uid = firebase.auth().currentUser.uid;
+          var currentArray = [];
 
-        if (removeQuizzes) {
-          const ref = firebase.database().ref();
-          const dbTestQuiz = ref.child("Quizzes/" + uid);
-          dbTestQuiz.remove();
-        }
+          if (removeQuizzes) {
+            const ref = firebase.database().ref();
+            const dbTestQuiz = ref.child("Quizzes/" + uid);
+            dbTestQuiz.remove();
+          }
 
-        user
-          .delete()
-          .then(() => {
-            const usersRef = firebase.database().ref(`Users/${uid}`);
+          user
+            .delete()
+            .then(() => {
+              const usersRef = firebase.database().ref(`Users/${uid}`);
 
-            usersRef.remove();
-            window.location.href = "/";
+              usersRef.remove();
+              window.location.href = "/";
 
-            // User deleted.
-          })
-          .catch((error) => {
-            console.log(error);
-            alert(error);
-            // An error ocurred
-            // ...
-          });
-      } else {
-        alert("Not your email address");
-      }
+              // User deleted.
+            })
+            .catch((error) => {
+              console.log(error);
+              alert(error);
+              // An error ocurred
+              // ...
+            });
+        })
+        .catch((error) => {
+          alert(error);
+        });
     }
   }
 
