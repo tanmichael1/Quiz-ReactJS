@@ -73,38 +73,55 @@ function Profile() {
   }
 
   function changeUsername() {
-    // document.getElementById("verifyPassword");
+    var verifyPassword = document.getElementById("verifyPassword").value;
     var newUsername = document.getElementById("newUsername").value;
     var result = window.confirm(
       "Are you sure you want to change your username to " + newUsername + "?"
     );
 
     if (result) {
-      const dbRefUsers = firebase.database().ref(`Users/${userID}`);
-      const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, verifyPassword)
+        .then(function (userCredential) {
+          const dbRefUsers = firebase.database().ref(`Users/${userID}`);
+          const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
 
-      const dbRefQuizTitles = firebase.database().ref(`Quizzes/${userID}`);
-      dbRefQuizTitles.on("value", (quiz) => {
-        quiz.forEach((test) => {
-          var title = test.val().Title;
-          console.log(title);
-          // test.update({ creator: newUsername });
-          console.log(test.val().creator);
-          firebase.database().ref(`Quizzes/${userID}/${title}`).update({
-            creator: newUsername,
+          const dbRefQuizTitles = firebase.database().ref(`Quizzes/${userID}`);
+          dbRefQuizTitles.on("value", (quiz) => {
+            quiz.forEach((test) => {
+              var title = test.val().Title;
+              console.log(title);
+              // test.update({ creator: newUsername });
+              console.log(test.val().creator);
+              firebase.database().ref(`Quizzes/${userID}/${title}`).update({
+                creator: newUsername,
+              });
+            });
+            console.log(quiz.val());
+            console.log(createdQuizzes);
           });
+
+          firebase.database().ref(`Users/${userID}`).update({
+            username: newUsername,
+          });
+
+          setTimeout(() => {
+            window.location.href = "/profile";
+          }, 1000);
+        })
+        .then(function (e) {
+          alert(
+            "Username change successful. Your username is now " + newUsername
+          );
+          document.getElementById("verifyPassword").value = "";
+          document.getElementById("newUsername").value = "";
+        })
+        .catch((error) => {
+          alert(error);
+          console.log(error);
+          // Handle error.
         });
-        console.log(quiz.val());
-        console.log(createdQuizzes);
-      });
-
-      firebase.database().ref(`Users/${userID}`).update({
-        username: newUsername,
-      });
-
-      setTimeout(() => {
-        window.location.href = "/profile";
-      }, 1000);
     }
   }
 
