@@ -263,8 +263,6 @@ function Profile() {
     );
 
     if (currentPass) {
-      var userPassword = firebase.auth().currentUser.email;
-
       firebase
         .auth()
         .signInWithEmailAndPassword(email, currentPass)

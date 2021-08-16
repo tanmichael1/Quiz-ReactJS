@@ -65,7 +65,9 @@ function Home() {
           </a>
         </div>
       ) : (
-        <div></div>
+        <div>
+          <p>Loading latest quiz</p>
+        </div>
       )}
     </div>
   );
