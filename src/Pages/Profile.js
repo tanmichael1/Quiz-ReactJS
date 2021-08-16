@@ -314,6 +314,12 @@ function Profile() {
       {finished ? (
         <div>
           <h1>{username}</h1>
+          <br />
+          <img
+            width="300"
+            height="300"
+            src={"./images/defaultProfilePic.jpg"}
+          />
           <hr />
 
           <h2>Created quizzes</h2>
