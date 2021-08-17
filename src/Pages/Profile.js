@@ -7,6 +7,7 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const [finished, setFinished] = useState(false);
   const [username, setUsername] = useState("");
+  const [profilePicture, setProfilePicture] = useState("");
   const [email, setEmail] = useState("");
   const [createdQuizzes, setCreatedQuizzes] = useState([]);
   const [userID, setUserID] = useState();
@@ -19,7 +20,18 @@ function Profile() {
       const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
       setUserID(user.uid);
       const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
-
+      var storage = firebase.storage();
+      //var pathReference = storage.ref("profilePictures/defaultProfilePic.jpg")
+      var storageRef = firebase.storage().ref();
+      storageRef
+        .child("profilePictures/defaultProfilePic.jpg")
+        .getDownloadURL()
+        .then((url) => {
+          setProfilePicture(url);
+        });
+      // const picture = firebase.storage().ref("profilePictures");
+      // picture.once("value", (image) => console.log(image));
+      // setProfilePicture();
       dbRefUsers.on("value", (user) => {
         //console.log(user.val());
 
@@ -39,6 +51,7 @@ function Profile() {
           );
         }
       });
+
       dbRefUsers.once("value", (test) => {
         console.log("set");
         setUsername(test.val().username);
@@ -315,11 +328,7 @@ function Profile() {
         <div>
           <h1>{username}</h1>
           <br />
-          <img
-            width="300"
-            height="300"
-            src={"./images/defaultProfilePic.jpg"}
-          />
+          <img width="300" height="300" src={profilePicture} />
           <hr />
 
           <h2>Created quizzes</h2>
