@@ -11,15 +11,29 @@ function Profile() {
   const [email, setEmail] = useState("");
   const [createdQuizzes, setCreatedQuizzes] = useState([]);
   const [userID, setUserID] = useState();
+  const [image, setImage] = useState();
+  function changeProfilePic() {
+    var file = document.getElementById("file").value;
+    // Create a root reference
+    var storageRef = firebase.storage().ref();
+    // Create a reference to 'images/mountains.jpg'
+    var profileImgRef = storageRef.child(`profilePictures/${userID}.jpg`);
+    const task = profileImgRef.put(file);
+    task.on(
+      "state_changed",
+      (snapshot) => {},
+      (error) => {},
+      () => {}
+    );
+
+    profileImgRef.put(file).then((snapshot) => {
+      console.log("Uploaded a file");
+    });
+    return false;
+  }
   function setup() {
     firebase.auth().onAuthStateChanged((user) => {
       console.log("setup");
-      console.log(user);
-      console.log(user.email);
-      setEmail(user.email);
-      const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
-      setUserID(user.uid);
-      const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
       var storage = firebase.storage();
       //var pathReference = storage.ref("profilePictures/defaultProfilePic.jpg")
       var storageRef = firebase.storage().ref();
@@ -29,12 +43,14 @@ function Profile() {
         .then((url) => {
           setProfilePicture(url);
         });
-      // const picture = firebase.storage().ref("profilePictures");
-      // picture.once("value", (image) => console.log(image));
-      // setProfilePicture();
-      dbRefUsers.on("value", (user) => {
-        //console.log(user.val());
+      console.log(user);
+      console.log(user.email);
+      setEmail(user.email);
+      const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
+      setUserID(user.uid);
+      const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
 
+      dbRefUsers.on("value", (user) => {
         if (user.val().createdQuizzes == undefined) {
           console.log("undefined");
         } else {
@@ -59,20 +75,6 @@ function Profile() {
     });
 
     setDone(true);
-  }
-
-  function test() {
-    let user = firebase.auth().currentUser;
-    let newPassword = "Password";
-
-    user.updatePassword(newPassword).then(
-      () => {
-        // Update successful.
-      },
-      (error) => {
-        // An error happened.
-      }
-    );
   }
 
   function toggleUsername() {
@@ -155,54 +157,7 @@ function Profile() {
       document.getElementById("emailChange").classList.add("hidden");
     }
   }
-
-  // function changePassword() {
-  //   document.getElementById("currentPassword");
-  //   var newPassword = document.getElementById("newPassword").value;
-  //   var confirmNewPassword =
-  //     document.getElementById("confirmNewPassword").value;
-  //   console.log(newPassword);
-  //   console.log(confirmNewPassword);
-  //   if (newPassword == confirmNewPassword) {
-  //     var result = window.confirm(
-  //       "Are you sure you want to change your password to " + newPassword + "?"
-  //     );
-  //     if (result) {
-  //     }
-  //   } else {
-  //     alert("Passwords must be identical");
-  //   }
-  // }
-
-  // function changePassword() {
-  //   // Ask signed in user for current password.
-  //   const currentPass = window.prompt("Please enter current password");
-  //   const emailCred = firebase.auth.EmailAuthProvider.credential(
-  //     firebase.auth().currentUser,
-  //     currentPass
-  //   );
-  //   console.log(emailCred);
-  //   firebase
-  //     .auth()
-  //     .currentUser.reauthenticateWithCredential(emailCred)
-  //     .then(() => {
-  //       // User successfully reauthenticated.
-  //       const newPass = window.prompt("Please enter new password");
-  //       return firebase.auth().currentUser.updatePassword(newPass);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       // Handle error.
-  //     });
-  // }
-
   function changePassword() {
-    // Ask signed in user for current password.
-    // const emailCred = firebase.auth.EmailAuthProvider.credential(
-    //   firebase.auth().currentUser,
-    //   currentPass
-    // );
-    // console.log(emailCred);
     const currentPassword = document.getElementById("currentPassword").value;
     const newPassword = document.getElementById("newPassword").value;
     const confirmNewPassword =
@@ -313,13 +268,47 @@ function Profile() {
     }
   }
 
+  function changeProfilePic() {
+    var file = document.getElementById("file").value;
+    // Create a root reference
+    var storageRef = firebase.storage().ref();
+    // Create a reference to 'images/mountains.jpg'
+    var profileImgRef = storageRef.child(`profilePictures/${userID}.jpg`);
+    const task = profileImgRef.put(file);
+    task.on(
+      "state_changed",
+      (snapshot) => {},
+      (error) => {},
+      () => {}
+    );
+
+    profileImgRef.put(file).then((snapshot) => {
+      console.log("Uploaded a file");
+    });
+    return false;
+  }
+
+  // function changeProfilePic2 = async (e) => {
+  //   const imgRef = await firebase.storage().ref('images/' + Image.name)
+  // }
+
   if (!done) {
     setTimeout(() => {
       setup();
       setLoading(false);
       setFinished(true);
-    }, 3000);
+    }, 4000);
   }
+
+  const upload = () => {
+    if (image == null) return;
+    firebase
+      .storage()
+      .ref()
+      .child(`profilePictures/${image.name}.jpg`)
+      .put(image)
+      .on("state_changed", alert("success"), alert);
+  };
 
   return (
     <div className="container box">
@@ -329,6 +318,21 @@ function Profile() {
           <h1>{username}</h1>
           <br />
           <img width="300" height="300" src={profilePicture} />
+          <br />
+          <form>
+            <label>Choose file</label>
+            <input
+              type="file"
+              id="file"
+              onChange={(e) => {
+                setImage(e.target.files[0]);
+                console.log(e.target.files[0]);
+              }}
+            />
+            <button id="send" onClick={upload}>
+              Submit
+            </button>
+          </form>
           <hr />
 
           <h2>Created quizzes</h2>
