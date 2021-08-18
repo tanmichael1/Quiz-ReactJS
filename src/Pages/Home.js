@@ -5,6 +5,7 @@ import Slideshow from "./components/Slideshow";
 function Home() {
   const [done, setDone] = useState(false);
   const [latestQuiz, setLatestQuiz] = useState("");
+  const [latestQuizzes, setLatestQuizzes] = useState([]);
   const [latestCreator, setLatestCreator] = useState("");
   const [latestCreatorID, setLatestCreatorID] = useState("");
   const colors = ["#0088FE", "#00C49F", "#FFBB28"];
@@ -15,18 +16,31 @@ function Home() {
   if (!done) {
     setup();
     var date = null;
+    var array = [];
 
     latestQuizRef.on("value", (quizzes) =>
       quizzes.forEach((user) => {
         user.forEach((quiz) => {
-          var tempVal = setValues(quiz, date);
+          array.push(quiz.val());
+          // var tempVal = setValues(quiz, date);
 
-          if (tempVal != date) {
-            date = tempVal;
-          }
+          // if (tempVal != date) {
+          //   date = tempVal;
+          // }
         });
+        array.sort(function (a, b) {
+          if (a.createdSortDate < b.createdSortDate) {
+            return 1;
+          } else if (a.createdSortDate > b.createdSortDate) {
+            return -1;
+          }
+          return 0;
+        });
+
+        setValues2(array);
       })
     );
+
     setDone(true);
   }
 
@@ -42,6 +56,14 @@ function Home() {
     } else {
       return latestDate;
     }
+  }
+
+  function setValues2(prevArray) {
+    var newArray = [];
+    newArray.push(prevArray[0]);
+    newArray.push(prevArray[1]);
+    newArray.push(prevArray[2]);
+    setLatestQuizzes(newArray);
   }
 
   function setup() {
@@ -109,6 +131,50 @@ function Home() {
           ))}
         </div>
       </div>
+
+      {done ? (
+        <div>
+          {latestQuizzes.map((quiz, i) => (
+            <div>{quiz.Title} </div>
+          ))}
+        </div>
+      ) : (
+        <div> </div>
+      )}
+
+      {done ? (
+        <div className="slideshow">
+          <div
+            className="slideshowSlider"
+            style={{ transform: `translate3d(${-index * 100}%, 0, 0)` }}
+          >
+            {latestQuizzes.map((quiz, index) => (
+              <div
+                className="slide"
+                key={index}
+                style={{ backgroundColor: "#0088FE" }}
+                // style={{ backgroundColor }}
+              >
+                {quiz.Title}
+              </div>
+            ))}
+          </div>
+
+          <div className="slideshowDots">
+            {colors.map((_, idx) => (
+              <div
+                key={idx}
+                className={`slideshowDot${index === idx ? " active" : ""}`}
+                onClick={() => {
+                  setIndex(idx);
+                }}
+              ></div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div> </div>
+      )}
       {latestQuiz !== "" ? (
         <div>
           <a href={`${latestCreatorID}/${latestQuiz}`}>
