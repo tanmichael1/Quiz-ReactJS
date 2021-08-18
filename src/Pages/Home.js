@@ -5,7 +5,7 @@ import Slideshow from "./components/Slideshow";
 function Home() {
   const [done, setDone] = useState(false);
   const [latestQuiz, setLatestQuiz] = useState("");
-  const [latestQuizzes, setLatestQuizzes] = useState([]);
+  const [latestQuizzes, setLatestQuizzes] = useState("");
   const [latestCreator, setLatestCreator] = useState("");
   const [latestCreatorID, setLatestCreatorID] = useState("");
   const colors = ["#0088FE", "#00C49F", "#FFBB28"];
@@ -105,44 +105,8 @@ function Home() {
       <h1>Welcome to the Website</h1>
       <hr />
       <h2>Latest Quiz</h2>
-      <div className="slideshow">
-        <div
-          className="slideshowSlider"
-          style={{ transform: `translate3d(${-index * 100}%, 0, 0)` }}
-        >
-          {colors.map((backgroundColor, index) => (
-            <div
-              className="slide"
-              key={index}
-              style={{ backgroundColor }}
-            ></div>
-          ))}
-        </div>
 
-        <div className="slideshowDots">
-          {colors.map((_, idx) => (
-            <div
-              key={idx}
-              className={`slideshowDot${index === idx ? " active" : ""}`}
-              onClick={() => {
-                setIndex(idx);
-              }}
-            ></div>
-          ))}
-        </div>
-      </div>
-
-      {done ? (
-        <div>
-          {latestQuizzes.map((quiz, i) => (
-            <div>{quiz.Title} </div>
-          ))}
-        </div>
-      ) : (
-        <div> </div>
-      )}
-
-      {done ? (
+      {latestQuizzes != "" ? (
         <div className="slideshow">
           <div
             className="slideshowSlider"
@@ -155,7 +119,13 @@ function Home() {
                 style={{ backgroundColor: "#0088FE" }}
                 // style={{ backgroundColor }}
               >
-                {quiz.Title}
+                <div className="slideText">
+                  <span>
+                    <a href={`${quiz.creatorID}/${quiz.Title}`}>
+                      {quiz.Title} from {quiz.creator}
+                    </a>
+                  </span>
+                </div>
               </div>
             ))}
           </div>
@@ -173,9 +143,11 @@ function Home() {
           </div>
         </div>
       ) : (
-        <div> </div>
+        <div>
+          <p>Loading latest quiz</p>{" "}
+        </div>
       )}
-      {latestQuiz !== "" ? (
+      {/* {latestQuiz !== "" ? (
         <div>
           <a href={`${latestCreatorID}/${latestQuiz}`}>
             <h3>
@@ -188,7 +160,7 @@ function Home() {
         <div>
           <p>Loading latest quiz</p>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

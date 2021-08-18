@@ -132,6 +132,19 @@ nav {
   border-radius: 40px;
 }
 
+.slideText {
+  width: 100%;
+  height: 400px;
+  line-height: 350px;
+  text-align: center;
+  display: inline-block;
+  font-size: 3vw;
+  vertical-align: middle;
+}
+
+.slideText span {
+  line-height: normal;
+}
 /* Buttons */
 
 .slideshowDots {
