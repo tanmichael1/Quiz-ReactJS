@@ -144,7 +144,12 @@ nav {
 
 .slideText span {
   line-height: normal;
+  color: black;
 }
+
+.slideColor {
+}
+
 /* Buttons */
 
 .slideshowDots {
@@ -164,7 +169,8 @@ nav {
 }
 
 .slideshowDot.active {
-  background-color: #6a0dad;
+  background-color: #052180;
+  /* background-color: #6a0dad; */
 }
 
 /* Progress bar */

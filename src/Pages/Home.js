@@ -7,6 +7,7 @@ function Home() {
   const [latestQuiz, setLatestQuiz] = useState("");
   const [latestQuizzes, setLatestQuizzes] = useState("");
   const [latestCreator, setLatestCreator] = useState("");
+  const [index, setIndex] = React.useState(0);
   const [latestCreatorID, setLatestCreatorID] = useState("");
   const colors = ["#0088FE", "#00C49F", "#FFBB28"];
   const delay = 2500;
@@ -76,7 +77,6 @@ function Home() {
     setDone(true);
   }
 
-  const [index, setIndex] = React.useState(0);
   const timeoutRef = React.useRef(null);
 
   function resetTimeout() {
@@ -92,6 +92,7 @@ function Home() {
         setIndex((prevIndex) =>
           prevIndex === colors.length - 1 ? 0 : prevIndex + 1
         ),
+      delay,
       delay
     );
 
@@ -104,7 +105,7 @@ function Home() {
     <div className="container box">
       <h1>Welcome to the Website</h1>
       <hr />
-      <h2>Latest Quiz</h2>
+      <h2>Latest Quizzes</h2>
 
       {latestQuizzes != "" ? (
         <div className="slideshow">
@@ -116,14 +117,16 @@ function Home() {
               <div
                 className="slide"
                 key={index}
-                style={{ backgroundColor: "#0088FE" }}
+                style={{
+                  // backgroundColor: "#0088FE"
+                  backgroundColor: "white",
+                }}
                 // style={{ backgroundColor }}
               >
                 <div className="slideText">
                   <span>
-                    <a href={`${quiz.creatorID}/${quiz.Title}`}>
-                      {quiz.Title} from {quiz.creator}
-                    </a>
+                    <a href={`${quiz.creatorID}/${quiz.Title}`}>{quiz.Title}</a>{" "}
+                    from {quiz.creator}
                   </span>
                 </div>
               </div>
@@ -144,7 +147,7 @@ function Home() {
         </div>
       ) : (
         <div>
-          <p>Loading latest quiz</p>{" "}
+          <p>Loading quizzes</p>{" "}
         </div>
       )}
       {/* {latestQuiz !== "" ? (
