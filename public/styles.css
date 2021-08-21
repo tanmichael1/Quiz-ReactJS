@@ -138,16 +138,13 @@ nav {
   line-height: 350px;
   text-align: center;
   display: inline-block;
-  font-size: 3vw;
+  font-size: 2vw;
   vertical-align: middle;
 }
 
 .slideText span {
   line-height: normal;
   color: black;
-}
-
-.slideColor {
 }
 
 /* Buttons */

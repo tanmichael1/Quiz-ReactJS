@@ -3,33 +3,26 @@ import { firebase } from "./../Config";
 import Slideshow from "./components/Slideshow";
 
 function Home() {
+  // Setup
   const [done, setDone] = useState(false);
-  const [latestQuiz, setLatestQuiz] = useState("");
+  const latestQuizzesRef = firebase.database().ref("Quizzes");
   const [latestQuizzes, setLatestQuizzes] = useState("");
-  const [latestCreator, setLatestCreator] = useState("");
-  const [index, setIndex] = React.useState(0);
-  const [latestCreatorID, setLatestCreatorID] = useState("");
-  const colors = ["#0088FE", "#00C49F", "#FFBB28"];
-  const delay = 2500;
 
-  const latestQuizRef = firebase.database().ref("Quizzes");
+  // Slideshow
+  const [index, setIndex] = React.useState(0);
+  const colors = ["#0088FE", "#00C49F", "#FFBB28"];
+  const delay = 3000;
 
   if (!done) {
     setup();
-    var date = null;
-    var array = [];
+    var quizArray = [];
 
-    latestQuizRef.on("value", (quizzes) =>
+    latestQuizzesRef.on("value", (quizzes) =>
       quizzes.forEach((user) => {
         user.forEach((quiz) => {
-          array.push(quiz.val());
-          // var tempVal = setValues(quiz, date);
-
-          // if (tempVal != date) {
-          //   date = tempVal;
-          // }
+          quizArray.push(quiz.val());
         });
-        array.sort(function (a, b) {
+        quizArray.sort(function (a, b) {
           if (a.createdSortDate < b.createdSortDate) {
             return 1;
           } else if (a.createdSortDate > b.createdSortDate) {
@@ -38,32 +31,18 @@ function Home() {
           return 0;
         });
 
-        setValues2(array);
+        setValues(quizArray);
       })
     );
 
     setDone(true);
   }
 
-  function setValues(quiz, latestDate) {
-    var object = quiz.val();
-    if (latestDate === null || object.createdSortDate > latestDate) {
-      setLatestQuiz(object.Title);
-      let newDate = object.createdSortDate;
-
-      setLatestCreator(object.creator);
-      setLatestCreatorID(object.creatorID);
-      return newDate;
-    } else {
-      return latestDate;
-    }
-  }
-
-  function setValues2(prevArray) {
+  function setValues(latestArray) {
     var newArray = [];
-    newArray.push(prevArray[0]);
-    newArray.push(prevArray[1]);
-    newArray.push(prevArray[2]);
+    newArray.push(latestArray[0]);
+    newArray.push(latestArray[1]);
+    newArray.push(latestArray[2]);
     setLatestQuizzes(newArray);
   }
 
@@ -76,6 +55,8 @@ function Home() {
     });
     setDone(true);
   }
+
+  /* Slideshow */
 
   const timeoutRef = React.useRef(null);
 
@@ -92,7 +73,6 @@ function Home() {
         setIndex((prevIndex) =>
           prevIndex === colors.length - 1 ? 0 : prevIndex + 1
         ),
-      delay,
       delay
     );
 
@@ -150,20 +130,6 @@ function Home() {
           <p>Loading quizzes</p>{" "}
         </div>
       )}
-      {/* {latestQuiz !== "" ? (
-        <div>
-          <a href={`${latestCreatorID}/${latestQuiz}`}>
-            <h3>
-              {" "}
-              {latestQuiz} from {latestCreator}{" "}
-            </h3>{" "}
-          </a>
-        </div>
-      ) : (
-        <div>
-          <p>Loading latest quiz</p>
-        </div>
-      )} */}
     </div>
   );
 }
