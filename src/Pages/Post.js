@@ -285,6 +285,7 @@ export default function Post() {
     document.getElementById("next-btn").hidden = true;
     document.getElementById("check-btn").hidden = false;
     refreshButtons();
+    setSelected(false);
 
     const nextQuestion = currentQuestion + 1;
     if (nextQuestion < numQuestions) {
@@ -335,6 +336,7 @@ export default function Post() {
     setCurrentQuestion(0);
 
     setScore(0);
+    setSelected(false);
     refreshResults();
 
     setEnd(false);
