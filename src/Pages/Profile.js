@@ -278,19 +278,16 @@ function Profile() {
     task.on(
       "state_changed",
       (snapshot) => {},
-      (error) => {},
+      (error) => {
+        console.log(error);
+      },
       () => {}
     );
 
     profileImgRef.put(file).then((snapshot) => {
       console.log("Uploaded a file");
     });
-    return false;
   }
-
-  // function changeProfilePic2 = async (e) => {
-  //   const imgRef = await firebase.storage().ref('images/' + Image.name)
-  // }
 
   if (!done) {
     setTimeout(() => {
@@ -305,9 +302,9 @@ function Profile() {
     firebase
       .storage()
       .ref()
-      .child(`profilePictures/${image.name}.jpg`)
+      .child(`profilePictures/${userID}.jpg`)
       .put(image)
-      .on("state_changed", alert("success"), alert);
+      .on("state_changed", alert("success"));
   };
 
   return (
