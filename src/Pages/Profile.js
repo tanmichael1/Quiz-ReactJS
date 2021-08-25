@@ -35,7 +35,6 @@ function Profile() {
     firebase.auth().onAuthStateChanged((user) => {
       console.log("setup");
       var storage = firebase.storage();
-      //var pathReference = storage.ref("profilePictures/defaultProfilePic.jpg")
       var storageRef = firebase.storage().ref();
       storageRef
         .child(`profilePictures/${user.uid}.jpg`)
@@ -312,14 +311,17 @@ function Profile() {
     }, 4000);
   }
 
-  const upload = () => {
-    if (image == null) return;
-    firebase
-      .storage()
-      .ref()
-      .child(`profilePictures/${userID}.jpg`)
-      .put(image)
-      .on("state_changed", alert("success"));
+  const upload = (e) => {
+    if (image == null) {
+      e.preventDefault();
+    } else {
+      firebase
+        .storage()
+        .ref()
+        .child(`profilePictures/${userID}.jpg`)
+        .put(image)
+        .on("state_changed", alert("success"));
+    }
   };
 
   return (
@@ -332,7 +334,7 @@ function Profile() {
           <img width="300" height="300" src={profilePicture} />
           <br />
           <form>
-            <label>Choose file</label>
+            <br />
             <input
               type="file"
               id="file"
@@ -341,7 +343,8 @@ function Profile() {
                 console.log(e.target.files[0]);
               }}
             />
-            <button id="send" onClick={upload}>
+            <br />
+            <button className="btn btn-primary" id="send" onClick={upload}>
               Submit
             </button>
           </form>
