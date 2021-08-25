@@ -38,10 +38,15 @@ function Profile() {
       //var pathReference = storage.ref("profilePictures/defaultProfilePic.jpg")
       var storageRef = firebase.storage().ref();
       storageRef
-        .child("profilePictures/defaultProfilePic.jpg")
+        .child(`profilePictures/${user.uid}.jpg`)
         .getDownloadURL()
         .then((url) => {
+          console.log(url);
           setProfilePicture(url);
+        })
+        .catch((err) => {
+          console.log(err);
+          setDefaultProfilePic();
         });
       console.log(user);
       console.log(user.email);
@@ -75,6 +80,16 @@ function Profile() {
     });
 
     setDone(true);
+  }
+
+  function setDefaultProfilePic() {
+    var storageRef = firebase.storage().ref();
+    storageRef
+      .child("profilePictures/defaultProfilePic.jpg")
+      .getDownloadURL()
+      .then((url) => {
+        setProfilePicture(url);
+      });
   }
 
   function toggleUsername() {
