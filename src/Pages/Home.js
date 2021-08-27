@@ -6,7 +6,7 @@ function Home() {
   // Setup
   const [done, setDone] = useState(false);
   const latestQuizzesRef = firebase.database().ref("Quizzes");
-  const [latestQuizzes, setLatestQuizzes] = useState("");
+  const [latestQuizzes, setLatestQuizzes] = useState(null);
 
   // Slideshow
   const [index, setIndex] = React.useState(0);
@@ -19,6 +19,7 @@ function Home() {
 
     latestQuizzesRef.on("value", (quizzes) =>
       quizzes.forEach((user) => {
+        console.log(user.val());
         user.forEach((quiz) => {
           quizArray.push(quiz.val());
         });
@@ -87,7 +88,7 @@ function Home() {
       <hr />
       <h2>Latest Quizzes</h2>
 
-      {latestQuizzes != "" ? (
+      {latestQuizzes != null ? (
         <div className="slideshow">
           <div
             className="slideshowSlider"
@@ -106,7 +107,7 @@ function Home() {
                 <div className="slideText">
                   <span>
                     <a href={`${quiz.creatorID}/${quiz.Title}`}>{quiz.Title}</a>{" "}
-                    from {quiz.creator}
+                    from <a href={`users/${quiz.creatorID}`}>{quiz.creator}</a>
                   </span>
                 </div>
               </div>
