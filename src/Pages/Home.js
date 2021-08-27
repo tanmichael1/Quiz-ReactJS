@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { firebase } from "./../Config";
+import { Link } from "react-router-dom";
 import Slideshow from "./components/Slideshow";
 
 function Home() {
@@ -107,7 +108,14 @@ function Home() {
                 <div className="slideText">
                   <span>
                     <a href={`${quiz.creatorID}/${quiz.Title}`}>{quiz.Title}</a>{" "}
-                    from <a href={`users/${quiz.creatorID}`}>{quiz.creator}</a>
+                    from{" "}
+                    <Link
+                      to={{
+                        pathname: `users/${quiz.creatorID}`,
+                      }}
+                    >
+                      {quiz.creator}
+                    </Link>
                   </span>
                 </div>
               </div>

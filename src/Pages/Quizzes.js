@@ -120,7 +120,14 @@ export default function Quizzes() {
                 >
                   {quiz.title}
                 </Link>{" "}
-                from {quiz.creator}
+                from{" "}
+                <Link
+                  to={{
+                    pathname: `users/${quiz.creatorID}`,
+                  }}
+                >
+                  {quiz.creator}
+                </Link>
               </h3>
             ))}
 
@@ -138,7 +145,14 @@ export default function Quizzes() {
                     >
                       {quiz.title}
                     </Link>{" "}
-                    from {quiz.creator}
+                    from{" "}
+                    <Link
+                      to={{
+                        pathname: `users/${quiz.creatorID}`,
+                      }}
+                    >
+                      {quiz.creator}
+                    </Link>
                   </h3>
                 ))}
               </div>
