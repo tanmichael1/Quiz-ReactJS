@@ -15,33 +15,39 @@ function Home() {
   const delay = 3000;
 
   if (!done) {
-    setup();
-    var quizArray = [];
+    setTimeout(() => {
+      setup();
+      var quizArray = [];
 
-    latestQuizzesRef.on("value", (quizzes) =>
-      quizzes.forEach((user) => {
-        console.log(user.val());
-        user.forEach((quiz) => {
-          quizArray.push(quiz.val());
+      latestQuizzesRef
+        .once("value", (quizzes) =>
+          quizzes.forEach((user) => {
+            console.log(user.val());
+            user.forEach((quiz) => {
+              quizArray.push(quiz.val());
+            });
+            quizArray.sort(function (a, b) {
+              if (a.createdSortDate < b.createdSortDate) {
+                return 1;
+              } else if (a.createdSortDate > b.createdSortDate) {
+                return -1;
+              }
+              return 0;
+            });
+            console.log(quizArray);
+          })
+        )
+        .then(function () {
+          setValues(quizArray);
         });
-        quizArray.sort(function (a, b) {
-          if (a.createdSortDate < b.createdSortDate) {
-            return 1;
-          } else if (a.createdSortDate > b.createdSortDate) {
-            return -1;
-          }
-          return 0;
-        });
 
-        setValues(quizArray);
-      })
-    );
-
-    setDone(true);
+      setDone(true);
+    }, 3000);
   }
 
   function setValues(latestArray) {
     var newArray = [];
+    console.log(latestArray);
     newArray.push(latestArray[0]);
     newArray.push(latestArray[1]);
     newArray.push(latestArray[2]);
