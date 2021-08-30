@@ -24,7 +24,9 @@ function Home() {
           quizzes.forEach((user) => {
             console.log(user.val());
             user.forEach((quiz) => {
-              quizArray.push(quiz.val());
+              if (!quiz.val().testQuiz) {
+                quizArray.push(quiz.val());
+              }
             });
             quizArray.sort(function (a, b) {
               if (a.createdSortDate < b.createdSortDate) {
