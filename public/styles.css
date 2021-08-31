@@ -351,6 +351,15 @@ nav {
 
 #question {
   font-family: "Poppins", "sans-serif";
+  font-size: 2vw;
+}
+
+#editQuestion {
+  width: 50%;
+}
+
+#editTitle {
+  width: 50%;
 }
 
 #question-container {

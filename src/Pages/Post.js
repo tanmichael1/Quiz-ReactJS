@@ -972,7 +972,7 @@ export default function Post() {
                 return (
                   <div key={questionIndex} className="questionWidget">
                     <h3> {questionIndex + 1}. Question</h3>
-                    <input
+                    <textarea
                       type="text"
                       questionnum={questionIndex}
                       id="editQuestion"
@@ -1078,9 +1078,6 @@ export default function Post() {
                   Save Question
                 </button>
 
-                <button onClick={(e) => addQuestion(e)}>
-                  Add New Question
-                </button>
                 <br />
               </form>
             </div>
@@ -1146,7 +1143,7 @@ export default function Post() {
               <hr />
 
               <div id="question-container">
-                <h2 id="question">{quizData[currentQuestion].questionText}</h2>
+                <h3 id="question">{quizData[currentQuestion].questionText}</h3>
 
                 <div id="answer-buttons" className="answer-section">
                   {quizData[currentQuestion].answerOptions.map(
@@ -1303,13 +1300,15 @@ export default function Post() {
               ) : (
                 <div>
                   {" "}
+                  <hr />
                   <h3>No one has used the scoreboard yet.</h3>{" "}
                   <h3>Would you like to be added to the scoreboard?</h3>
-                  <button
+                  <Button
                     onClick={(currentUser) => addUserToScoreboard(currentUser)}
                   >
                     Yes
-                  </button>
+                  </Button>
+                  <hr />
                 </div>
               )}
 
