@@ -378,6 +378,8 @@ export default function Create() {
                     answernum={i}
                     className="checkboxes"
                   />
+                  {"  "}
+                  <label>Correct</label>
                   <br /> <br />
                 </div>
               ))}

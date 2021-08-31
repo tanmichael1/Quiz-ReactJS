@@ -990,7 +990,8 @@ export default function Post() {
                             className="answer"
                             type="text"
                             defaultValue={answer.answerText}
-                          ></input>
+                          ></input>{" "}
+                          {"  "}
                           <input
                             onChange={() => updateTicked(i, questionIndex)}
                             questionnum2={questionIndex}
@@ -1000,6 +1001,8 @@ export default function Post() {
                             type="checkbox"
                             defaultChecked={answer.isCorrect === true}
                           />
+                          {"  "}
+                          <label>Correct</label>
                         </div>
                       ))}
                     </div>
@@ -1049,6 +1052,8 @@ export default function Post() {
                         className="newCheckboxes"
                         type="checkbox"
                       />
+                      {"  "}
+                      <label>Correct</label>
                       <br /> <br />
                     </div>
                   ))}
