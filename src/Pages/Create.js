@@ -349,7 +349,7 @@ export default function Create() {
           <form id="addQuestions">
             <div>
               <h3>Question</h3>
-              <input
+              <textarea
                 type="text"
                 className="form-control"
                 id="upload-question"

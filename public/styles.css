@@ -364,6 +364,11 @@ nav {
   width: 50%;
 }
 
+#upload-NewQuestion {
+  width: 70%;
+  display: inline-block;
+}
+
 #question-container {
   justify-content: center;
   padding-bottom: 2%;

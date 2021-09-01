@@ -978,6 +978,8 @@ export default function Post() {
                       id="editQuestion"
                       className="editQuestions"
                       defaultValue={question.questionText}
+                      rows="4"
+                      cols="50"
                     />
                     <br /> <br />
                     <h3>Answer Options</h3>
@@ -1022,7 +1024,7 @@ export default function Post() {
               <form id="addEditQuestions">
                 <div>
                   <h3>Question</h3>
-                  <input
+                  <textarea
                     type="text"
                     className="form-control"
                     id="upload-NewQuestion"
