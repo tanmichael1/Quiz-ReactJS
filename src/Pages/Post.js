@@ -20,6 +20,7 @@ export default function Post() {
   const [quizCreator, setQuizCreator] = useState();
   const [quizCreatorID, setQuizCreatorID] = useState();
   const [quizTitle, setQuizTitle] = useState(null);
+  const [registerFormShow, setRegisterFormShow] = useState(false);
 
   /* Editing */
   const [editingMode, setEditingMode] = useState(false);
@@ -61,9 +62,40 @@ export default function Post() {
   const [savedDateCreated, setSavedDateCreated] = useState();
   const [savedTimeCreated, setSavedTimeCreated] = useState();
   const [savedCreatedSortDate, setSavedCreatedSortDate] = useState();
-
   /* Progress bar */
   const progressBarFull = document.getElementById("progressBarFull");
+
+  if (end) {
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    console.log(btn);
+
+    if (btn) {
+      // When the user clicks on the button, open the modal
+      btn.onclick = function () {
+        modal.style.display = "block";
+      };
+
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function () {
+        modal.style.display = "none";
+      };
+    }
+
+    // // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    };
+  }
 
   /* Setup */
 
@@ -716,45 +748,49 @@ export default function Post() {
   /* Scoreboard */
 
   function addUserToScoreboard(nameTest) {
-    console.log(numScoreboardUsers);
-    var newNumScoreboardUsers = numScoreboardUsers + 1;
-    setUserOnScoreboard(true);
-    setScoreboardUsed(true);
-    setNumScoreboardUsers(newNumScoreboardUsers);
-    var arrayUsersScoreboard = scoreboardUsers;
-    var theUser = currentUser;
-    arrayUsersScoreboard.push({
-      scoreboardUsername: currentUser,
-      score: score + "/" + numQuestions,
-      time: totalTimeInSeconds,
-    });
-
-    setScoreboardUsers(arrayUsersScoreboard);
-    firebase
-      .database()
-      .ref(`Quizzes/${quizCreatorID}/${quizTitle}/scoreboard`)
-      .update({
-        numScoreboardUsers: newNumScoreboardUsers,
-      });
-    var ref = firebase
-      .database()
-      .ref(
-        `Quizzes/${quizCreatorID}/${quizTitle}/scoreboard/users/${currentUser}`
-      );
-    console.log(currentUser);
-
-    for (var i = 0; i < scoreboardUsers.length; i++) {
-      console.log(scoreboardUsers[i].scoreboardUsername);
-
-      ref.set({
+    if (currentUser == "guest") {
+      alert(currentUser);
+    } else {
+      console.log(numScoreboardUsers);
+      var newNumScoreboardUsers = numScoreboardUsers + 1;
+      setUserOnScoreboard(true);
+      setScoreboardUsed(true);
+      setNumScoreboardUsers(newNumScoreboardUsers);
+      var arrayUsersScoreboard = scoreboardUsers;
+      var theUser = currentUser;
+      arrayUsersScoreboard.push({
         scoreboardUsername: currentUser,
         score: score + "/" + numQuestions,
-        time: finalTimeSeconds,
+        time: totalTimeInSeconds,
       });
 
-      // else {
-      //   currentArray.push(scoreboardUsers[i]);
-      // }
+      setScoreboardUsers(arrayUsersScoreboard);
+      firebase
+        .database()
+        .ref(`Quizzes/${quizCreatorID}/${quizTitle}/scoreboard`)
+        .update({
+          numScoreboardUsers: newNumScoreboardUsers,
+        });
+      var ref = firebase
+        .database()
+        .ref(
+          `Quizzes/${quizCreatorID}/${quizTitle}/scoreboard/users/${currentUser}`
+        );
+      console.log(currentUser);
+
+      for (var i = 0; i < scoreboardUsers.length; i++) {
+        console.log(scoreboardUsers[i].scoreboardUsername);
+
+        ref.set({
+          scoreboardUsername: currentUser,
+          score: score + "/" + numQuestions,
+          time: finalTimeSeconds,
+        });
+
+        // else {
+        //   currentArray.push(scoreboardUsers[i]);
+        // }
+      }
     }
 
     //ref.push({ users: arrayUsersScoreboard });
@@ -1294,6 +1330,49 @@ export default function Post() {
                   ) : (
                     <div>
                       <h3>Would you like to be added to the scoreboard?</h3>
+                      {registerFormShow ? (
+                        <div> </div>
+                      ) : (
+                        <div>
+                          {/* <form id="signup-form">
+                            <div>
+                              <label>Username</label>
+                              <input
+                                required
+                                type="text"
+                                className="form-control"
+                                id="signup-username"
+                                placeholder="Enter username"
+                              />
+                            </div>
+
+                            <div>
+                              <label>Email address</label>
+                              <input
+                                required
+                                type="email"
+                                className="form-control"
+                                id="signup-email"
+                                placeholder="Enter email"
+                              />
+                            </div>
+
+                            <div>
+                              <label>Password</label>
+                              <input
+                                required
+                                type="password"
+                                className="form-control"
+                                id="signup-password"
+                                placeholder="Password"
+                              />
+                            </div>
+                            <button className="btn btn-primary">
+                              Register
+                            </button>
+                          </form> */}
+                        </div>
+                      )}
                       <button
                         onClick={(currentUser) =>
                           addUserToScoreboard(currentUser)
@@ -1310,6 +1389,48 @@ export default function Post() {
                   <hr />
                   <h3>No one has used the scoreboard yet.</h3>{" "}
                   <h3>Would you like to be added to the scoreboard?</h3>
+                  <button id="myBtn">Open Modal</button>
+                  <div id="myModal" className="modal">
+                    <div className="modal-content">
+                      <span className="close">&times;</span>
+                      <p>Some text in the Modal..</p>
+                      <form id="signupScoreboardForm">
+                        <div>
+                          <label>Username</label>
+                          <input
+                            required
+                            type="text"
+                            className="form-control"
+                            id="signupScoreboardForm-username"
+                            placeholder="Enter username"
+                          />
+                        </div>
+
+                        <div>
+                          <label>Email address</label>
+                          <input
+                            required
+                            type="email"
+                            className="form-control"
+                            id="signupScoreboardForm-email"
+                            placeholder="Enter email"
+                          />
+                        </div>
+
+                        <div>
+                          <label>Password</label>
+                          <input
+                            required
+                            type="password"
+                            className="form-control"
+                            id="signupScoreboardForm-password"
+                            placeholder="Password"
+                          />
+                        </div>
+                        <button className="btn btn-primary">Register</button>
+                      </form>
+                    </div>
+                  </div>
                   <Button
                     onClick={(currentUser) => addUserToScoreboard(currentUser)}
                   >

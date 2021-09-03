@@ -77,6 +77,74 @@ window.onload = function () {
     });
   }
 
+  const signupScoreboardForm = document.querySelector("#signupScoreboardForm");
+  if (signupScoreboardForm) {
+    signupScoreboardForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      // get user info
+      const newUsername =
+        signupScoreboardForm["signupScoreboardForm-username"].value;
+      const email = signupScoreboardForm["signupScoreboardForm-email"].value;
+      const password =
+        signupScoreboardForm["signupScoreboardForm-password"].value;
+
+      const usersRef = database.ref("Users");
+      var currentArray = [];
+
+      usersRef
+        .once("value", (snap) =>
+          snap.forEach((user) => {
+            console.log(user.val().username);
+            var newUser = user.val().username;
+
+            currentArray.push(newUser.toLowerCase());
+          })
+        )
+        .then(function onSuccess(res) {
+          console.log(currentArray);
+          console.log(newUsername);
+          if (currentArray.includes(newUsername.toLowerCase())) {
+            console.log("true");
+            alert("Username already used");
+            done = true;
+          } else {
+            console.log("false");
+            auth
+              .createUserWithEmailAndPassword(email, password)
+              .then((cred) => {
+                console.log(cred.user);
+                console.log(cred.user.uid);
+                const userID = cred.user.uid;
+
+                database.ref(`Users/${userID}`).set({
+                  username: newUsername,
+                  admin: false,
+
+                  id: userID,
+                });
+                signupForm.reset();
+                window.location.href = "/";
+              })
+              .catch(function (error) {
+                // Handle Errors here
+
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log("user did not sign up correctly");
+                console.log(errorCode);
+                console.log(errorMessage);
+                alert(errorMessage);
+              });
+          }
+        })
+        .catch(function onError(err) {
+          console.log(err);
+          // do sth
+        });
+    });
+  }
+
   // logout
   const logout = document.querySelector("#logout");
   if (logout) {
