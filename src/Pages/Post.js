@@ -64,7 +64,7 @@ export default function Post() {
   const [savedCreatedSortDate, setSavedCreatedSortDate] = useState();
   /* Progress bar */
   const progressBarFull = document.getElementById("progressBarFull");
-
+//https://www.w3schools.com/howto/howto_css_modals.asp
   if (end) {
     // Get the modal
     var modal = document.getElementById("myModal");

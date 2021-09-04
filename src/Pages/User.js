@@ -44,54 +44,97 @@ function User() {
 
     var newQuizTitle = unescape(splittable[2]);
     firebase.auth().onAuthStateChanged((user) => {
-      //if user page
-      if (user.uid == currentUserID) {
-        window.location.href = "/profile";
-      } else {
-      }
-      console.log("setup");
-      var storage = firebase.storage();
-      var storageRef = firebase.storage().ref();
-      storageRef
-        .child(`profilePictures/${currentUserID}.jpg`)
-        .getDownloadURL()
-        .then((url) => {
-          console.log(url);
-          setProfilePicture(url);
-        })
-        .catch((err) => {
-          console.log(err);
-          setDefaultProfilePic();
-        });
-      console.log(user);
-      console.log(user.email);
-      setEmail(user.email);
-      const dbRefUsers = firebase.database().ref(`Users/${currentUserID}`);
-      setCurrentUserID(user.uid);
-      const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
+      if (user) {
+        //if user page
 
-      dbRefUsers.on("value", (user) => {
-        if (user.val().createdQuizzes == undefined) {
-          console.log("undefined");
+        if (user.uid == currentUserID) {
+          window.location.href = "/profile";
         } else {
-          dbCreatedQuizzes.once("value", (userQuizzes) =>
-            userQuizzes.forEach((quiz) => {
-              var tempArray = createdQuizzes;
-              //console.log(quiz.val());
-              tempArray.push({
-                title: quiz.val().title,
-              });
-
-              setCreatedQuizzes(tempArray);
-            })
-          );
         }
-      });
+        console.log("setup");
+        var storage = firebase.storage();
+        var storageRef = firebase.storage().ref();
+        storageRef
+          .child(`profilePictures/${currentUserID}.jpg`)
+          .getDownloadURL()
+          .then((url) => {
+            console.log(url);
+            setProfilePicture(url);
+          })
+          .catch((err) => {
+            console.log(err);
+            setDefaultProfilePic();
+          });
+        console.log(user);
+        console.log(user.email);
+        setEmail(user.email);
+        const dbRefUsers = firebase.database().ref(`Users/${currentUserID}`);
+        setCurrentUserID(user.uid);
+        const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
 
-      dbRefUsers.once("value", (test) => {
-        console.log("set");
-        setUsername(test.val().username);
-      });
+        dbRefUsers.on("value", (user) => {
+          if (user.val().createdQuizzes == undefined) {
+            console.log("undefined");
+          } else {
+            dbCreatedQuizzes.once("value", (userQuizzes) =>
+              userQuizzes.forEach((quiz) => {
+                var tempArray = createdQuizzes;
+                //console.log(quiz.val());
+                tempArray.push({
+                  title: quiz.val().title,
+                });
+
+                setCreatedQuizzes(tempArray);
+              })
+            );
+          }
+        });
+
+        dbRefUsers.once("value", (test) => {
+          console.log("set");
+          setUsername(test.val().username);
+        });
+      } else {
+        var storage = firebase.storage();
+        var storageRef = firebase.storage().ref();
+        storageRef
+          .child(`profilePictures/${currentUserID}.jpg`)
+          .getDownloadURL()
+          .then((url) => {
+            console.log(url);
+            setProfilePicture(url);
+          })
+          .catch((err) => {
+            console.log(err);
+            setDefaultProfilePic();
+          });
+        const dbRefUsers = firebase.database().ref(`Users/${currentUserID}`);
+
+        const dbCreatedQuizzes = dbRefUsers.child("createdQuizzes");
+
+        dbRefUsers.on("value", (user) => {
+          if (user.val().createdQuizzes == undefined) {
+            console.log("undefined");
+          } else {
+            dbCreatedQuizzes.once("value", (userQuizzes) =>
+              userQuizzes.forEach((quiz) => {
+                var tempArray = createdQuizzes;
+                //console.log(quiz.val());
+                tempArray.push({
+                  title: quiz.val().title,
+                });
+
+                setCreatedQuizzes(tempArray);
+              })
+            );
+          }
+        });
+
+        dbRefUsers.once("value", (test) => {
+          console.log("set");
+          setUsername(test.val().username);
+        });
+      }
     });
 
     setDone(true);
