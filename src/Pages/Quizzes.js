@@ -99,72 +99,78 @@ export default function Quizzes() {
   }
 
   return (
-    <div className="container box">
-      <h1 id="quizzesTitle">Welcome to Quizzes</h1>
+    <div style={{ height: "90vh" }}>
+      <div className="container box">
+        <h1 id="quizzesTitle">Welcome to Quizzes</h1>
 
-      <div className="">
-        <Button id="refresh">Refresh Quizzes</Button>
-      </div>
-
-      {loading ? <div id="loading">Loading</div> : <div id="notLoading"></div>}
-
-      {finished ? (
-        <div id="finished">
-          <div id="finished2">
-            {quizArray.map((quiz, i) => (
-              <h3 id="center" key={i}>
-                <Link
-                  to={{
-                    pathname: `${quiz.creatorID}/${quiz.title}`,
-                  }}
-                >
-                  {quiz.title}
-                </Link>{" "}
-                from{" "}
-                <Link
-                  to={{
-                    pathname: `users/${quiz.creatorID}`,
-                  }}
-                >
-                  {quiz.creator}
-                </Link>
-              </h3>
-            ))}
-
-            {admin ? (
-              <div>
-                <br />
-                <hr />
-                <h2>Test Quizzes</h2>
-                {testQuizArray.map((quiz, i) => (
-                  <h3 id="center" key={i}>
-                    <Link
-                      to={{
-                        pathname: `${quiz.creatorID}/${quiz.title}`,
-                      }}
-                    >
-                      {quiz.title}
-                    </Link>{" "}
-                    from{" "}
-                    <Link
-                      to={{
-                        pathname: `users/${quiz.creatorID}`,
-                      }}
-                    >
-                      {quiz.creator}
-                    </Link>
-                  </h3>
-                ))}
-              </div>
-            ) : (
-              <div> </div>
-            )}
-          </div>
+        <div className="">
+          <Button id="refresh">Refresh Quizzes</Button>
         </div>
-      ) : (
-        <div id="notFinished"></div>
-      )}
-      <br />
+
+        {loading ? (
+          <div id="loading">Loading</div>
+        ) : (
+          <div id="notLoading"></div>
+        )}
+
+        {finished ? (
+          <div id="finished">
+            <div id="finished2">
+              {quizArray.map((quiz, i) => (
+                <h3 id="center" key={i}>
+                  <Link
+                    to={{
+                      pathname: `${quiz.creatorID}/${quiz.title}`,
+                    }}
+                  >
+                    {quiz.title}
+                  </Link>{" "}
+                  from{" "}
+                  <Link
+                    to={{
+                      pathname: `users/${quiz.creatorID}`,
+                    }}
+                  >
+                    {quiz.creator}
+                  </Link>
+                </h3>
+              ))}
+
+              {admin ? (
+                <div>
+                  <br />
+                  <hr />
+                  <h2>Test Quizzes</h2>
+                  {testQuizArray.map((quiz, i) => (
+                    <h3 id="center" key={i}>
+                      <Link
+                        to={{
+                          pathname: `${quiz.creatorID}/${quiz.title}`,
+                        }}
+                      >
+                        {quiz.title}
+                      </Link>{" "}
+                      from{" "}
+                      <Link
+                        to={{
+                          pathname: `users/${quiz.creatorID}`,
+                        }}
+                      >
+                        {quiz.creator}
+                      </Link>
+                    </h3>
+                  ))}
+                </div>
+              ) : (
+                <div> </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div id="notFinished"></div>
+        )}
+        <br />
+      </div>
     </div>
   );
 }

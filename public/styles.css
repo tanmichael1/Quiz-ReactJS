@@ -109,6 +109,20 @@ nav {
   box-shadow: 0 0 10px 2px;
   color: rgb(185, 185, 185);
   background-color: rgb(29, 26, 26);
+  min-height: 45.5vw;
+}
+
+.minHeight {
+  height: 50vw;
+}
+
+.center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 
 /* Slideshow */
@@ -200,6 +214,7 @@ nav {
 
 .navbar {
   text-align: center;
+  height: 5vw;
 }
 
 .nav {

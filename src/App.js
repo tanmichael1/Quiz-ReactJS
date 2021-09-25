@@ -17,7 +17,7 @@ import Post from "./Pages/Post";
 
 export default function App() {
   return (
-    <div className="App">
+    <div className="App" style={{ height: "100vh" }}>
       <Header />
       <BrowserRouter>
         <Switch>
