@@ -592,6 +592,15 @@ nav {
   h2 {
     font-size: 8vw !important;
   }
+
+  .navbar {
+    text-align: center;
+    height: 20vw;
+  }
+
+  .box {
+    min-height: 215vw;
+  }
 }
 
 @media screen and (min-width: 360px) {
@@ -603,6 +612,15 @@ nav {
 
   h1 {
     font-size: 10vw !important;
+  }
+
+  .navbar {
+    text-align: center;
+    height: 20vw;
+  }
+
+  .box {
+    min-height: 200vw;
   }
 }
 
@@ -625,6 +643,15 @@ nav {
   h2 {
     font-size: 5vw !important;
   }
+
+  .navbar {
+    text-align: center;
+    height: 20vw;
+  }
+
+  .box {
+    min-height: 165vw;
+  }
 }
 
 @media screen and (min-width: 768px) {
@@ -636,6 +663,15 @@ nav {
 
   #siteTitle {
     font-size: 5vw;
+  }
+
+  .navbar {
+    text-align: center;
+    height: 12vw;
+  }
+
+  .box {
+    min-height: 135vw;
   }
 
   .vl {
@@ -655,6 +691,10 @@ nav {
 @media screen and (min-width: 960px) {
   .vl {
     height: 8vw;
+  }
+
+  .box {
+    min-height: 105vw;
   }
 }
 
@@ -685,6 +725,15 @@ nav {
   .navbar .navbar-nav .nav-item:not(:last-child) .nav-link {
     border-right: 2px solid #000000;
   }
+
+  .navbar {
+    text-align: center;
+    height: 8vw;
+  }
+
+  .box {
+    min-height: 86vw;
+  }
 }
 
 /* desktop styles */
@@ -700,6 +749,10 @@ nav {
   .navbar .navbar-nav .nav-item:not(:last-child) .nav-link {
     border-right: 2px solid #000000;
   }
+
+  .box {
+    min-height: 50vw;
+  }
 }
 
 /* Large desktop styles */
@@ -710,6 +763,14 @@ nav {
   h2 {
     font-size: 4vw !important;
   }
+  .navbar {
+    text-align: center;
+    height: 5vw;
+  }
+
+  .box {
+    min-height: 52vw;
+  }
 
   /* Super Large desktop styles */
   @media screen and (min-width: 3000px) {
@@ -719,11 +780,8 @@ nav {
     h2 {
       font-size: 2vw !important;
     }
+    .box {
+      min-height: 45.5vw;
+    }
   }
 }
-
-/* grid testing */
-/* .projects {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-} */
