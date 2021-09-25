@@ -48,7 +48,8 @@ body {
   --hue-correct: 120;
   background-color: rgb(29, 26, 26);
   color: rgb(185, 185, 185);
-  background: black url("images/background.jpg") no-repeat fixed center;
+  /* background: rgb(124, 17, 17) url("images/background.jpg") no-repeat fixed center; */
+  background-color: rgb(9, 36, 87) !important;
   --hue: var(--hue-neutral);
   color: rgb(185, 185, 185);
   align-items: center;
