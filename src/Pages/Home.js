@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { firebase } from "./../Config";
 import { Link } from "react-router-dom";
-import Slideshow from "./components/Slideshow";
 
 function Home() {
   // Setup
@@ -98,49 +97,22 @@ function Home() {
       <h2>Latest Quizzes</h2>
 
       {latestQuizzes != null ? (
-        <div className="slideshow">
-          <div
-            className="slideshowSlider"
-            style={{ transform: `translate3d(${-index * 100}%, 0, 0)` }}
-          >
-            {latestQuizzes.map((quiz, index) => (
-              <div
-                className="slide"
-                key={index}
-                style={{
-                  // backgroundColor: "#0088FE"
-                  backgroundColor: "white",
-                }}
-                // style={{ backgroundColor }}
-              >
-                <div className="slideText">
-                  <span>
-                    <a href={`${quiz.creatorID}/${quiz.Title}`}>{quiz.Title}</a>{" "}
-                    from{" "}
-                    <Link
-                      to={{
-                        pathname: `users/${quiz.creatorID}`,
-                      }}
-                    >
-                      {quiz.creator}
-                    </Link>
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="slideshowDots">
-            {colors.map((_, idx) => (
-              <div
-                key={idx}
-                className={`slideshowDot${index === idx ? " active" : ""}`}
-                onClick={() => {
-                  setIndex(idx);
-                }}
-              ></div>
-            ))}
-          </div>
+        <div className="latestQuizzes center">
+          {latestQuizzes.map((quiz, index) => (
+            <div key={index}>
+              <span>
+                <a href={`${quiz.creatorID}/${quiz.Title}`}>{quiz.Title}</a>{" "}
+                from{" "}
+                <Link
+                  to={{
+                    pathname: `users/${quiz.creatorID}`,
+                  }}
+                >
+                  {quiz.creator}
+                </Link>
+              </span>
+            </div>
+          ))}
         </div>
       ) : (
         <div>
