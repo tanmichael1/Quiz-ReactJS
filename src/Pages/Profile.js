@@ -12,25 +12,7 @@ function Profile() {
   const [createdQuizzes, setCreatedQuizzes] = useState([]);
   const [userID, setUserID] = useState();
   const [image, setImage] = useState();
-  function changeProfilePic() {
-    var file = document.getElementById("file").value;
-    // Create a root reference
-    var storageRef = firebase.storage().ref();
-    // Create a reference to 'images/mountains.jpg'
-    var profileImgRef = storageRef.child(`profilePictures/${userID}.jpg`);
-    const task = profileImgRef.put(file);
-    task.on(
-      "state_changed",
-      (snapshot) => {},
-      (error) => {},
-      () => {}
-    );
 
-    profileImgRef.put(file).then((snapshot) => {
-      console.log("Uploaded a file");
-    });
-    return false;
-  }
   function setup() {
     firebase.auth().onAuthStateChanged((user) => {
       var storage = firebase.storage();
@@ -273,32 +255,6 @@ function Profile() {
     }
   }
 
-  function changeProfilePic() {
-    var file = document.getElementById("file").value;
-    // Create a root reference
-    var storageRef = firebase.storage().ref();
-    // Create a reference to 'images/mountains.jpg'
-    var profileImgRef = storageRef.child(`profilePictures/${userID}.jpg`);
-    const task = profileImgRef.put(file);
-    task.on(
-      "state_changed",
-      (snapshot) => {},
-      (error) => {
-        console.log(error);
-      },
-      () => {}
-    );
-
-    profileImgRef
-      .put(file)
-      .then((snapshot) => {
-        console.log("Uploaded a file");
-      })
-      .catch(function onError(err) {
-        console.log(err);
-      });
-  }
-
   if (!done) {
     setTimeout(() => {
       setup();
@@ -308,9 +264,11 @@ function Profile() {
   }
 
   const upload = (e) => {
+    e.preventDefault();
     if (image == null) {
       e.preventDefault();
     } else {
+      console.log(image);
       firebase
         .storage()
         .ref()

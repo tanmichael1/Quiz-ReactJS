@@ -3,17 +3,21 @@ import { firebase } from "./../Config";
 import Widget from "./components/AddQuestionWidget";
 
 export default function Create() {
+  /* Set up */
   const [done, setDone] = useState(false);
+  const [quizTitles, setQuizTitles] = useState([]);
+
+  /* Users */
+  const [currentUser, setCurrentUser] = useState();
+  const [currentUserID, setCurrentUserID] = useState();
+  const [admin, setAdmin] = useState(false);
+
+  /* Current Quiz */
   const [numAnswers, setNumAnswers] = useState(["Answer 1", "Answer 2"]);
   const [displayQuestions, setDisplayQuestions] = useState([]);
   const [savedQuestions, setSavedQuestions] = useState([]);
   const [answerOptions, setAnswerOptions] = useState([]);
-  const [currentUser, setCurrentUser] = useState();
-  const [currentUserID, setCurrentUserID] = useState();
-  const [quizTitles, setQuizTitles] = useState([]);
-  const [admin, setAdmin] = useState(false);
-
-  const [notes, setNotes] = useState([]);
+  const [questions, setQuestions] = useState([]);
 
   if (!done) {
     setup();
@@ -31,8 +35,8 @@ export default function Create() {
         return index !== id;
       });
     });
-    setNotes((prevNotes) => {
-      return prevNotes.filter((noteItem, index) => {
+    setQuestions((prevQuestions) => {
+      return prevQuestions.filter((noteItem, index) => {
         return index !== id;
       });
     });
@@ -91,11 +95,7 @@ export default function Create() {
   //Checks that quiz doesn't already exist
 
   function checkTitle() {
-    if (quizTitles.includes(document.getElementById("upload-title").value)) {
-      return true;
-    } else {
-      return false;
-    }
+    return quizTitles.includes(document.getElementById("upload-title").value);
   }
 
   function submitQuiz() {
@@ -146,22 +146,17 @@ export default function Create() {
 
       //Each question
 
-      var index = savedQuestions.length;
-
-      for (var i = 1; i < index + 1; i++) {
-        var questionArray = savedQuestions;
-
-        var question = questionArray[i - 1];
+      for (var i = 1; i < savedQuestions.length + 1; i++) {
         firebase
           .database()
           .ref(`Quizzes/${currentUserID}/${title}/${i}`)
           .set({
             answerOptions: answerOptions[i - 1],
-            questionText: question,
+            questionText: savedQuestions[i - 1],
           });
       }
 
-      setNotes([]);
+      setQuestions([]);
 
       const createQuizForm = document.querySelector("#createQuizForm");
       createQuizForm.reset();
@@ -171,10 +166,9 @@ export default function Create() {
 
   function checkCheckboxes() {
     var checkboxes = document.getElementsByClassName("checkboxes");
-    var i;
 
-    for (i = 0; i < checkboxes.length; i++) {
-      if (document.getElementsByClassName("checkboxes")[i].checked == true) {
+    for (var i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i].checked == true) {
         return true;
       }
     }
@@ -183,9 +177,7 @@ export default function Create() {
 
   function addQuestion(e) {
     e.preventDefault();
-
     var checkboxes = document.getElementsByClassName("checkboxes");
-
     let newQuestion = document.getElementById("upload-question").value;
     if (newQuestion == null || newQuestion == "") {
       alert("Needs a question");
@@ -247,7 +239,7 @@ export default function Create() {
             answerOptions: displayArray,
           });
 
-          setNotes(tempQuestions);
+          setQuestions(tempQuestions);
           document.getElementById("addQuestions").reset();
           setNumAnswers(["Answer 1", "Answer 2"]);
         } else {
@@ -284,7 +276,7 @@ export default function Create() {
   }
 
   function checkNumQuestions() {
-    if (notes.length <= 1) {
+    if (questions.length <= 1) {
       document.getElementById("savedQuestionsTitle").classList.add("hidden");
     } else {
       document.getElementById("savedQuestionsTitle").classList.remove("hidden");
@@ -312,7 +304,7 @@ export default function Create() {
           <h2 className="hidden" id="savedQuestionsTitle">
             Saved Questions
           </h2>
-          {notes.map((noteItem, index) => {
+          {questions.map((noteItem, index) => {
             return (
               <Widget
                 key={index}
