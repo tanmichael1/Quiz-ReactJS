@@ -674,6 +674,9 @@ nav {
   .box {
     min-height: 105vw;
   }
+  .latestQuizzes {
+    margin-top: 200px;
+  }
 }
 
 /* desktop styles */
