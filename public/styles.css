@@ -37,10 +37,8 @@ body {
   --hue-wrong: 0;
   --hue-mark: 200;
   --hue-correct: 120;
-  background-color: rgb(29, 26, 26);
   color: rgb(185, 185, 185);
-  /* background: rgb(124, 17, 17) url("images/background.jpg") no-repeat fixed center; */
-  background-color: rgb(9, 36, 87) !important;
+  background-color: rgb(29, 26, 26) !important;
   --hue: var(--hue-neutral);
   color: rgb(185, 185, 185);
   align-items: center;
@@ -93,7 +91,6 @@ nav {
 .box {
   padding: 1vw;
   border-radius: 5px;
-  box-shadow: 0 0 10px 2px;
   color: rgb(185, 185, 185);
   background-color: rgb(29, 26, 26);
   /* min-height: 45.5vw; */
@@ -101,24 +98,18 @@ nav {
 
 .trueCenter {
   margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
 }
 
 /* Latest Quizzes */
 
 .latestQuizzes {
-  height: 10%;
   width: 100%;
-  height: 400px;
   line-height: 50px;
   text-align: center;
   display: inline-block;
   font-size: 2vw;
   vertical-align: middle;
+  margin-top: 30px;
 }
 
 .latestQuizzes span {
@@ -559,10 +550,6 @@ nav {
     text-align: center;
     min-height: 20vw;
   } */
-
-  .box {
-    min-height: 215vw;
-  }
 }
 
 @media screen and (min-width: 360px) {
@@ -579,26 +566,6 @@ nav {
   .navbar {
     text-align: center;
     /* min-height: 20vw; */
-  }
-
-  .box {
-    min-height: 200vw;
-  }
-
-  /* .latestQuizzes {
-    margin-top: 300px;
-  } */
-}
-
-@media screen and (min-width: 455) {
-  .latestQuizzes {
-    margin-top: 150px;
-  }
-}
-
-@media screen and (min-width: 600px) {
-  .latestQuizzes {
-    margin-top: 120px;
   }
 }
 
@@ -626,10 +593,6 @@ nav {
     text-align: center;
     min-height: 20vw;
   }
-
-  .box {
-    min-height: 165vw;
-  }
 }
 
 @media screen and (min-width: 768px) {
@@ -646,10 +609,6 @@ nav {
   .navbar {
     text-align: center;
     min-height: 12vw;
-  }
-
-  .box {
-    min-height: 135vw;
   }
 
   .vl {
@@ -669,13 +628,6 @@ nav {
 @media screen and (min-width: 960px) {
   .vl {
     height: 8vw;
-  }
-
-  .box {
-    min-height: 105vw;
-  }
-  .latestQuizzes {
-    margin-top: 200px;
   }
 }
 
@@ -711,10 +663,6 @@ nav {
     text-align: center;
     min-height: 8vw;
   }
-
-  .box {
-    min-height: 86vw;
-  }
 }
 
 /* desktop styles */
@@ -729,10 +677,6 @@ nav {
   }
   .navbar .navbar-nav .nav-item:not(:last-child) .nav-link {
     border-right: 2px solid #000000;
-  }
-
-  .box {
-    min-height: 80vw;
   }
 }
 
@@ -749,17 +693,7 @@ nav {
     min-height: 5vw;
   }
 
-  .box {
-    min-height: 52vw;
-  }
-  .latestQuizzes {
-    margin-top: 200px;
-  }
-
   @media screen and (min-width: 2600px) {
-    .latestQuizzes {
-      margin-top: 300px;
-    }
   }
 
   /* Super Large desktop styles */
@@ -769,9 +703,6 @@ nav {
     }
     h2 {
       font-size: 2vw !important;
-    }
-    .box {
-      min-height: 45.5vw;
     }
   }
 }

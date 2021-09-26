@@ -1310,10 +1310,15 @@ export default function Post() {
                       </form>
                     </div>
                   </div>
-                  <Button
+                  {/* <Button
                     onClick={(currentUser) => addUserToScoreboard(currentUser)}
                   >
                     Yes
+                  </Button> */}
+                  <Button
+                    onClick={(event) => (window.location.href = "/login")}
+                  >
+                    Login
                   </Button>
                   <hr />
                 </div>
