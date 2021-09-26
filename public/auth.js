@@ -27,26 +27,19 @@ window.onload = function () {
       usersRef
         .once("value", (snap) =>
           snap.forEach((user) => {
-            console.log(user.val().username);
             var newUser = user.val().username;
 
             currentArray.push(newUser.toLowerCase());
           })
         )
         .then(function onSuccess(res) {
-          console.log(currentArray);
-          console.log(newUsername);
           if (currentArray.includes(newUsername.toLowerCase())) {
-            console.log("true");
             alert("Username already used");
             done = true;
           } else {
-            console.log("false");
             auth
               .createUserWithEmailAndPassword(email, password)
               .then((cred) => {
-                console.log(cred.user);
-                console.log(cred.user.uid);
                 const userID = cred.user.uid;
 
                 database.ref(`Users/${userID}`).set({
@@ -60,12 +53,8 @@ window.onload = function () {
               })
               .catch(function (error) {
                 // Handle Errors here
-
                 var errorCode = error.code;
                 var errorMessage = error.message;
-                console.log("user did not sign up correctly");
-                console.log(errorCode);
-                console.log(errorMessage);
                 alert(errorMessage);
               });
           }
@@ -95,26 +84,19 @@ window.onload = function () {
       usersRef
         .once("value", (snap) =>
           snap.forEach((user) => {
-            console.log(user.val().username);
             var newUser = user.val().username;
 
             currentArray.push(newUser.toLowerCase());
           })
         )
         .then(function onSuccess(res) {
-          console.log(currentArray);
-          console.log(newUsername);
           if (currentArray.includes(newUsername.toLowerCase())) {
-            console.log("true");
             alert("Username already used");
             done = true;
           } else {
-            console.log("false");
             auth
               .createUserWithEmailAndPassword(email, password)
               .then((cred) => {
-                console.log(cred.user);
-                console.log(cred.user.uid);
                 const userID = cred.user.uid;
 
                 database.ref(`Users/${userID}`).set({
@@ -131,9 +113,6 @@ window.onload = function () {
 
                 var errorCode = error.code;
                 var errorMessage = error.message;
-                console.log("user did not sign up correctly");
-                console.log(errorCode);
-                console.log(errorMessage);
                 alert(errorMessage);
               });
           }
@@ -168,7 +147,6 @@ window.onload = function () {
       auth
         .signInWithEmailAndPassword(email, password)
         .then((cred) => {
-          console.log(cred.user);
           loginForm.reset();
           window.location.href = "/";
         })
@@ -177,9 +155,6 @@ window.onload = function () {
 
           var errorCode = error.code;
           var errorMessage = error.message;
-          console.log("user did not sign in correctly");
-          console.log(errorCode);
-          console.log(errorMessage);
           alert(errorMessage);
         });
     });

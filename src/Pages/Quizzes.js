@@ -36,7 +36,6 @@ export default function Quizzes() {
         const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
 
         dbRefUsers.on("value", (user) => {
-          console.log(user.val());
           if (user.val().admin == undefined || user.val().admin == false) {
             console.log("undefined or not admin");
           } else {
@@ -103,21 +102,21 @@ export default function Quizzes() {
       <div className="container box">
         <h1 id="quizzesTitle">Welcome to Quizzes</h1>
 
-        <div className="">
+        {/* <div className="">
           <Button id="refresh">Refresh Quizzes</Button>
-        </div>
+        </div> */}
 
         {loading ? (
           <div id="loading">Loading</div>
         ) : (
-          <div id="notLoading"></div>
-        )}
-
-        {finished ? (
           <div id="finished">
             <div id="finished2">
               {quizArray.map((quiz, i) => (
-                <h3 id="center" key={i}>
+                <h3
+                  style={{ marginTop: "20px", marginBottom: "20px" }}
+                  id="center"
+                  key={i}
+                >
                   <Link
                     to={{
                       pathname: `${quiz.creatorID}/${quiz.title}`,
@@ -140,9 +139,13 @@ export default function Quizzes() {
                 <div>
                   <br />
                   <hr />
-                  <h2>Test Quizzes</h2>
+                  <h2 style={{ textAlign: "center" }}>Test Quizzes</h2>
                   {testQuizArray.map((quiz, i) => (
-                    <h3 id="center" key={i}>
+                    <h3
+                      style={{ marginTop: "20px", marginBottom: "20px" }}
+                      id="center"
+                      key={i}
+                    >
                       <Link
                         to={{
                           pathname: `${quiz.creatorID}/${quiz.title}`,
@@ -166,9 +169,8 @@ export default function Quizzes() {
               )}
             </div>
           </div>
-        ) : (
-          <div id="notFinished"></div>
         )}
+
         <br />
       </div>
     </div>

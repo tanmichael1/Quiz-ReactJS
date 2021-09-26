@@ -6,15 +6,6 @@
   --hue-wrong: 0;
   --hue-mark: 200;
   --hue-correct: 120;
-  /* width: 111px;
-  padding-top: 40vh; */
-  /* height: 100vh;
-
-  /* display: flex; */
-  /* justify-content: center;
-  align-items: center;
-  display: flex; */
-  /* display: flex; */
 }
 
 /* reset */
@@ -91,11 +82,6 @@ li {
   color: #9893d8;
 }
 
-/* h1, */
-/* h3 {
-  font-size: 1.2em;
-} */
-
 nav {
   width: 100%;
 }
@@ -113,7 +99,7 @@ nav {
   /* min-height: 45.5vw; */
 }
 
-.center {
+.trueCenter {
   margin: 0;
   position: absolute;
   top: 50%;
@@ -138,29 +124,6 @@ nav {
 .latestQuizzes span {
   line-height: normal;
   color: white;
-}
-
-/* Buttons */
-
-.slideshowDots {
-  text-align: center;
-}
-
-.slideshowDot {
-  display: inline-block;
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-
-  cursor: pointer;
-  margin: 15px 7px 0px;
-
-  background-color: #c4c4c4;
-}
-
-.slideshowDot.active {
-  background-color: #052180;
-  /* background-color: #6a0dad; */
 }
 
 /* Progress bar */
@@ -211,7 +174,6 @@ nav {
   border: 1px solid hsl(var(--hue), 100%, 30%);
   background-color: hsl(var(--hue), 100%, 50%);
   border-radius: 5px;
-  /* padding: 5px 10px; */
   margin: 1%;
   text-align: center;
   outline: none;
@@ -220,7 +182,6 @@ nav {
 
 .btn:hover {
   border-color: black;
-
   transform: scale(1.03);
 }
 

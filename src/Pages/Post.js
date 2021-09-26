@@ -64,7 +64,7 @@ export default function Post() {
   const [savedCreatedSortDate, setSavedCreatedSortDate] = useState();
   /* Progress bar */
   const progressBarFull = document.getElementById("progressBarFull");
-//https://www.w3schools.com/howto/howto_css_modals.asp
+  //https://www.w3schools.com/howto/howto_css_modals.asp
   if (end) {
     // Get the modal
     var modal = document.getElementById("myModal");
@@ -74,8 +74,6 @@ export default function Post() {
 
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
-
-    console.log(btn);
 
     if (btn) {
       // When the user clicks on the button, open the modal
@@ -112,7 +110,6 @@ export default function Post() {
     dbTestQuiz.once("value", function (quiz) {
       var count = quiz.child("NumQuestions").val();
       setTestQuiz(quiz.child("testQuiz").val());
-      console.log(quiz.val());
       setNumQuestions(count);
       setSavedDateCreated(quiz.child("dateCreated").val());
       setSavedTimeCreated(quiz.child("timeCreated").val());
@@ -164,15 +161,11 @@ export default function Post() {
         dbRefUsersName.once("value", function (snapUser) {
           setCurrentUser(snapUser.val());
           newUser = snapUser.val();
-          console.log(currUser);
-          console.log(snapUser.val());
 
           if (snapUser.val() === currUser) {
             setUserIsCreator(true);
-            console.log("User's Quiz");
           } else {
             setUserIsCreator(false);
-            console.log("Not creator");
           }
 
           dbRefUsers.once("value", (person) => {
@@ -180,22 +173,18 @@ export default function Post() {
               person.val().admin == undefined ||
               person.val().admin == false
             ) {
-              console.log("undefined or not admin");
             } else {
               setAdmin(true);
             }
           });
 
           if (scoreboardNumUsers > 0) {
-            console.log(true);
             setScoreboardUsed(true);
 
             var userArray = [];
             var scoreboardLength = quiz
               .child("scoreboard/numScoreboardUsers")
               .val();
-            console.log(quiz.val().Title);
-            console.log(quizCreatorID);
             const scoreboardUsersRef = firebase
               .database()
               .ref(
@@ -206,14 +195,12 @@ export default function Post() {
                   "/scoreboard/users"
               );
             scoreboardUsersRef.once("value", (snap) => {
-              console.log(snap.val());
               snap.forEach((addUser) => {
                 userArray.push({
                   scoreboardUsername: addUser.val().scoreboardUsername,
                   score: addUser.val().score,
                   time: addUser.val().time,
                 });
-                console.log(userArray);
 
                 if (addUser.val().scoreboardUsername == newUser) {
                   setUserOnScoreboard(true);
@@ -228,11 +215,9 @@ export default function Post() {
             setScoreboardUsers([]);
           }
           newUser = snapUser.val();
-          console.log(newUser);
           return newUser;
         });
       } else {
-        console.log("User is not logged in");
         setCurrentUser("guest");
 
         setUserOnScoreboard(false);
@@ -258,7 +243,6 @@ export default function Post() {
     startTimer();
     setInitial(false);
     setQuiz(true);
-    console.log(quizCreatorID);
   }
 
   function handleCheckButtonClick() {
@@ -287,8 +271,6 @@ export default function Post() {
       setResponse(currentResponse);
 
       Array.from(answerButtonsElement.children).forEach((button) => {
-        console.log(currentAnswer);
-
         if (currentAnswer === button.innerHTML) {
           if (currentAnswer === trueAnswer) {
             button.classList.add("correct");
@@ -391,14 +373,11 @@ export default function Post() {
         }
 
         if (answer.answerText === text) {
-          console.log(answer);
         }
       });
       setSelected(true);
 
       Array.from(answerButtonsElement.children).forEach((button) => {
-        console.log(currentAnswer);
-
         if (text === button.innerHTML) {
           //Save button
           button.classList.add("marked");
@@ -460,7 +439,6 @@ export default function Post() {
       }
 
       if (deleteCheckboxes[i].checked == false) {
-        console.log(editQuestions[i].value);
         finalArray.push({
           question: editQuestions[i].value,
           answerOptions: answersArray,
@@ -535,8 +513,6 @@ export default function Post() {
             answerOptions: question.answerOptions,
             questionText: question.question,
           });
-
-        console.log(question.question);
       }
 
       window.location.href = `${quizCreatorID}/${newTitle}`;
@@ -566,7 +542,7 @@ export default function Post() {
 
       for (var m = 1; m < numQuestions - numDeleteCheckboxes + 1; m++) {
         var question = finalArray[m - 1];
-        console.log(question);
+
         firebase
           .database()
           .ref(`Quizzes/${quizCreatorID}/${newTitle}/${m}`)
@@ -656,7 +632,7 @@ export default function Post() {
       for (i = 0; i < x.length; i++) {
         if (x[i].value != "" && x[i].value != null) {
           numOptionsCount++;
-          console.log(numOptionsCount);
+
           if (
             document.getElementsByClassName("newCheckboxes")[i].checked == true
           ) {
@@ -726,11 +702,6 @@ export default function Post() {
       var questionNumTest = i;
       var answersArray = [];
       for (var j = 0; j < answersEdit.length; j++) {
-        console.log(answersEdit[j]);
-        console.log(
-          "questionnum2: " + answersEdit[j].getAttribute("questionnum2")
-        );
-
         if (answersEdit[j].getAttribute("questionnum2") == questionNumTest) {
           answersArray.push({
             answerText: answersEdit[j].value,
@@ -741,7 +712,7 @@ export default function Post() {
 
       finalArray.push(answersArray);
     }
-    console.log(finalArray);
+
     return finalArray;
   }
 
@@ -751,7 +722,6 @@ export default function Post() {
     if (currentUser == "guest") {
       alert(currentUser);
     } else {
-      console.log(numScoreboardUsers);
       var newNumScoreboardUsers = numScoreboardUsers + 1;
       setUserOnScoreboard(true);
       setScoreboardUsed(true);
@@ -776,72 +746,33 @@ export default function Post() {
         .ref(
           `Quizzes/${quizCreatorID}/${quizTitle}/scoreboard/users/${currentUser}`
         );
-      console.log(currentUser);
 
       for (var i = 0; i < scoreboardUsers.length; i++) {
-        console.log(scoreboardUsers[i].scoreboardUsername);
-
         ref.set({
           scoreboardUsername: currentUser,
           score: score + "/" + numQuestions,
           time: finalTimeSeconds,
         });
-
-        // else {
-        //   currentArray.push(scoreboardUsers[i]);
-        // }
       }
     }
-
-    //ref.push({ users: arrayUsersScoreboard });
-
-    // ref.push({
-    //   user: currentUser,
-    //   score: score,
-    //   time: totalTimeInSeconds,
-    // });
-
-    // setScoreboardUsed(true);
-    // firebase
-    //   .database()
-    //   .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`)
-    //   .push({
-    //     user: currentUser,
-    //     score: score,
-    //     time: totalTimeInSeconds,
-    //   });
-    // testRef.push({
-    //   user: currentUser,
-    //   score: score,
-    //   time: totalTimeInSeconds,
-    // });
-    // set
   }
 
   function removeScoreboardUser(nameTest) {
-    console.log(numQuestions);
     var currentArray = [];
-    console.log(scoreboardUsers);
-    console.log(scoreboardUsers.length);
 
     for (var i = 0; i < scoreboardUsers.length; i++) {
-      console.log(scoreboardUsers[i].scoreboardUsername);
       if (scoreboardUsers[i].scoreboardUsername == nameTest) {
       } else {
         currentArray.push(scoreboardUsers[i]);
       }
     }
 
-    console.log(nameTest);
-
-    console.log(currentArray);
     setScoreboardUsers(currentArray);
     setUserOnScoreboard(false);
 
     var newNumScoreboardUsers = numScoreboardUsers - 1;
     setNumScoreboardUsers(newNumScoreboardUsers);
     if (currentArray.length == 0) {
-      console.log("Empty");
       setScoreboardUsed(false);
     }
 
@@ -858,8 +789,6 @@ export default function Post() {
 
     scoreboardUsersFirebase.once("value", (currScoreboardUser) =>
       currScoreboardUser.forEach((scoreUser) => {
-        console.log(scoreUser.key);
-        console.log(scoreUser.val());
         if (scoreUser.val().scoreboardUsername == nameTest) {
           firebase
             .database()
@@ -881,7 +810,6 @@ export default function Post() {
     var currentArray = [];
 
     for (var i = 0; i < scoreboardUsers.length; i++) {
-      console.log(scoreboardUsers[i].scoreboardUsername);
       if (scoreboardUsers[i].scoreboardUsername == nameTest) {
         currentArray.push({
           scoreboardUsername: nameTest,
@@ -895,56 +823,12 @@ export default function Post() {
 
     setScoreboardUsers(currentArray);
 
-    // updatedSortDate: new Date().toISOString(),
-
-    // NumQuestions: numQuestions - numDeleteCheckboxes,
-    // Title: newTitle,
-    // creator: quizUser,
-    // dateCreated: savedDateCreated,
-    // timeCreated: savedTimeCreated,
-    // createdSortDate: savedCreatedSortDate,
-    // testQuiz: changeTestQuiz,
-
-    // firebase.database().ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`).set({
-    //   numScoreboardUsers: newNumScoreboardUsers,
-    // });
-
-    // const scoreboardUsersFirebase = firebase
-    //   .database()
-    //   .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard`);
-
-    // scoreboardUsersFirebase.on("value", (currScoreboardUser) => {
-    //   console.log(currScoreboardUser);
-    //   currScoreboardUser.forEach((scoreUser) => {
-    //     console.log(scoreUser);
-    //   });
-    //   if (currScoreboardUser == nameTest) {
-    //     // currScoreboardUser.remove();
-    //     // currScoreboardUser.set({ user: "test" });
-    //     //   firebase
-    //     // .database()
-    //     // .ref(`Quizzes/${quizUser}/${quizTitle}/scoreboard/users`)
-    //     // .push({
-    //     //   user: currentUser,
-    //     //   score: score,
-    //     //   time: totalTimeInSeconds,
-    //     // });
-    //     //     user: currentUser,
-    //     //     score: score,
-    //     //     time: totalTimeInSeconds,
-    //   }
-    //   //   // console.log(currScoreboardUser);
-    // });
-
     const scoreboardUsersFirebase = firebase
       .database()
       .ref(`Quizzes/${quizCreatorID}/${quizTitle}/scoreboard/users`);
 
     scoreboardUsersFirebase.once("value", (currScoreboardUser) =>
       currScoreboardUser.forEach((scoreUser) => {
-        console.log(scoreUser.val());
-        console.log(scoreUser.key);
-
         if (scoreUser.val().scoreboardUsername == nameTest) {
           firebase
             .database()
@@ -974,12 +858,9 @@ export default function Post() {
   }
   function endTimer() {
     setEndTime(new Date());
-    console.log(endTime);
-    console.log(startTime);
 
     var timeDiff = new Date() - startTime; //in ms
     // strip the ms
-    console.log(timeDiff);
     timeDiff /= 1000;
 
     // get seconds
@@ -987,11 +868,8 @@ export default function Post() {
     setTotalTimeInSeconds(seconds);
     var minutes = Math.floor(seconds / 60);
     seconds = seconds - minutes * 60;
-
     setFinalTimeSeconds(seconds);
     setFinalTimeMinutes(minutes);
-    console.log(seconds + " seconds");
-    console.log(minutes + " minustes");
   }
 
   return (
@@ -1128,6 +1006,7 @@ export default function Post() {
           {admin ? (
             <>
               <label>Test Quiz</label>
+              {"   "}
               <input
                 id="changeTestQuiz"
                 type="checkbox"
@@ -1389,7 +1268,7 @@ export default function Post() {
                   <hr />
                   <h3>No one has used the scoreboard yet.</h3>{" "}
                   <h3>Would you like to be added to the scoreboard?</h3>
-                  <button id="myBtn">Open Modal</button>
+                  {/* <button id="myBtn">Open Modal</button> */}
                   <div id="myModal" className="modal">
                     <div className="modal-content">
                       <span className="close">&times;</span>

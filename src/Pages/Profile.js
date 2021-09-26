@@ -33,22 +33,18 @@ function Profile() {
   }
   function setup() {
     firebase.auth().onAuthStateChanged((user) => {
-      console.log("setup");
       var storage = firebase.storage();
       var storageRef = firebase.storage().ref();
       storageRef
         .child(`profilePictures/${user.uid}.jpg`)
         .getDownloadURL()
         .then((url) => {
-          console.log(url);
           setProfilePicture(url);
         })
         .catch((err) => {
           console.log(err);
           setDefaultProfilePic();
         });
-      console.log(user);
-      console.log(user.email);
       setEmail(user.email);
       const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
       setUserID(user.uid);
@@ -61,7 +57,6 @@ function Profile() {
           dbCreatedQuizzes.once("value", (userQuizzes) =>
             userQuizzes.forEach((quiz) => {
               var tempArray = createdQuizzes;
-              //console.log(quiz.val());
               tempArray.push({
                 title: quiz.val().title,
               });
@@ -73,7 +68,6 @@ function Profile() {
       });
 
       dbRefUsers.once("value", (test) => {
-        console.log("set");
         setUsername(test.val().username);
       });
     });
@@ -120,15 +114,13 @@ function Profile() {
           dbRefQuizTitles.on("value", (quiz) => {
             quiz.forEach((test) => {
               var title = test.val().Title;
-              console.log(title);
+
               // test.update({ creator: newUsername });
-              console.log(test.val().creator);
+
               firebase.database().ref(`Quizzes/${userID}/${title}`).update({
                 creator: newUsername,
               });
             });
-            console.log(quiz.val());
-            console.log(createdQuizzes);
           });
 
           firebase.database().ref(`Users/${userID}`).update({
@@ -207,8 +199,7 @@ function Profile() {
 
     var currEmail = document.getElementById("currentEmail").value;
     var newEmail = document.getElementById("newEmail").value;
-    console.log(currentPass);
-    console.log(newEmail);
+
     firebase
       .auth()
       .signInWithEmailAndPassword(currEmail, currentPass)
@@ -298,9 +289,14 @@ function Profile() {
       () => {}
     );
 
-    profileImgRef.put(file).then((snapshot) => {
-      console.log("Uploaded a file");
-    });
+    profileImgRef
+      .put(file)
+      .then((snapshot) => {
+        console.log("Uploaded a file");
+      })
+      .catch(function onError(err) {
+        console.log(err);
+      });
   }
 
   if (!done) {
@@ -340,7 +336,6 @@ function Profile() {
               id="file"
               onChange={(e) => {
                 setImage(e.target.files[0]);
-                console.log(e.target.files[0]);
               }}
             />
             <br />

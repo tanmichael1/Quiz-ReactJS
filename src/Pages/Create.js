@@ -36,7 +36,6 @@ export default function Create() {
         return index !== id;
       });
     });
-    console.log(savedQuestions.length);
 
     checkNumQuestions();
   }
@@ -46,7 +45,6 @@ export default function Create() {
         const dbRefUsersName = firebase
           .database()
           .ref("Users/" + user.uid + "/username");
-        console.log(user);
         const dbRefUsers = firebase.database().ref(`Users/${user.uid}`);
         dbRefUsers.on("value", (user) => {
           if (user.val().admin == undefined || user.val().admin == false) {
@@ -59,7 +57,6 @@ export default function Create() {
         setCurrentUserID(user.uid);
         dbRefUsersName.on("value", function (snap) {
           setCurrentUser(snap.val());
-          console.log(snap.val());
         });
       } else {
         alert("Must have be logged in to create a quiz");
@@ -155,7 +152,6 @@ export default function Create() {
         var questionArray = savedQuestions;
 
         var question = questionArray[i - 1];
-        console.log(answerOptions);
         firebase
           .database()
           .ref(`Quizzes/${currentUserID}/${title}/${i}`)
@@ -216,7 +212,6 @@ export default function Create() {
       for (i = 0; i < x.length; i++) {
         if (x[i].value != "" && x[i].value != null) {
           numOptionsCount++;
-          console.log(numOptionsCount);
           if (
             document.getElementsByClassName("checkboxes")[i].checked == true
           ) {
@@ -238,12 +233,7 @@ export default function Create() {
 
       if (min2Options) {
         if (validAnswer) {
-          console.log(displayArray);
           newSavedAnswers.push(answerArray);
-
-          console.log(answerArray);
-          console.log(newSavedAnswers);
-          //setAnswerOptions(newSavedAnswers);
 
           //Save question
           var currentQuestions = savedQuestions;
@@ -283,9 +273,8 @@ export default function Create() {
   function updateTicked(checkbox, input) {
     var currentInput = input;
     var checkboxes = document.getElementsByClassName("checkboxes");
-    var i;
 
-    for (i = 0; i < checkboxes.length; i++) {
+    for (var i = 0; i < checkboxes.length; i++) {
       if (input == i) {
         document.getElementsByClassName("checkboxes")[i].checked = true;
       } else {
@@ -300,12 +289,6 @@ export default function Create() {
     } else {
       document.getElementById("savedQuestionsTitle").classList.remove("hidden");
     }
-    console.log(notes.length);
-  }
-
-  function test(e) {
-    e.preventDefault();
-    console.log(document.getElementById("testQuiz").checked);
   }
 
   return (
@@ -408,15 +391,14 @@ export default function Create() {
             >
               Save Question
             </button>
-            <button className="hidden" onClick={(e) => test(e)}>
-              Test Quiz Button
-            </button>
+
             <br />
 
             {admin ? (
               <div>
-                <label>Test Quiz </label>
-                <input id="testQuiz" type="checkbox" />{" "}
+                <label>Private </label>
+                {"   "}
+                <input id="testQuiz" type="checkbox" />
               </div>
             ) : (
               <div></div>

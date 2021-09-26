@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import { firebase } from "./../Config";
 import { Link } from "react-router-dom";
 
-export function updateUser() {}
-
-export function logout() {}
 function User() {
   const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -51,22 +48,20 @@ function User() {
           window.location.href = "/profile";
         } else {
         }
-        console.log("setup");
+
         var storage = firebase.storage();
         var storageRef = firebase.storage().ref();
         storageRef
           .child(`profilePictures/${currentUserID}.jpg`)
           .getDownloadURL()
           .then((url) => {
-            console.log(url);
             setProfilePicture(url);
           })
           .catch((err) => {
             console.log(err);
             setDefaultProfilePic();
           });
-        console.log(user);
-        console.log(user.email);
+
         setEmail(user.email);
         const dbRefUsers = firebase.database().ref(`Users/${currentUserID}`);
         setCurrentUserID(user.uid);
@@ -79,7 +74,7 @@ function User() {
             dbCreatedQuizzes.once("value", (userQuizzes) =>
               userQuizzes.forEach((quiz) => {
                 var tempArray = createdQuizzes;
-                //console.log(quiz.val());
+
                 tempArray.push({
                   title: quiz.val().title,
                 });
@@ -91,7 +86,6 @@ function User() {
         });
 
         dbRefUsers.once("value", (test) => {
-          console.log("set");
           setUsername(test.val().username);
         });
       } else {
@@ -101,7 +95,6 @@ function User() {
           .child(`profilePictures/${currentUserID}.jpg`)
           .getDownloadURL()
           .then((url) => {
-            console.log(url);
             setProfilePicture(url);
           })
           .catch((err) => {
@@ -119,7 +112,7 @@ function User() {
             dbCreatedQuizzes.once("value", (userQuizzes) =>
               userQuizzes.forEach((quiz) => {
                 var tempArray = createdQuizzes;
-                //console.log(quiz.val());
+
                 tempArray.push({
                   title: quiz.val().title,
                 });
@@ -131,7 +124,6 @@ function User() {
         });
 
         dbRefUsers.once("value", (test) => {
-          console.log("set");
           setUsername(test.val().username);
         });
       }
