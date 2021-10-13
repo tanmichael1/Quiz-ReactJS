@@ -1,60 +1,31 @@
-# Getting Started with Create React App
+# Quiz: ReactJS - Overview
+
+Quiz app/website, front end is created using React, and the database, image storage and hosting uses Firebase.
+
+This project was created with HTML, CSS, JavaScript and React.
+
+## Features
+
+- Website using ReactJS
+- Create, reads, updates and deletes quiz data (quiz, questions, answers, etc)
+- Register, log in, and log out
+- Quiz and user data stored on Firebase
+- Hosted online using Firebase
+
+## Hosted Website
+
+You can see a running version of this website at https://quiz---reactjs.web.app/
+
+## Installation
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+It requires [NPM](https://docs.npmjs.com/) to be installed.
 
-In the project directory, you can run:
+    git clone https://github.com/tanmichael1/Quiz-ReactJS.git
+    cd quiz-reactjs
+    npm install
 
-### `yarn start`
+## Usage
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### Project Description and Technologies
-
-This project was created with
-
-- HTML
-- JavaScript
-- CSS
-- React
-
-### Planning/to do
-
-- Create project with react: DONE
-- Host on Firebase: DONE
-- Add firebase's realtime database to project: DONE
-- Create basic layout recreating base app: DONE
-- Use local database to make quiz work: DONE
-- Make test quiz on realtime database work on app: DONE
-- Add navbar: DONE
-- Add pages: DONE
-- Add users, logins, logouts, and registration: DONE
-- Generate pages for quizzes: DONE
-- Create quizzes and structure using realtime database: DONE
-- Give options to create, edit and delete quizzes: DONE
-- Finalise pages
-- Create layout for mobile screen
-- Create layout for desktop screen
-- Add progress bar to quiz
-- Add timers
-- Add scoreboards
+    npm start
